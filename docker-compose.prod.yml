@@ -1,0 +1,119 @@
+name: japonparts-prod
+
+networks:
+  app-net:
+    driver: bridge
+  dokploy-network:
+    external: true
+
+volumes:
+  pgdata_prod:
+  redisdata_prod:
+  miniodata_prod:
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: japonparts-postgres-prod
+    restart: always
+    env_file:
+      - .env.prod
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata_prod:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: japonparts-redis-prod
+    restart: always
+    env_file:
+      - .env.prod
+    command: >
+      sh -c '
+        if [ -n "${REDIS_PASSWORD}" ]; then
+          redis-server --requirepass "${REDIS_PASSWORD}"
+        else
+          redis-server
+        fi
+      '
+    volumes:
+      - redisdata_prod:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-net
+
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: japonparts-minio-prod
+    restart: always
+    env_file:
+      - .env.prod
+    command: server /data
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - miniodata_prod:/data
+    networks:
+      - app-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: japonparts-backend-prod
+    restart: always
+    env_file:
+      - .env.prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app-net
+      - dokploy-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    container_name: japonparts-frontend-prod
+    restart: always
+    env_file:
+      - .env.prod
+    depends_on:
+      - backend
+    networks:
+      - app-net
+      - dokploy-network
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+    container_name: japonparts-worker-prod
+    restart: always
+    env_file:
+      - .env.prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app-net

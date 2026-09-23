@@ -1,0 +1,141 @@
+name: japonparts-dev
+
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  pgdata_dev:
+  redisdata_dev:
+  miniodata_dev:
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: japonparts-postgres-dev
+    restart: unless-stopped
+    env_file:
+      - .env.dev
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-japonparts_dev}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - pgdata_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-japonparts_dev}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: japonparts-redis-dev
+    restart: unless-stopped
+    env_file:
+      - .env.dev
+    ports:
+      - "${REDIS_HOST_PORT:-6380}:6379"
+    volumes:
+      - redisdata_dev:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-net
+
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: japonparts-minio-dev
+    restart: unless-stopped
+    env_file:
+      - .env.dev
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    ports:
+      - "${MINIO_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - miniodata_dev:/data
+    networks:
+      - app-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile.dev
+    container_name: japonparts-backend-dev
+    restart: unless-stopped
+    command: pnpm --filter @japonparts/backend start:dev
+    ports:
+      - "${BACKEND_PORT:-4000}:4000"
+    environment:
+      CI: "true"
+    env_file:
+      - .env.dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/backend/node_modules
+      - /app/packages/shared/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app-net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile.dev
+    container_name: japonparts-frontend-dev
+    restart: unless-stopped
+    command: pnpm --filter @japonparts/frontend dev
+    ports:
+      - "${FRONTEND_PORT:-3001}:3000"
+    environment:
+      CI: "true"
+    env_file:
+      - .env.dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/frontend/node_modules
+      - /app/apps/frontend/.next
+      - /app/packages/shared/node_modules
+    networks:
+      - app-net
+
+  worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile.dev
+    container_name: japonparts-worker-dev
+    restart: unless-stopped
+    command: pnpm --filter @japonparts/worker start:dev
+    environment:
+      CI: "true"
+    env_file:
+      - .env.dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/apps/worker/node_modules
+      - /app/packages/shared/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - app-net

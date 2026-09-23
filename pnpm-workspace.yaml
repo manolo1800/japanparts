@@ -1,0 +1,10 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+
+onlyBuiltDependencies:
+  - msgpackr-extract
+  - unrs-resolver
+allowBuilds:
+  msgpackr-extract: true
+  unrs-resolver: true

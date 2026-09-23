@@ -1,0 +1,22 @@
+FROM node:22-alpine
+
+RUN npm install -g pnpm@11.22.0
+
+WORKDIR /app
+
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json turbo.json tsconfig.base.json ./
+COPY packages/shared/package.json ./packages/shared/
+COPY apps/backend/package.json ./apps/backend/
+
+RUN pnpm install
+
+COPY packages/shared ./packages/shared
+COPY apps/backend ./apps/backend
+
+RUN pnpm --filter @japonparts/shared build
+
+WORKDIR /app/apps/backend
+
+EXPOSE 4000
+
+CMD ["pnpm", "start:dev"]

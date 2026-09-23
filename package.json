@@ -1,0 +1,28 @@
+{
+  "name": "japonparts-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.22.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
+    "dev:up": "docker compose --env-file .env.dev -f docker-compose.dev.yml up",
+    "dev:up:build": "docker compose --env-file .env.dev -f docker-compose.dev.yml up --build",
+    "dev:down": "docker compose --env-file .env.dev -f docker-compose.dev.yml down",
+    "prod:up": "docker compose --env-file .env.prod -f docker-compose.prod.yml up -d",
+    "prod:down": "docker compose --env-file .env.prod -f docker-compose.prod.yml down",
+    "db:migrate": "pnpm --filter @japonparts/backend db:migrate",
+    "db:seed": "pnpm --filter @japonparts/backend db:seed"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "@typescript-eslint/eslint-plugin": "^8.70.0",
+    "@typescript-eslint/parser": "^8.70.0",
+    "eslint": "^9.39.5",
+    "prettier": "^3.5.0",
+    "turbo": "^2.4.4",
+    "typescript": "^5.7.3"
+  }
+}

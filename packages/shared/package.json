@@ -1,0 +1,16 @@
+{
+  "name": "@japonparts/shared",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc -b -w",
+    "lint": "echo 'Linting shared...'"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
