@@ -291,3 +291,97 @@ export interface OcrParsedFacturaResult {
   items: OcrFacturaItem[];
   raw_text?: string;
 }
+
+// ============================================================================
+// FASE 3: Ventas, Clientes, Órdenes y Documentos Internos (Facturas / Recibos)
+// ============================================================================
+
+export interface ClienteSummary {
+  id: string;
+  nombre: string;
+  telefono?: string | null;
+  email?: string | null;
+  direccion?: string | null;
+  notas?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OrdenDetalleSummary {
+  id: string;
+  orden_id: string;
+  sku_id: string;
+  publicacion_id?: string | null;
+  cantidad: number;
+  precio_unitario: number;
+  subtotal: number;
+  created_at?: string;
+  updated_at?: string;
+  sku?: SkuSummary;
+  publicacion?: PublicacionSummary | null;
+}
+
+export interface DocumentoVentaSummary {
+  id: string;
+  orden_id: string;
+  tipo: DocumentType;
+  numero: string;
+  fecha: string;
+  datos_cliente?: Record<string, any>;
+  pdf_url?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OrdenSummary {
+  id: string;
+  numero_orden: string;
+  canal: Channel;
+  cuenta_id?: string | null;
+  vendedor_id?: string | null;
+  cliente_id?: string | null;
+  fecha: string;
+  estado: OrderStatus;
+  tipo_entrega: DeliveryType;
+  direccion_entrega?: string | null;
+  total: number;
+  metodo_pago: string;
+  estado_pago: PaymentStatus;
+  origen?: string | null;
+  created_at: string;
+  updated_at: string;
+  cliente?: ClienteSummary | null;
+  vendedor?: UserSummary | null;
+  cuenta?: CuentaCanalSummary | null;
+  detalles?: OrdenDetalleSummary[];
+  documentos?: DocumentoVentaSummary[];
+}
+
+export interface CreateOrdenItemDto {
+  sku_id: string;
+  cantidad: number;
+  precio_unitario: number;
+  publicacion_id?: string;
+}
+
+export interface CreateClienteDto {
+  nombre: string;
+  telefono?: string;
+  email?: string;
+  direccion?: string;
+  notas?: string;
+}
+
+export interface CreateOrdenDto {
+  canal?: Channel;
+  cuenta_id?: string;
+  cliente_id?: string;
+  cliente_nuevo?: CreateClienteDto;
+  tipo_entrega?: DeliveryType;
+  direccion_entrega?: string;
+  metodo_pago?: string;
+  estado_pago?: PaymentStatus;
+  generar_documento?: DocumentType;
+  items: CreateOrdenItemDto[];
+}
+

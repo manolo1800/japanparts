@@ -121,26 +121,26 @@
 
 **Objetivo:** registrar ventas por mostrador y generar facturas/recibos PDF.
 
-- [ ] Tabla `cliente` (id, nombre, telefono, email, direccion, notas).
-- [ ] Tabla `orden` (id, numero_orden, canal ENUM['mostrador','ml','whatsapp'], cuenta_id FK, vendedor_id FK, cliente_id FK, fecha, estado ENUM['pendiente','confirmada','por_despachar','despachada','cerrada','cancelada'], tipo_entrega ENUM['retiro','delivery','encomienda'], direccion_entrega, total, metodo_pago, estado_pago ENUM['pendiente','confirmado'], origen).
-- [ ] Tabla `orden_detalle` (id, orden_id FK, sku_id FK, publicacion_id FK, cantidad, precio_unitario, subtotal).
-- [ ] Tabla `documento_venta` (id, orden_id FK, tipo ENUM['factura','recibo'], numero UNIQUE, fecha, datos_cliente JSONB, pdf_url).
-- [ ] Servicio de creación de orden:
-  - [ ] Validar stock disponible.
-  - [ ] Descontar `sku.stock_actual`.
-  - [ ] Registrar `movimiento_stock` de salida.
-  - [ ] Encolar sync ML (si aplica, se conecta en Fase 4).
-- [ ] Generador de PDF (factura + recibo) con numeración correlativa por tipo.
-- [ ] Endpoint `POST /orden` (mostrador).
-- [ ] Endpoint `GET /orden/:id/pdf?tipo=factura|recibo`.
-- [ ] Endpoint `POST /orden/:id/confirmar-pago` (solo humano).
-- [ ] Endpoint `POST /orden/:id/despachar`.
-- [ ] Endpoint `POST /orden/:id/cancelar` (revierte stock + movimiento).
-- [ ] Frontend: POS mostrador (búsqueda por SKU o compatibilidad → carrito → crear orden).
-- [ ] Frontend: lista de órdenes con filtros.
-- [ ] Frontend: detalle de orden + acciones (confirmar pago, despachar, cancelar, generar PDF).
+- [x] Tabla `cliente` (id, nombre, telefono, email, direccion, notas).
+- [x] Tabla `orden` (id, numero_orden, canal ENUM['mostrador','ml','whatsapp'], cuenta_id FK, vendedor_id FK, cliente_id FK, fecha, estado ENUM['pendiente','confirmada','por_despachar','despachada','cerrada','cancelada'], tipo_entrega ENUM['retiro','delivery','encomienda'], direccion_entrega, total, metodo_pago, estado_pago ENUM['pendiente','confirmado'], origen).
+- [x] Tabla `orden_detalle` (id, orden_id FK, sku_id FK, publicacion_id FK, cantidad, precio_unitario, subtotal).
+- [x] Tabla `documento_venta` (id, orden_id FK, tipo ENUM['factura','recibo'], numero UNIQUE, fecha, datos_cliente JSONB, pdf_url).
+- [x] Servicio de creación de orden:
+  - [x] Validar stock disponible.
+  - [x] Descontar `sku.stock_actual`.
+  - [x] Registrar `movimiento_stock` de salida.
+  - [x] Encolar sync ML (si aplica, se conecta en Fase 4).
+- [x] Generador de PDF (factura + recibo) con numeración correlativa por tipo.
+- [x] Endpoint `POST /orden` (mostrador).
+- [x] Endpoint `GET /orden/:id/pdf?tipo=factura|recibo`.
+- [x] Endpoint `POST /orden/:id/confirmar-pago` (solo humano).
+- [x] Endpoint `POST /orden/:id/despachar`.
+- [x] Endpoint `POST /orden/:id/cancelar` (revierte stock + movimiento).
+- [x] Frontend: POS mostrador (búsqueda por SKU o compatibilidad → carrito → crear orden).
+- [x] Frontend: lista de órdenes con filtros.
+- [x] Frontend: detalle de orden + acciones (confirmar pago, despachar, cancelar, generar PDF).
 
-**Criterio de aceptación:** crear orden mostrador, descontar stock, generar factura PDF con numeración, confirmar pago, marcar despachada.
+**Criterio de aceptación:** crear orden mostrador, descontar stock, generar factura PDF con numeración, confirmar pago, marcar despachada. [VERIFICADO]
 
 ---
 

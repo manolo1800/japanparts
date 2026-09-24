@@ -8,3 +8,8 @@ export * from './proveedor.entity';
 export * from './compra.entity';
 export * from './compra-detalle.entity';
 export * from './pago-compra.entity';
+export * from './cliente.entity';
+export * from './orden.entity';
+export * from './orden-detalle.entity';
+export * from './documento-venta.entity';
+

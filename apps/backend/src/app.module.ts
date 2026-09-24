@@ -11,6 +11,8 @@ import { MovimientoStockModule } from './movimiento-stock/movimiento-stock.modul
 import { StorageModule } from './storage/storage.module';
 import { ProveedorModule } from './proveedor/proveedor.module';
 import { CompraModule } from './compra/compra.module';
+import { ClienteModule } from './cliente/cliente.module';
+import { OrdenModule } from './orden/orden.module';
 import {
   Usuario,
   Sku,
@@ -22,6 +24,10 @@ import {
   Compra,
   CompraDetalle,
   PagoCompra,
+  Cliente,
+  Orden,
+  OrdenDetalle,
+  DocumentoVenta,
 } from './entities';
 
 @Module({
@@ -61,6 +67,10 @@ import {
             Compra,
             CompraDetalle,
             PagoCompra,
+            Cliente,
+            Orden,
+            OrdenDetalle,
+            DocumentoVenta,
           ],
           synchronize: false,
           logging: false,
@@ -76,6 +86,8 @@ import {
     StorageModule,
     ProveedorModule,
     CompraModule,
+    ClienteModule,
+    OrdenModule,
   ],
 })
 export class AppModule {}

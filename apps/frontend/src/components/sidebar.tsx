@@ -11,50 +11,79 @@ import {
   Car,
   ShoppingCart,
   Building2,
+  Store,
+  ReceiptText,
 } from 'lucide-react';
 
 export function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
 
-  const navItems = [
+  const navSections = [
     {
-      label: 'Inventario & SKUs',
-      href: '/inventario',
-      icon: Package,
-      badge: null,
+      title: 'Ventas & Facturación',
+      items: [
+        {
+          label: 'Punto de Venta (POS)',
+          href: '/pos',
+          icon: Store,
+          badge: 'POS',
+        },
+        {
+          label: 'Órdenes de Venta',
+          href: '/ventas',
+          icon: ReceiptText,
+          badge: null,
+        },
+      ],
     },
     {
-      label: 'Buscador por Vehículo',
-      href: '/buscador-inverso',
-      icon: Car,
-      badge: 'Inverso',
+      title: 'Inventario & Catálogo',
+      items: [
+        {
+          label: 'Inventario & SKUs',
+          href: '/inventario',
+          icon: Package,
+          badge: null,
+        },
+        {
+          label: 'Buscador por Vehículo',
+          href: '/buscador-inverso',
+          icon: Car,
+          badge: 'Inverso',
+        },
+        {
+          label: 'Publicaciones Canales',
+          href: '/publicaciones',
+          icon: Share2,
+          badge: null,
+        },
+      ],
     },
     {
-      label: 'Publicaciones Canales',
-      href: '/publicaciones',
-      icon: Share2,
-      badge: null,
-    },
-    {
-      label: 'Compras & Facturas',
-      href: '/compras',
-      icon: ShoppingCart,
-      badge: 'OCR',
-    },
-    {
-      label: 'Proveedores & CxP',
-      href: '/proveedores',
-      icon: Building2,
-      badge: null,
+      title: 'Compras & Proveedores',
+      items: [
+        {
+          label: 'Compras & Facturas',
+          href: '/compras',
+          icon: ShoppingCart,
+          badge: 'OCR',
+        },
+        {
+          label: 'Proveedores & CxP',
+          href: '/proveedores',
+          icon: Building2,
+          badge: null,
+        },
+      ],
     },
   ];
 
   return (
     <aside className="w-64 border-r border-slate-800/80 bg-[#0b101b] flex flex-col justify-between shrink-0 select-none">
-      <div>
+      <div className="overflow-y-auto">
         {/* Brand Header */}
-        <div className="h-16 px-6 flex items-center gap-3 border-b border-slate-800/80">
+        <div className="h-16 px-6 flex items-center gap-3 border-b border-slate-800/80 sticky top-0 bg-[#0b101b] z-10">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-rose-400 flex items-center justify-center shadow-lg shadow-rose-600/30">
             <span className="font-black text-white text-lg tracking-wider">JP</span>
           </div>
@@ -68,43 +97,48 @@ export function Sidebar() {
           </div>
         </div>
 
-        {/* Navigation Section */}
-        <div className="px-3 py-6">
-          <div className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider px-3 mb-2">
-            Módulos Fase 1
-          </div>
-          <nav className="space-y-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive =
-                pathname === item.href ||
-                (item.href !== '/' && pathname.startsWith(item.href));
+        {/* Navigation Sections */}
+        <div className="px-3 py-4 space-y-5">
+          {navSections.map((section, idx) => (
+            <div key={idx}>
+              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1.5">
+                {section.title}
+              </div>
+              <nav className="space-y-0.5">
+                {section.items.map((item) => {
+                  const Icon = item.icon;
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href !== '/' && pathname.startsWith(item.href));
 
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                    isActive
-                      ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20 shadow-sm shadow-rose-500/10'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon className={`w-4 h-4 ${isActive ? 'text-rose-400' : 'text-slate-400'}`} />
-                    <span>{item.label}</span>
-                  </div>
-                  {item.badge && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded font-mono uppercase bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                        isActive
+                          ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20 shadow-sm shadow-rose-500/10'
+                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-rose-400' : 'text-slate-400'}`} />
+                        <span>{item.label}</span>
+                      </div>
+                      {item.badge && (
+                        <span className="text-[9px] px-1.5 py-0.2 rounded font-mono uppercase bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                          {item.badge}
+                        </span>
+                      )}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          ))}
         </div>
       </div>
+
 
       {/* User Status & Logout Footer */}
       <div className="p-3 border-t border-slate-800/80 bg-slate-900/30">
