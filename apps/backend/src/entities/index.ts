@@ -4,3 +4,7 @@ export * from './compatibilidad.entity';
 export * from './cuenta-canal.entity';
 export * from './publicacion.entity';
 export * from './movimiento-stock.entity';
+export * from './proveedor.entity';
+export * from './compra.entity';
+export * from './compra-detalle.entity';
+export * from './pago-compra.entity';

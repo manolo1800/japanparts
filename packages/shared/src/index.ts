@@ -194,3 +194,100 @@ export interface CompatibilidadSearchParams {
   anio?: number;
   motor?: string;
 }
+
+// ============================================================================
+// FASE 2: Compras, Proveedores, Pagos y OCR
+// ============================================================================
+
+export interface ProveedorSummary {
+  id: string;
+  nombre: string;
+  rif: string;
+  contacto?: string | null;
+  telefono?: string | null;
+  email?: string | null;
+  direccion?: string | null;
+  created_at: string;
+  updated_at: string;
+  compras?: CompraSummary[];
+}
+
+export interface CompraDetalleSummary {
+  id: string;
+  compra_id: string;
+  sku_id: string;
+  cantidad: number;
+  costo_unitario: number;
+  subtotal: number;
+  created_at?: string;
+  updated_at?: string;
+  sku?: SkuSummary;
+}
+
+export interface PagoCompraSummary {
+  id: string;
+  compra_id: string;
+  fecha: string;
+  monto: number;
+  metodo: string;
+  referencia?: string | null;
+  usuario_id?: string | null;
+  notas?: string | null;
+  created_at: string;
+  usuario?: UserSummary;
+}
+
+export interface CompraSummary {
+  id: string;
+  proveedor_id: string;
+  numero_factura: string;
+  fecha: string;
+  subtotal: number;
+  total: number;
+  condicion_pago: PurchasePaymentCondition;
+  dias_credito: number;
+  estado: PurchaseStatus;
+  archivo_url?: string | null;
+  usuario_id?: string | null;
+  created_at: string;
+  updated_at: string;
+  proveedor?: ProveedorSummary;
+  detalles?: CompraDetalleSummary[];
+  pagos?: PagoCompraSummary[];
+  usuario?: UserSummary;
+  monto_pagado?: number;
+  saldo_pendiente?: number;
+}
+
+export interface EstadoCuentaProveedor {
+  proveedor: ProveedorSummary;
+  total_compras: number;
+  total_facturado: number;
+  total_pagado: number;
+  saldo_pendiente: number;
+  compras_pendientes: CompraSummary[];
+  historial_pagos: PagoCompraSummary[];
+}
+
+export interface OcrFacturaItem {
+  sku_interno?: string;
+  descripcion: string;
+  cantidad: number;
+  costo_unitario: number;
+  subtotal: number;
+  sku_id_coincidente?: string | null;
+}
+
+export interface OcrParsedFacturaResult {
+  proveedor_nombre?: string;
+  rif?: string;
+  numero_factura?: string;
+  fecha?: string;
+  condicion_pago?: PurchasePaymentCondition;
+  dias_credito?: number;
+  subtotal?: number;
+  total?: number;
+  archivo_url?: string;
+  items: OcrFacturaItem[];
+  raw_text?: string;
+}

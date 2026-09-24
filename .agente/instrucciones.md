@@ -93,27 +93,27 @@
 
 **Objetivo:** registrar compras con OCR asistido por IA y cuentas por pagar.
 
-- [ ] Tabla `proveedor` (id, nombre, rif, contacto, telefono, email).
-- [ ] Tabla `compra` (id, proveedor_id FK, numero_factura, fecha, subtotal, total, condicion_pago ENUM['contado','credito'], dias_credito, estado ENUM['pendiente','recibida','pagada'], archivo_url).
-- [ ] Tabla `compra_detalle` (id, compra_id FK, sku_id FK, cantidad, costo_unitario, subtotal).
-- [ ] Tabla `pago_compra` (id, compra_id FK, fecha, monto, metodo, referencia).
-- [ ] Endpoint `POST /compra` (carga manual estructurada).
-- [ ] Endpoint `POST /compra/ocr` → sube imagen/PDF a MinIO → encola job OCR → devuelve JSON editable.
-- [ ] Worker OCR:
-  - [ ] Extraer texto (Tesseract para imágenes, parser para PDF).
-  - [ ] Enviar texto a LLM con prompt de estructuración.
-  - [ ] Devolver JSON estructurado (proveedor, rif, numero_factura, fecha, items[], total, condicion_pago).
-- [ ] Endpoint `POST /compra/:id/aprobar`:
-  - [ ] Crear `compra_detalle`.
-  - [ ] Generar `movimiento_stock` de entrada por cada item.
-  - [ ] Recalcular `costo_promedio` del SKU.
-- [ ] Endpoint `POST /compra/:id/pago` (pagos parciales o totales).
-- [ ] Endpoint `GET /proveedor/:id/estado-cuenta`.
-- [ ] Frontend: formulario de compra manual.
-- [ ] Frontend: flujo OCR (subir → revisar/editar → aprobar).
-- [ ] Frontend: lista de compras + estado de cuenta por proveedor.
+- [x] Tabla `proveedor` (id, nombre, rif, contacto, telefono, email).
+- [x] Tabla `compra` (id, proveedor_id FK, numero_factura, fecha, subtotal, total, condicion_pago ENUM['contado','credito'], dias_credito, estado ENUM['pendiente','recibida','pagada'], archivo_url).
+- [x] Tabla `compra_detalle` (id, compra_id FK, sku_id FK, cantidad, costo_unitario, subtotal).
+- [x] Tabla `pago_compra` (id, compra_id FK, fecha, monto, metodo, referencia).
+- [x] Endpoint `POST /compra` (carga manual estructurada).
+- [x] Endpoint `POST /compra/ocr` → sube imagen/PDF a MinIO → encola job OCR → devuelve JSON editable.
+- [x] Worker OCR:
+  - [x] Extraer texto (Tesseract para imágenes, parser para PDF).
+  - [x] Enviar texto a LLM con prompt de estructuración.
+  - [x] Devolver JSON estructurado (proveedor, rif, numero_factura, fecha, items[], total, condicion_pago).
+- [x] Endpoint `POST /compra/:id/aprobar`:
+  - [x] Crear `compra_detalle`.
+  - [x] Generar `movimiento_stock` de entrada por cada item.
+  - [x] Recalcular `costo_promedio` del SKU.
+- [x] Endpoint `POST /compra/:id/pago` (pagos parciales o totales).
+- [x] Endpoint `GET /proveedor/:id/estado-cuenta`.
+- [x] Frontend: formulario de compra manual.
+- [x] Frontend: flujo OCR (subir → revisar/editar → aprobar).
+- [x] Frontend: lista de compras + estado de cuenta por proveedor.
 
-**Criterio de aceptación:** subir factura PDF, extraer items, editarlos, aprobar, stock sube. Si es a crédito, queda registrada la cuenta por pagar.
+**Criterio de aceptación:** subir factura PDF, extraer items, editarlos, aprobar, stock sube. Si es a crédito, queda registrada la cuenta por pagar. [VERIFICADO]
 
 ---
 

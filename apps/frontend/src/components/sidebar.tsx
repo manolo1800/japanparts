@@ -9,6 +9,8 @@ import {
   Share2,
   LogOut,
   Car,
+  ShoppingCart,
+  Building2,
 } from 'lucide-react';
 
 export function Sidebar() {
@@ -32,6 +34,18 @@ export function Sidebar() {
       label: 'Publicaciones Canales',
       href: '/publicaciones',
       icon: Share2,
+      badge: null,
+    },
+    {
+      label: 'Compras & Facturas',
+      href: '/compras',
+      icon: ShoppingCart,
+      badge: 'OCR',
+    },
+    {
+      label: 'Proveedores & CxP',
+      href: '/proveedores',
+      icon: Building2,
       badge: null,
     },
   ];

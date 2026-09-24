@@ -8,6 +8,9 @@ import { SkuModule } from './sku/sku.module';
 import { CompatibilidadModule } from './compatibilidad/compatibilidad.module';
 import { PublicacionModule } from './publicacion/publicacion.module';
 import { MovimientoStockModule } from './movimiento-stock/movimiento-stock.module';
+import { StorageModule } from './storage/storage.module';
+import { ProveedorModule } from './proveedor/proveedor.module';
+import { CompraModule } from './compra/compra.module';
 import {
   Usuario,
   Sku,
@@ -15,6 +18,10 @@ import {
   CuentaCanal,
   Publicacion,
   MovimientoStock,
+  Proveedor,
+  Compra,
+  CompraDetalle,
+  PagoCompra,
 } from './entities';
 
 @Module({
@@ -50,6 +57,10 @@ import {
             CuentaCanal,
             Publicacion,
             MovimientoStock,
+            Proveedor,
+            Compra,
+            CompraDetalle,
+            PagoCompra,
           ],
           synchronize: false,
           logging: false,
@@ -62,6 +73,9 @@ import {
     CompatibilidadModule,
     PublicacionModule,
     MovimientoStockModule,
+    StorageModule,
+    ProveedorModule,
+    CompraModule,
   ],
 })
 export class AppModule {}

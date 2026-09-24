@@ -10,13 +10,15 @@ interface HeaderProps {
   subtitle?: string;
   onRefresh?: () => void;
   showNewSkuBtn?: boolean;
+  actionSlot?: React.ReactNode;
 }
 
 export function Header({
   title,
   subtitle,
   onRefresh,
-  showNewSkuBtn = true,
+  showNewSkuBtn = false,
+  actionSlot,
 }: HeaderProps) {
   const { isBodega } = useAuth();
 
@@ -41,6 +43,8 @@ export function Header({
             <RefreshCw className="w-4 h-4" />
           </button>
         )}
+
+        {actionSlot}
 
         {showNewSkuBtn && isBodega && (
           <Link

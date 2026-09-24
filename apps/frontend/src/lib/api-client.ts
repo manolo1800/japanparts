@@ -138,6 +138,30 @@ class ApiClient {
     });
   }
 
+  public upload<T>(endpoint: string, formData: FormData): Promise<ApiResponse<T>> {
+    const url = endpoint.startsWith('http')
+      ? endpoint
+      : `${API_BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+
+    let token = this.getAccessToken();
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return fetch(url, {
+      method: 'POST',
+      headers,
+      body: formData,
+    }).then(async (response) => {
+      const data: ApiResponse<T> = await response.json();
+      if (!response.ok) {
+        throw new Error(data.message || 'Error en la petición al servidor');
+      }
+      return data;
+    });
+  }
+
   public delete<T>(endpoint: string) {
     return this.request<T>(endpoint, { method: 'DELETE' });
   }

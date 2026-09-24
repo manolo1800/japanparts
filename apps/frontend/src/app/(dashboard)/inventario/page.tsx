@@ -57,6 +57,7 @@ export default function InventarioPage() {
         title="Catálogo de SKUs & Inventario"
         subtitle="Gestión de repuestos maestros, compatibilidad vehicular y trazabilidad de stock"
         onRefresh={() => refetch()}
+        showNewSkuBtn={true}
       />
 
       <div className="p-8 max-w-7xl mx-auto space-y-6">
