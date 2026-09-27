@@ -17,7 +17,7 @@ export class MailService {
     const pass = this.configService.get<string>('SMTP_PASS');
     this.mailFrom =
       this.configService.get<string>('MAIL_FROM') ||
-      'Japón Parts <notificaciones@japonparts.com>';
+      'Tokugawa Spare Parts <notificaciones@tokugawaspareparts.com>';
 
     if (host && user && pass) {
       this.transporter = nodemailer.createTransport({
@@ -73,11 +73,11 @@ export class MailService {
     orden: Partial<OrdenSummary> & { numero_orden: string; total: number },
     pdfBuffer?: Buffer,
   ): Promise<boolean> {
-    const subject = `Comprobante de Orden #${orden.numero_orden} — Japón Parts`;
+    const subject = `Comprobante de Orden #${orden.numero_orden} — Tokugawa Spare Parts`;
     const html = `
       <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #1F2937;">
         <div style="background-color: #0A0D14; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 24px;">
-          <h1 style="color: #FFFFFF; margin: 0; font-size: 24px;">JAPÓN<span style="color: #C4F82A;">PARTS</span></h1>
+          <h1 style="color: #FFFFFF; margin: 0; font-size: 24px;">TOKUGAWA <span style="color: #C4F82A;">SPARE PARTS</span></h1>
           <p style="color: #8B949E; margin: 5px 0 0; font-size: 13px;">Especialistas en Repuestos Automotrices</p>
         </div>
 
@@ -102,7 +102,7 @@ export class MailService {
         </div>
 
         <p style="font-size: 12px; color: #9CA3AF; text-align: center;">
-          Este es un correo automático generado por el sistema de Japón Parts. Si tienes dudas, contáctanos por WhatsApp.
+          Este es un correo automático generado por el sistema de Tokugawa Spare Parts. Si tienes dudas, contáctanos por WhatsApp.
         </p>
       </div>
     `;

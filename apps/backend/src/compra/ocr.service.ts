@@ -81,7 +81,7 @@ export class OcrService {
 }`;
 
     const parsed = await this.deepSeekService!.extractStructuredJson<any>(
-      'Eres un sistema experto contable en lectura de facturas para Japón Parts.',
+      'Eres un sistema experto contable en lectura de facturas para Tokugawa Spare Parts.',
       `${prompt}\n\nTexto crudo extraído:\n${rawText.slice(0, 3000)}`,
       schema,
     );
@@ -125,7 +125,7 @@ export class OcrService {
     return {
       proveedor_nombre: proveedorNombre,
       rif: parsed.rif || 'J-00000000-0',
-      numero_factura: parsed.numero_factura || `FAC-${Date.now().toString().slice(-6)}`,
+      numero_factura: parsed.numero_factura || `FAC-${new Date().getFullYear()}-0001`,
       fecha: parsed.fecha || new Date().toISOString().split('T')[0],
       condicion_pago:
         parsed.condicion_pago === 'credito'
@@ -178,7 +178,7 @@ export class OcrService {
       text.match(/(?:factura|nro|numero)?\s*[:\s]*([A-Z]{2,4}-?\d{3,8}[A-Z0-9_-]*)/i) ||
       text.match(/(?:factura|invoice)(?:\s*(?:nro|n°|num|#)?:?)\s*([a-zA-Z0-9_-]{3,20})/i) ||
       filename.match(/(?:fac|factura|inv)[_-]?([a-zA-Z0-9]+)/i);
-    const numeroFactura = facturaMatch ? facturaMatch[1].toUpperCase() : `FAC-${Date.now().toString().slice(-6)}`;
+    const numeroFactura = facturaMatch ? facturaMatch[1].toUpperCase() : `FAC-${new Date().getFullYear()}-0001`;
 
     // 3. Condición de pago
     const isCredito = /cr[eé]dito|d[ií]as|plazo/i.test(text);

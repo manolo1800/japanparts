@@ -9,6 +9,7 @@ import { Header } from '../../../components/header';
 import { AjusteStockModal } from '../../../components/ajuste-stock-modal';
 import { CompatibilidadModal } from '../../../components/compatibilidad-modal';
 import { PublicacionModal } from '../../../components/publicacion-modal';
+import { EditarSkuModal } from '../../../components/editar-sku-modal';
 import {
   Search,
   Car,
@@ -17,6 +18,7 @@ import {
   CheckCircle2,
   XCircle,
   ChevronRight,
+  Pencil,
 } from 'lucide-react';
 
 export default function InventarioPage() {
@@ -26,6 +28,7 @@ export default function InventarioPage() {
   const [page, setPage] = useState(1);
 
   // Modales
+  const [editModalSku, setEditModalSku] = useState<SkuSummary | null>(null);
   const [stockModalSku, setStockModalSku] = useState<SkuSummary | null>(null);
   const [compatModalSku, setCompatModalSku] = useState<SkuSummary | null>(null);
   const [pubModalSku, setPubModalSku] = useState<SkuSummary | null>(null);
@@ -275,6 +278,14 @@ export default function InventarioPage() {
                         <td className="py-4 px-4 text-right whitespace-nowrap">
                           <div className="flex items-center justify-end gap-1.5">
                             <button
+                              onClick={() => setEditModalSku(sku)}
+                              className="p-1.5 rounded-lg bg-[#F8F9FA] hover:bg-blue-50 text-[#7F8C8D] hover:text-[#1A5276] border border-[#E2E8F0] hover:border-[#BFDBFE] transition"
+                              title="Editar Datos del SKU"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                            </button>
+
+                            <button
                               onClick={() => setStockModalSku(sku)}
                               className="px-2.5 py-1.5 rounded-lg bg-[#F8F9FA] hover:bg-slate-100 text-[#2C3E50] border border-[#E2E8F0] text-xs font-semibold transition"
                               title="Ajustar Stock"
@@ -346,6 +357,13 @@ export default function InventarioPage() {
         sku={pubModalSku}
         isOpen={!!pubModalSku}
         onClose={() => setPubModalSku(null)}
+        onSuccess={() => refetch()}
+      />
+
+      <EditarSkuModal
+        sku={editModalSku}
+        isOpen={!!editModalSku}
+        onClose={() => setEditModalSku(null)}
         onSuccess={() => refetch()}
       />
     </div>

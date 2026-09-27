@@ -28,7 +28,7 @@ export class DeepSeekService {
       'https://api.deepseek.com';
     this.defaultModel =
       (this.configService.get<string>('DEEPSEEK_MODEL') || '').trim() ||
-      'deepseek-v4-pro';
+      'deepseek-chat';
 
 
     if (

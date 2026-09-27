@@ -21,8 +21,8 @@ export class PdfGeneratorService {
           size: 'LETTER',
           margin: 40,
           info: {
-            Title: `${tipo.toUpperCase()} ${numeroDocumento} - Japón Parts`,
-            Author: 'ERP Japón Parts',
+            Title: `${tipo.toUpperCase()} ${numeroDocumento} - Tokugawa Spare Parts`,
+            Author: 'ERP Tokugawa Spare Parts',
           },
         });
 
@@ -80,12 +80,12 @@ export class PdfGeneratorService {
 
     // Brand logo text
     doc
-      .fontSize(22)
+      .fontSize(19)
       .font('Helvetica-Bold')
       .fillColor(primaryColor)
-      .text('JAPÓN', 55, 52, { continued: true })
+      .text('TOKUGAWA', 55, 52, { continued: true })
       .fillColor('#0f172a')
-      .text('PARTS', { continued: false });
+      .text(' SPARE PARTS', { continued: false });
 
     doc
       .fontSize(8)
@@ -300,7 +300,7 @@ export class PdfGeneratorService {
         '1. Las partes eléctricas tienen 48 horas de garantía contra defectos comprobables de fábrica.\n' +
         '2. Partes mecánicas disponen de 15 días continuos de garantía presentando el empaque original intacto.\n' +
         '3. No se aceptan devoluciones por errores de aplicación si el cliente no suministró la compatibilidad vehicular correcta.\n' +
-        '4. Documento emitido electrónicamente por el Sistema ERP Japón Parts multicanal.',
+        '4. Documento emitido electrónicamente por el Sistema ERP Tokugawa Spare Parts multicanal.',
         40,
         footerTop + 20,
         { align: 'center', lineGap: 2 },

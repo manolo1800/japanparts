@@ -25,6 +25,102 @@ export enum Channel {
   MOSTRADOR = 'mostrador',
 }
 
+/** Tasa de comisión fija cobrada por la plataforma MercadoLibre por cada venta (12%) */
+export const MERCADOLIBRE_COMMISSION_RATE = 0.12;
+
+/**
+ * Obtiene la tasa de comisión según el canal de venta.
+ * Para MercadoLibre es 12% (0.12), para canales propios (mostrador, whatsapp) es 0%.
+ */
+export function getChannelCommissionRate(canal: Channel | string): number {
+  return canal === Channel.ML || canal === 'ml' ? MERCADOLIBRE_COMMISSION_RATE : 0;
+}
+
+export interface FinancialCalculation {
+  totalVenta: number;
+  commissionRate: number;
+  comisionPlataforma: number;
+  ingresoNeto: number;
+  costoMercancia: number;
+  gananciaNeta: number;
+  margenPorcentaje: number;
+  esMercadoLibre: boolean;
+}
+
+/**
+ * Calcula el desglose financiero completo de una orden:
+ * total de venta, comisiones retenidas por plataforma (12% si es MercadoLibre),
+ * costo total de mercancía vendida (COGS) y ganancia neta real con su margen %.
+ */
+export function calculateOrderFinancials(orden: {
+  canal: Channel | string;
+  total: number;
+  detalles?: Array<{
+    cantidad: number;
+    subtotal?: number;
+    precio_unitario?: number;
+    sku?: { costo_promedio?: number };
+  }>;
+}): FinancialCalculation {
+  const totalVenta = Number(orden.total) || 0;
+  const commissionRate = getChannelCommissionRate(orden.canal);
+  const comisionPlataforma = Number((totalVenta * commissionRate).toFixed(2));
+  const ingresoNeto = Number((totalVenta - comisionPlataforma).toFixed(2));
+
+  let costoMercancia = 0;
+  if (orden.detalles && orden.detalles.length > 0) {
+    costoMercancia = orden.detalles.reduce((acc, det) => {
+      const costoUnit = Number(det.sku?.costo_promedio) || 0;
+      return acc + (costoUnit * (det.cantidad || 1));
+    }, 0);
+    costoMercancia = Number(costoMercancia.toFixed(2));
+  }
+
+  const gananciaNeta = Number((ingresoNeto - costoMercancia).toFixed(2));
+  const margenPorcentaje =
+    totalVenta > 0 ? Number(((gananciaNeta / totalVenta) * 100).toFixed(1)) : 0;
+
+  return {
+    totalVenta,
+    commissionRate,
+    comisionPlataforma,
+    ingresoNeto,
+    costoMercancia,
+    gananciaNeta,
+    margenPorcentaje,
+    esMercadoLibre: commissionRate > 0,
+  };
+}
+
+/**
+ * Calcula el desglose unitario financiero para un producto o publicación según el canal
+ */
+export function calculateItemChannelFinancials(
+  precio: number,
+  costoPromedio: number,
+  canal: Channel | string,
+) {
+  const precioNum = Number(precio) || 0;
+  const costoNum = Number(costoPromedio) || 0;
+  const commissionRate = getChannelCommissionRate(canal);
+  const comision = Number((precioNum * commissionRate).toFixed(2));
+  const ingresoNeto = Number((precioNum - comision).toFixed(2));
+  const gananciaNeta = Number((ingresoNeto - costoNum).toFixed(2));
+  const margenPorcentaje =
+    precioNum > 0 ? Number(((gananciaNeta / precioNum) * 100).toFixed(1)) : 0;
+
+  return {
+    precio: precioNum,
+    costo: costoNum,
+    commissionRate,
+    comision,
+    ingresoNeto,
+    gananciaNeta,
+    margenPorcentaje,
+    esMercadoLibre: commissionRate > 0,
+  };
+}
+
 export enum OrderStatus {
   PENDIENTE = 'pendiente',
   CONFIRMADA = 'confirmada',
@@ -442,6 +538,8 @@ export interface ConversacionSummary {
   ultimo_mensaje?: MensajeSummary | null;
   no_leidos?: number;
 }
+
+export type ConversacionDetalle = ConversacionSummary;
 
 export interface EnviarMensajeWhatsappDto {
   conversacion_id: string;

@@ -97,10 +97,10 @@ export function Sidebar() {
       <div className="sidebar-brand">
         <Link href="/whatsapp" className="brand-logo">
           <div className="brand-icon">
-            <span>JP</span>
+            <span>TSP</span>
           </div>
           <div className="brand-text">
-            <span className="brand-name">Japón Parts</span>
+            <span className="brand-name">Tokugawa Spare Parts</span>
             <span className="brand-sub">ERP Cloud Dashboard</span>
           </div>
         </Link>

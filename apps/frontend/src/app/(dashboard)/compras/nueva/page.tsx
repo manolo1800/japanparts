@@ -215,8 +215,11 @@ export default function NuevaCompraPage() {
     setSaving(true);
 
     try {
-      // Validate
-      if (!numeroFactura.trim()) throw new Error('El número de factura es obligatorio');
+      const defaultNumeroFactura = `FAC-${new Date().getFullYear()}-0001`;
+      const resolvedNumeroFactura = numeroFactura.trim().toUpperCase() || defaultNumeroFactura;
+      if (!numeroFactura.trim()) {
+        setNumeroFactura(resolvedNumeroFactura);
+      }
       if (items.length === 0) throw new Error('Debe agregar al menos un ítem a la factura');
 
       for (const it of items) {
@@ -245,15 +248,18 @@ export default function NuevaCompraPage() {
       // 1. Create Purchase
       const createRes = await apiClient.post<any>('/compra', {
         proveedor_id: resolvedProveedorId,
-        numero_factura: numeroFactura.trim(),
+        numero_factura: resolvedNumeroFactura,
         fecha,
+        subtotal: Number(subtotal.toFixed(2)),
+        total: Number(total.toFixed(2)),
         condicion_pago: condicionPago,
-        dias_credito: condicionPago === PurchasePaymentCondition.CREDITO ? diasCredito : 0,
+        dias_credito: condicionPago === PurchasePaymentCondition.CREDITO ? Number(diasCredito) : 0,
         archivo_url: archivoUrl || undefined,
         items: items.map((it) => ({
           sku_id: it.sku_id,
           cantidad: Number(it.cantidad),
           costo_unitario: Number(it.costo_unitario),
+          subtotal: Number((Number(it.cantidad) * Number(it.costo_unitario)).toFixed(2)),
         })),
       });
 
@@ -458,10 +464,14 @@ export default function NuevaCompraPage() {
               </label>
               <input
                 type="text"
-                required
                 value={numeroFactura}
                 onChange={(e) => setNumeroFactura(e.target.value)}
-                placeholder="FAC-2024-001"
+                onBlur={() => {
+                  if (!numeroFactura.trim()) {
+                    setNumeroFactura(`FAC-${new Date().getFullYear()}-0001`);
+                  }
+                }}
+                placeholder={`FAC-${new Date().getFullYear()}-0001`}
                 className="w-full bg-[#F8F9FA] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white font-mono font-bold"
               />
             </div>

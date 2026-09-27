@@ -16,10 +16,10 @@ export class MailController {
     const targetEmail = email || 'admin@japonparts.com';
     const sent = await this.mailService.sendMail(
       targetEmail,
-      'Prueba de Correo — Japón Parts ERP',
+      'Prueba de Correo — Tokugawa Spare Parts ERP',
       `<div style="font-family: sans-serif; padding: 20px;">
         <h2>Prueba Exitosa</h2>
-        <p>El servicio de correo transaccional de <strong>Japón Parts</strong> está funcionando correctamente.</p>
+        <p>El servicio de correo transaccional de <strong>Tokugawa Spare Parts</strong> está funcionando correctamente.</p>
       </div>`,
     );
 

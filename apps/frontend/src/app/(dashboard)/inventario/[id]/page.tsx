@@ -3,12 +3,20 @@
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { SkuSummary, CompatibilidadSummary, PublicacionSummary, MovimientoStockSummary } from '@japonparts/shared';
+import {
+  SkuSummary,
+  CompatibilidadSummary,
+  PublicacionSummary,
+  MovimientoStockSummary,
+  calculateItemChannelFinancials,
+  MERCADOLIBRE_COMMISSION_RATE,
+} from '@japonparts/shared';
 import { apiClient } from '../../../../lib/api-client';
 import { Header } from '../../../../components/header';
 import { AjusteStockModal } from '../../../../components/ajuste-stock-modal';
 import { CompatibilidadModal } from '../../../../components/compatibilidad-modal';
 import { PublicacionModal } from '../../../../components/publicacion-modal';
+import { EditarSkuModal } from '../../../../components/editar-sku-modal';
 import {
   ArrowLeft,
   SlidersHorizontal,
@@ -23,6 +31,7 @@ import {
   XCircle,
   Clock,
   User,
+  Pencil,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -36,6 +45,7 @@ export default function SkuDetailPage() {
   const [isStockModalOpen, setIsStockModalOpen] = useState(false);
   const [isCompatModalOpen, setIsCompatModalOpen] = useState(false);
   const [isPubModalOpen, setIsPubModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   // Queries
   const { data: sku, isLoading: isSkuLoading, refetch: refetchSku } = useQuery<SkuSummary>({
@@ -129,6 +139,15 @@ export default function SkuDetailPage() {
           </Link>
 
           <div className="flex items-center gap-2.5">
+            <button
+              onClick={() => setIsEditModalOpen(true)}
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#2C3E50] text-xs font-semibold shadow-sm transition"
+              title="Editar todos los datos iniciales"
+            >
+              <Pencil className="w-3.5 h-3.5 text-[#1A5276]" />
+              <span>Editar Datos</span>
+            </button>
+
             <button
               onClick={() => setIsStockModalOpen(true)}
               className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#2C3E50] text-xs font-semibold shadow-sm transition"
@@ -254,9 +273,18 @@ export default function SkuDetailPage() {
         {activeTab === 'info' && (
           <div className="bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h3 className="text-sm font-bold text-[#2C3E50] uppercase tracking-wider">
-                Detalles Técnicos
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-bold text-[#2C3E50] uppercase tracking-wider">
+                  Detalles Técnicos
+                </h3>
+                <button
+                  onClick={() => setIsEditModalOpen(true)}
+                  className="inline-flex items-center gap-1.5 text-xs text-[#1A5276] hover:text-[#154360] font-semibold hover:underline"
+                >
+                  <Pencil className="w-3 h-3" />
+                  <span>Editar</span>
+                </button>
+              </div>
               <div className="space-y-3 text-xs">
                 <div className="flex justify-between py-2 border-b border-[#E2E8F0]">
                   <span className="text-[#7F8C8D]">SKU Interno:</span>
@@ -291,10 +319,27 @@ export default function SkuDetailPage() {
                   <span className="font-mono text-[#2C3E50]">${Number(sku.costo_promedio).toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[#E2E8F0]">
-                  <span className="text-[#7F8C8D]">Margen Bruto Unitario:</span>
+                  <span className="text-[#7F8C8D]">Margen Venta Directa (0% com.):</span>
                   <span className="font-mono text-[#1A5276] font-bold">
                     ${(Number(sku.precio_base) - Number(sku.costo_promedio)).toFixed(2)}
                   </span>
+                </div>
+                <div className="p-2.5 rounded-xl border border-amber-200 bg-amber-50/70 space-y-1">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-amber-900 font-bold flex items-center gap-1">
+                      <span>Ganancia MercadoLibre</span>
+                      <span className="text-[10px] bg-amber-200/80 text-amber-800 px-1.5 py-0.2 rounded font-mono">
+                        -12% com.
+                      </span>
+                    </span>
+                    <span className="font-mono font-bold text-amber-900 text-sm">
+                      ${((Number(sku.precio_base) * 0.88) - Number(sku.costo_promedio)).toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-[11px] text-amber-800/80 font-mono">
+                    <span>Retención ML (12%): -${(Number(sku.precio_base) * MERCADOLIBRE_COMMISSION_RATE).toFixed(2)}</span>
+                    <span>Neto recibido: ${(Number(sku.precio_base) * 0.88).toFixed(2)}</span>
+                  </div>
                 </div>
                 <div className="pt-2">
                   <span className="text-[#7F8C8D] block mb-1">Descripción:</span>
@@ -392,8 +437,10 @@ export default function SkuDetailPage() {
                   <tr>
                     <th className="py-3 px-4">Canal</th>
                     <th className="py-3 px-4">Título Publicación</th>
-                    <th className="py-3 px-4 text-right">Precio Publicado</th>
-                    <th className="py-3 px-4 text-center">Stock Publicado</th>
+                    <th className="py-3 px-4 text-right">Precio Canal</th>
+                    <th className="py-3 px-4 text-right">Comisión / Neto</th>
+                    <th className="py-3 px-4 text-right">Ganancia Neta</th>
+                    <th className="py-3 px-4 text-center">Stock</th>
                     <th className="py-3 px-4 text-center">Estado</th>
                     <th className="py-3 px-4 text-right">Acción</th>
                   </tr>
@@ -401,49 +448,74 @@ export default function SkuDetailPage() {
                 <tbody className="divide-y divide-[#E2E8F0]">
                   {publicaciones?.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-[#7F8C8D]">
+                      <td colSpan={8} className="py-8 text-center text-[#7F8C8D]">
                         No hay publicaciones registradas para este SKU.
                       </td>
                     </tr>
                   ) : (
-                    publicaciones?.map((pub) => (
-                      <tr key={pub.id} className="hover:bg-[#F8FBFF] transition">
-                        <td className="py-3 px-4 whitespace-nowrap">
-                          <span
-                            className={`px-2 py-0.5 rounded font-mono text-[10px] uppercase font-bold ${
-                              pub.canal === 'ml'
-                                ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                                : pub.canal === 'whatsapp'
-                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                  : 'bg-blue-50 text-blue-700 border border-blue-200'
-                            }`}
-                          >
-                            {pub.canal}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 font-semibold text-[#2C3E50]">{pub.titulo}</td>
-                        <td className="py-3 px-4 text-right font-mono font-bold text-[#2C3E50]">
-                          ${Number(pub.precio).toFixed(2)}
-                        </td>
-                        <td className="py-3 px-4 text-center font-mono text-[#2C3E50]">
-                          {pub.stock_publicado}
-                        </td>
-                        <td className="py-3 px-4 text-center">
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            {pub.estado}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 text-right">
-                          <button
-                            onClick={() => handleDeletePub(pub.id)}
-                            className="p-1 rounded text-[#7F8C8D] hover:text-red-600 hover:bg-red-50 transition"
-                            title="Eliminar"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))
+                    publicaciones?.map((pub) => {
+                      const fin = calculateItemChannelFinancials(pub.precio, sku.costo_promedio, pub.canal);
+                      return (
+                        <tr key={pub.id} className="hover:bg-[#F8FBFF] transition">
+                          <td className="py-3 px-4 whitespace-nowrap">
+                            <span
+                              className={`px-2 py-0.5 rounded font-mono text-[10px] uppercase font-bold ${
+                                pub.canal === 'ml'
+                                  ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                  : pub.canal === 'whatsapp'
+                                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                    : 'bg-blue-50 text-blue-700 border border-blue-200'
+                              }`}
+                            >
+                              {pub.canal}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4 font-semibold text-[#2C3E50]">{pub.titulo}</td>
+                          <td className="py-3 px-4 text-right font-mono font-bold text-[#2C3E50]">
+                            ${Number(pub.precio).toFixed(2)}
+                          </td>
+                          <td className="py-3 px-4 text-right font-mono">
+                            {fin.esMercadoLibre ? (
+                              <div>
+                                <span className="text-amber-700 font-bold block text-[11px]">
+                                  ML (12%): -${fin.comision.toFixed(2)}
+                                </span>
+                                <span className="text-[10px] text-[#7F8C8D]">Neto: ${fin.ingresoNeto.toFixed(2)}</span>
+                              </div>
+                            ) : (
+                              <span className="text-emerald-700 font-medium text-[11px]">0% comisión</span>
+                            )}
+                          </td>
+                          <td className="py-3 px-4 text-right font-mono">
+                            <span
+                              className={`font-bold block text-xs ${
+                                fin.gananciaNeta >= 0 ? 'text-emerald-700' : 'text-red-600'
+                              }`}
+                            >
+                              ${fin.gananciaNeta.toFixed(2)}
+                            </span>
+                            <span className="text-[10px] text-[#7F8C8D]">({fin.margenPorcentaje}%)</span>
+                          </td>
+                          <td className="py-3 px-4 text-center font-mono text-[#2C3E50]">
+                            {pub.stock_publicado}
+                          </td>
+                          <td className="py-3 px-4 text-center">
+                            <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                              {pub.estado}
+                            </span>
+                          </td>
+                          <td className="py-3 px-4 text-right">
+                            <button
+                              onClick={() => handleDeletePub(pub.id)}
+                              className="p-1 rounded text-[#7F8C8D] hover:text-red-600 hover:bg-red-50 transition"
+                              title="Eliminar"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>
@@ -575,6 +647,15 @@ export default function SkuDetailPage() {
         onClose={() => setIsPubModalOpen(false)}
         onSuccess={() => {
           refetchPubs();
+          refetchSku();
+        }}
+      />
+
+      <EditarSkuModal
+        sku={sku}
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        onSuccess={() => {
           refetchSku();
         }}
       />

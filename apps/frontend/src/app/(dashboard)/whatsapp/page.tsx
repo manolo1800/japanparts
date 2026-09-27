@@ -490,7 +490,7 @@ export default function WhatsAppPage() {
                                 {isUser && 'Cliente'}
                                 {isBot && (
                                   <>
-                                    <Bot className="w-2.5 h-2.5" /> Bot Japón Parts
+                                    <Bot className="w-2.5 h-2.5" /> Bot Tokugawa Spare Parts
                                   </>
                                 )}
                                 {isHumano && (
@@ -684,7 +684,7 @@ export default function WhatsAppPage() {
                       +{status.telefonoVinculado}
                     </p>
                     <p className="text-[11px] text-slate-400 mt-0.5">
-                      {status.nombreVinculado || 'Japón Parts'}
+                      {status.nombreVinculado || 'Tokugawa Spare Parts'}
                     </p>
                   </div>
                   <div className="pt-2">

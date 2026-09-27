@@ -40,8 +40,8 @@ export class CreateCompraDto {
   proveedor_id: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'El número de factura es obligatorio' })
-  numero_factura: string;
+  @IsOptional()
+  numero_factura?: string;
 
   @IsString()
   @IsNotEmpty({ message: 'La fecha es obligatoria' })
@@ -56,7 +56,8 @@ export class CreateCompraDto {
   @IsNumber()
   @Min(0)
   @Type(() => Number)
-  total: number;
+  @IsOptional()
+  total?: number;
 
   @IsEnum(PurchasePaymentCondition)
   condicion_pago: PurchasePaymentCondition;

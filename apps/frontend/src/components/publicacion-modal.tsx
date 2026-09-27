@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Channel, SkuSummary } from '@japonparts/shared';
+import { Channel, SkuSummary, calculateItemChannelFinancials } from '@japonparts/shared';
 import { apiClient } from '../lib/api-client';
-import { X, Share2, AlertCircle } from 'lucide-react';
+import { X, Share2, AlertCircle, DollarSign } from 'lucide-react';
 
 interface PublicacionModalProps {
   sku: SkuSummary | null;
@@ -153,6 +153,75 @@ export function PublicacionModal({
               />
             </div>
           </div>
+
+          {/* Live Financial Breakdown with 12% ML fee */}
+          {(() => {
+            const financials = calculateItemChannelFinancials(precio, sku.costo_promedio, canal);
+            return (
+              <div
+                className={`p-3.5 rounded-xl border text-xs space-y-2 ${
+                  financials.esMercadoLibre
+                    ? 'bg-amber-50/70 border-amber-200'
+                    : 'bg-[#F8F9FA] border-[#E2E8F0]'
+                }`}
+              >
+                <div className="flex items-center justify-between font-semibold">
+                  <span className="text-[#2C3E50] flex items-center gap-1.5">
+                    <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
+                    Cálculo Costo / Ganancia ({financials.esMercadoLibre ? 'MercadoLibre' : 'Canal Directo'})
+                  </span>
+                  {financials.esMercadoLibre ? (
+                    <span className="text-[10px] font-mono font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded border border-amber-300">
+                      Retención ML: 12%
+                    </span>
+                  ) : (
+                    <span className="text-[10px] font-mono font-bold bg-sky-100 text-sky-800 px-2 py-0.5 rounded border border-sky-200">
+                      Comisión: 0%
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] pt-1 border-t border-slate-200/60">
+                  <div>
+                    <span className="text-[#7F8C8D] block text-[10px]">Precio Venta:</span>
+                    <span className="font-mono font-bold text-[#2C3E50]">${financials.precio.toFixed(2)}</span>
+                  </div>
+                  <div>
+                    <span className="text-[#7F8C8D] block text-[10px]">
+                      {financials.esMercadoLibre ? 'Comisión ML (12%):' : 'Comisión Plataforma:'}
+                    </span>
+                    <span
+                      className={`font-mono font-bold ${
+                        financials.esMercadoLibre ? 'text-amber-700' : 'text-[#7F8C8D]'
+                      }`}
+                    >
+                      {financials.esMercadoLibre ? `-$${financials.comision.toFixed(2)}` : '$0.00'}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-[#7F8C8D] block text-[10px]">Costo Repuesto:</span>
+                    <span className="font-mono font-semibold text-slate-600">-${financials.costo.toFixed(2)}</span>
+                  </div>
+                  <div>
+                    <span className="text-[#7F8C8D] block text-[10px]">Ganancia Neta:</span>
+                    <span
+                      className={`font-mono font-bold ${
+                        financials.gananciaNeta >= 0 ? 'text-emerald-700' : 'text-red-600'
+                      }`}
+                    >
+                      ${financials.gananciaNeta.toFixed(2)} ({financials.margenPorcentaje}%)
+                    </span>
+                  </div>
+                </div>
+
+                {financials.gananciaNeta < 0 && (
+                  <p className="text-[11px] text-red-600 font-semibold pt-1 border-t border-red-200">
+                    ⚠️ Alerta: El precio no cubre el costo de la pieza (${financials.costo.toFixed(2)}) más la comisión del 12% de MercadoLibre.
+                  </p>
+                )}
+              </div>
+            );
+          })()}
 
           <div>
             <label className="block text-xs font-semibold text-[#2C3E50] mb-1.5">

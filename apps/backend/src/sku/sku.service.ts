@@ -100,7 +100,54 @@ export class SkuService {
 
   async update(id: string, updateSkuDto: UpdateSkuDto): Promise<Sku> {
     const sku = await this.findOne(id);
-    Object.assign(sku, updateSkuDto);
+
+    if (updateSkuDto.sku_interno) {
+      const formattedSku = updateSkuDto.sku_interno.toUpperCase().trim();
+      if (formattedSku !== sku.sku_interno) {
+        const existing = await this.skuRepository.findOne({
+          where: { sku_interno: formattedSku },
+        });
+
+        if (existing && existing.id !== id) {
+          throw new ConflictException(
+            `Ya existe un SKU con el código interno '${updateSkuDto.sku_interno}'`,
+          );
+        }
+        sku.sku_interno = formattedSku;
+      }
+    }
+
+    if (updateSkuDto.nombre !== undefined) {
+      sku.nombre = updateSkuDto.nombre.trim();
+    }
+    if (updateSkuDto.marca !== undefined) {
+      sku.marca = updateSkuDto.marca.trim();
+    }
+    if (updateSkuDto.codigo_fabricante !== undefined) {
+      sku.codigo_fabricante = updateSkuDto.codigo_fabricante ? updateSkuDto.codigo_fabricante.trim() : null;
+    }
+    if (updateSkuDto.descripcion !== undefined) {
+      sku.descripcion = updateSkuDto.descripcion ? updateSkuDto.descripcion.trim() : null;
+    }
+    if (updateSkuDto.costo_promedio !== undefined) {
+      sku.costo_promedio = Number(updateSkuDto.costo_promedio);
+    }
+    if (updateSkuDto.precio_base !== undefined) {
+      sku.precio_base = Number(updateSkuDto.precio_base);
+    }
+    if (updateSkuDto.stock_actual !== undefined) {
+      sku.stock_actual = Number(updateSkuDto.stock_actual);
+    }
+    if (updateSkuDto.stock_minimo !== undefined) {
+      sku.stock_minimo = Number(updateSkuDto.stock_minimo);
+    }
+    if (updateSkuDto.ubicacion !== undefined) {
+      sku.ubicacion = updateSkuDto.ubicacion ? updateSkuDto.ubicacion.trim() : null;
+    }
+    if (updateSkuDto.activo !== undefined) {
+      sku.activo = Boolean(updateSkuDto.activo);
+    }
+
     return await this.skuRepository.save(sku);
   }
 

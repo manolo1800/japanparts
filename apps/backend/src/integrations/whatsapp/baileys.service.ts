@@ -169,7 +169,7 @@ export class BaileysService implements OnModuleInit, OnModuleDestroy {
         logger: pino({ level: 'silent' }),
         printQRInTerminal: false,
         syncFullHistory: false,
-        browser: ['Japón Parts ERP', 'Chrome', '122.0.0'],
+        browser: ['Tokugawa Spare Parts ERP', 'Chrome', '122.0.0'],
         keepAliveIntervalMs: 15000,
         connectTimeoutMs: 60000,
         defaultQueryTimeoutMs: 60000,
@@ -213,7 +213,7 @@ export class BaileysService implements OnModuleInit, OnModuleDestroy {
 
           const userId = this.sock?.user?.id || '';
           this.telefonoVinculado = userId.split(':')[0] || userId;
-          this.nombreVinculado = this.sock?.user?.name || 'Japón Parts';
+          this.nombreVinculado = this.sock?.user?.name || 'Tokugawa Spare Parts';
 
           this.logger.log(
             `WhatsApp Conectado exitosamente con cuenta: ${this.telefonoVinculado} (${this.nombreVinculado})`,

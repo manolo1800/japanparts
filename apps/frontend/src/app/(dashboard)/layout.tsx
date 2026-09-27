@@ -25,7 +25,7 @@ export default function DashboardLayout({
       <div className="min-h-screen bg-[#113750] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="w-10 h-10 border-4 border-[#4A90E2] border-t-transparent rounded-full animate-spin" />
-          <span className="text-xs text-white/70 font-medium tracking-wide">Cargando ERP Japón Parts...</span>
+          <span className="text-xs text-white/70 font-medium tracking-wide">Cargando ERP Tokugawa Spare Parts...</span>
         </div>
       </div>
     );

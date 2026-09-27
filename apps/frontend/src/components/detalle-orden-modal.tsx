@@ -7,6 +7,7 @@ import {
   OrderStatus,
   PaymentStatus,
   DocumentType,
+  calculateOrderFinancials,
 } from '@japonparts/shared';
 import { apiClient } from '../lib/api-client';
 import {
@@ -21,6 +22,8 @@ import {
   AlertTriangle,
   Receipt,
   ExternalLink,
+  DollarSign,
+  TrendingUp,
 } from 'lucide-react';
 
 
@@ -362,6 +365,73 @@ export function DetalleOrdenModal({
                     </tfoot>
                   </table>
                 </div>
+
+                {/* Financial Profit & Cost Breakdown */}
+                {(() => {
+                  const fin = calculateOrderFinancials(orden);
+                  return (
+                    <div className="p-4 rounded-xl border border-[#E2E8F0] bg-white space-y-3">
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <span className="text-xs font-bold text-[#2C3E50] uppercase tracking-wider flex items-center gap-1.5">
+                          <TrendingUp className="w-3.5 h-3.5 text-emerald-600" />
+                          Rendimiento Financiero & Ganancia Real
+                        </span>
+                        {fin.esMercadoLibre ? (
+                          <span className="text-[10px] font-mono font-bold bg-amber-50 text-amber-800 border border-amber-300 px-2.5 py-0.5 rounded-full">
+                            MercadoLibre (12% retención)
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-mono font-bold bg-sky-50 text-sky-700 border border-sky-200 px-2.5 py-0.5 rounded-full">
+                            Venta Directa (0% comisión)
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                        <div>
+                          <span className="text-[#7F8C8D] block text-[10px] uppercase font-semibold">Total Facturado</span>
+                          <span className="font-mono font-bold text-[#2C3E50] text-sm block mt-0.5">
+                            ${fin.totalVenta.toFixed(2)}
+                          </span>
+                        </div>
+
+                        <div>
+                          <span className="text-[#7F8C8D] block text-[10px] uppercase font-semibold">
+                            {fin.esMercadoLibre ? 'Comisión ML (12%)' : 'Comisión Plataforma'}
+                          </span>
+                          <span
+                            className={`font-mono font-bold text-sm block mt-0.5 ${
+                              fin.esMercadoLibre ? 'text-amber-700' : 'text-[#7F8C8D]'
+                            }`}
+                          >
+                            {fin.esMercadoLibre ? `-$${fin.comisionPlataforma.toFixed(2)}` : '$0.00'}
+                          </span>
+                        </div>
+
+                        <div>
+                          <span className="text-[#7F8C8D] block text-[10px] uppercase font-semibold">Costo Repuestos</span>
+                          <span className="font-mono font-semibold text-slate-600 text-sm block mt-0.5">
+                            -${fin.costoMercancia.toFixed(2)}
+                          </span>
+                        </div>
+
+                        <div>
+                          <span className="text-[#7F8C8D] block text-[10px] uppercase font-semibold">Ganancia Neta Real</span>
+                          <div className="flex items-baseline gap-1 mt-0.5">
+                            <span
+                              className={`font-mono font-black text-sm ${
+                                fin.gananciaNeta >= 0 ? 'text-emerald-700' : 'text-red-600'
+                              }`}
+                            >
+                              ${fin.gananciaNeta.toFixed(2)}
+                            </span>
+                            <span className="text-[10px] text-[#7F8C8D] font-mono">({fin.margenPorcentaje}%)</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Documents Section */}

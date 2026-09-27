@@ -7,6 +7,9 @@ import {
   OrdenSummary,
   OrderStatus,
   PaymentStatus,
+  Channel,
+  calculateOrderFinancials,
+  MERCADOLIBRE_COMMISSION_RATE,
 } from '@japonparts/shared';
 import { apiClient } from '../../../lib/api-client';
 import { Header } from '../../../components/header';
@@ -61,7 +64,7 @@ export default function VentasPage() {
     }
   }, [ordenes, selectedOrdenId]);
 
-  // Calculate KPIs
+  // Calculate KPIs considering MercadoLibre 12% platform commission
   const totalOrdenes = ordenes.length;
   const pendientesDespacho = ordenes.filter(
     (o) =>
@@ -72,9 +75,24 @@ export default function VentasPage() {
   const despachadas = ordenes.filter(
     (o) => o.estado === OrderStatus.DESPACHADA || o.estado === OrderStatus.CERRADA,
   ).length;
-  const totalVendido = ordenes
-    .filter((o) => o.estado !== OrderStatus.CANCELADA)
-    .reduce((acc, o) => acc + (Number(o.total) || 0), 0);
+
+  const ordenesActivas = ordenes.filter((o) => o.estado !== OrderStatus.CANCELADA);
+  const totalVendido = ordenesActivas.reduce((acc, o) => acc + (Number(o.total) || 0), 0);
+
+  // Comisiones MercadoLibre (12% por cada venta de ML)
+  const totalComisionesML = ordenesActivas
+    .filter((o) => o.canal === Channel.ML)
+    .reduce((acc, o) => acc + (Number(o.total) * MERCADOLIBRE_COMMISSION_RATE || 0), 0);
+
+  const totalIngresoNeto = totalVendido - totalComisionesML;
+
+  const totalCostoRepuestos = ordenesActivas.reduce((acc, o) => {
+    const fin = calculateOrderFinancials(o);
+    return acc + fin.costoMercancia;
+  }, 0);
+
+  const totalGananciaNeta = totalIngresoNeto - totalCostoRepuestos;
+  const margenPromedio = totalVendido > 0 ? (totalGananciaNeta / totalVendido) * 100 : 0;
 
   const getPdfUrl = (ordenId: string, tipo: string = 'factura') => {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
@@ -148,6 +166,11 @@ export default function VentasPage() {
                 <span className="text-xs text-[#7F8C8D] font-medium block mt-0.5">
                   Ventas activas USD
                 </span>
+                {totalComisionesML > 0 && (
+                  <span className="text-[10px] text-amber-700 font-mono font-semibold block mt-1">
+                    Comisiones ML (12%): -${totalComisionesML.toFixed(2)}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -255,41 +278,30 @@ export default function VentasPage() {
             </div>
           </div>
 
-          {/* Card 4: Total Órdenes Registradas with Stacked Avatars */}
-          <div className="erp-card erp-card-hover flex flex-col justify-between">
+          {/* Card 4: Ganancia Neta Real (Post-Comisiones ML & Costo Repuestos) */}
+          <div className="erp-card erp-card-hover flex flex-col justify-between border-l-4 border-l-emerald-600">
             <div>
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-[#7F8C8D] uppercase tracking-wider block">
-                  Total Órdenes
+                  Ganancia Neta Real
                 </span>
-                <span className="text-[10px] font-mono text-[#7F8C8D]">
-                  Historial
+                <span className="text-[10px] font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">
+                  {margenPromedio.toFixed(1)}% margen
                 </span>
               </div>
               <div className="mt-2">
-                <span className="text-2xl lg:text-[28px] font-bold text-[#2C3E50] font-mono tracking-tight block">
-                  {totalOrdenes}
+                <span className="text-2xl lg:text-[28px] font-bold text-emerald-700 font-mono tracking-tight block">
+                  ${totalGananciaNeta.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
                 <span className="text-xs text-[#7F8C8D] font-medium block mt-0.5">
-                  Emitidas en sistema
+                  Post-comisión ML (12%) y costos
                 </span>
               </div>
             </div>
 
-            <div className="mt-5 pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
-              <div className="flex -space-x-2">
-                {ordenes.slice(0, 3).map((ord, idx) => (
-                  <div
-                    key={idx}
-                    className="w-6 h-6 rounded-full bg-[#1A5276] border-2 border-white flex items-center justify-center text-[10px] font-bold text-white uppercase"
-                  >
-                    {ord.cliente?.nombre ? ord.cliente.nombre.charAt(0) : 'C'}
-                  </div>
-                ))}
-              </div>
-              <span className="text-[11px] text-[#8B949E] font-mono">
-                Trazabilidad 100%
-              </span>
+            <div className="mt-5 pt-3 border-t border-[#E2E8F0] flex items-center justify-between text-[11px] font-mono">
+              <span className="text-amber-700">ML 12%: -${totalComisionesML.toFixed(2)}</span>
+              <span className="text-[#7F8C8D]">Costos: -${totalCostoRepuestos.toFixed(2)}</span>
             </div>
           </div>
         </div>
@@ -434,6 +446,11 @@ export default function VentasPage() {
                             <span className="font-mono font-bold text-sm text-[#2C3E50] block">
                               ${Number(orden.total).toFixed(2)}
                             </span>
+                            {orden.canal === 'ml' && (
+                              <span className="text-[10px] text-amber-700 font-mono font-semibold block">
+                                ML 12%: -${(Number(orden.total) * MERCADOLIBRE_COMMISSION_RATE).toFixed(2)}
+                              </span>
+                            )}
                             <span
                               className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full uppercase mt-1 ${
                                 isPaid
@@ -598,9 +615,20 @@ export default function VentasPage() {
                           </span>
                         </td>
 
-                        {/* Total */}
-                        <td className="px-5 py-4 text-right font-mono font-bold text-[#2C3E50] text-sm">
-                          ${Number(orden.total).toFixed(2)}
+                        {/* Total & Comisión */}
+                        <td className="px-5 py-4 text-right">
+                          <span className="font-mono font-bold text-[#2C3E50] text-sm block">
+                            ${Number(orden.total).toFixed(2)}
+                          </span>
+                          {orden.canal === 'ml' ? (
+                            <span className="text-[10px] font-mono text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 inline-block mt-0.5">
+                              ML (12%): -${(Number(orden.total) * MERCADOLIBRE_COMMISSION_RATE).toFixed(2)}
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-mono text-emerald-700 block mt-0.5">
+                              Neto (0% com.)
+                            </span>
+                          )}
                         </td>
 
                         {/* Acciones */}

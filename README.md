@@ -1,4 +1,4 @@
-# Japonparts ERP — Repuestos Multichannel
+# Tokugawa Spare Parts ERP — Repuestos Multichannel
 
 Sistema ERP integral para la gestión de repuestos automotrices con sincronización multicanal (MercadoLibre, WhatsApp con IA y Ventas por Mostrador).
 

@@ -497,7 +497,7 @@ export class ConversacionService implements OnModuleInit {
     // 2. Si DeepSeek está configurado, usar Function Calling nativo
     if (this.deepSeekService.isReady()) {
       try {
-        const systemPrompt = `Eres el asistente virtual oficial de "Japón Parts", una prestigiosa tienda de repuestos y autopartes para vehículos japoneses (Toyota, Nissan, Mitsubishi, Honda, Mazda, etc.) en Venezuela.
+        const systemPrompt = `Eres el asistente virtual oficial de "Tokugawa Spare Parts", una prestigiosa tienda de repuestos y autopartes para vehículos japoneses (Toyota, Nissan, Mitsubishi, Honda, Mazda, etc.) en Venezuela.
 Tu objetivo es ayudar al cliente a encontrar repuestos, verificar disponibilidad y precio, y tomar sus datos para generar una orden de compra pendiente.
 Normas clave:
 1. Sé amable, conciso, técnico y servicial. Usa emojis moderados (🚗, ⚙️, 📦).
@@ -743,7 +743,7 @@ Normas clave:
 
         // Enviar alerta al equipo por correo
         await this.mailService.sendWhatsappEscalationAlert(
-          'ventas@japonparts.com',
+          'ventas@tokugawaspareparts.com',
           conv.telefono,
           `Nueva Orden WhatsApp generada (#${orden.numero_orden}) por $${Number(orden.total).toFixed(2)}`,
           `Cliente: ${args.nombre_cliente}`,
@@ -770,7 +770,7 @@ Normas clave:
       await this.convRepository.save(conv);
 
       await this.mailService.sendWhatsappEscalationAlert(
-        'soporte@japonparts.com',
+        'soporte@tokugawaspareparts.com',
         conv.telefono,
         args.motivo || 'Solicitud de atención humana',
       );
@@ -803,7 +803,7 @@ Normas clave:
       conv.estado = ConversationStatus.HUMANO;
       await this.convRepository.save(conv);
       await this.mailService.sendWhatsappEscalationAlert(
-        'soporte@japonparts.com',
+        'soporte@tokugawaspareparts.com',
         conv.telefono,
         'Cliente solicitó hablar con un asesor humano',
         mensaje,
@@ -819,7 +819,7 @@ Normas clave:
       texto.startsWith('buenas tardes') ||
       texto.startsWith('buenas noches')
     ) {
-      return `¡Hola! Bienvenido a *Japón Parts* 🚗⚙️. Tu tienda de repuestos de confianza.\n\n¿Qué repuesto necesitas el día de hoy? Puedes indicarme el nombre de la pieza y para qué vehículo (marca, modelo y año) lo buscas.`;
+      return `¡Hola! Bienvenido a *Tokugawa Spare Parts* 🚗⚙️. Tu tienda de repuestos de confianza.\n\n¿Qué repuesto necesitas el día de hoy? Puedes indicarme el nombre de la pieza y para qué vehículo (marca, modelo y año) lo buscas.`;
     }
 
     // 3. Búsqueda en el catálogo
@@ -845,7 +845,7 @@ Normas clave:
     }
 
     // 4. Default orientativo
-    return `Gracias por contactar a *Japón Parts* 🇯🇵.\n\nPara consultar disponibilidad y precio, por favor indícame:\n1. Nombre del repuesto (ej: pastillas, amortiguador, filtro)\n2. Marca y modelo del vehículo (ej: Toyota Corolla 2012)\n\nTambién puedes escribir *"humano"* en cualquier momento para ser atendido por un asesor comercial.`;
+    return `Gracias por contactar a *Tokugawa Spare Parts* 🇯🇵.\n\nPara consultar disponibilidad y precio, por favor indícame:\n1. Nombre del repuesto (ej: pastillas, amortiguador, filtro)\n2. Marca y modelo del vehículo (ej: Toyota Corolla 2012)\n\nTambién puedes escribir *"humano"* en cualquier momento para ser atendido por un asesor comercial.`;
   }
 
   // ==========================================================================

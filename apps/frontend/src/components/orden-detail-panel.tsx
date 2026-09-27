@@ -7,6 +7,7 @@ import {
   OrderStatus,
   PaymentStatus,
   DocumentType,
+  calculateOrderFinancials,
 } from '@japonparts/shared';
 import { apiClient } from '../lib/api-client';
 import {
@@ -21,6 +22,8 @@ import {
   CreditCard,
   Building,
   MoreVertical,
+  DollarSign,
+  TrendingUp,
 } from 'lucide-react';
 
 interface OrdenDetailPanelProps {
@@ -180,7 +183,7 @@ export function OrdenDetailPanel({ ordenId, onUpdated }: OrdenDetailPanelProps) 
 
           <div className="flex items-center gap-2 mt-1.5 text-xs text-[#7F8C8D]">
             <Building className="w-3.5 h-3.5 text-[#7F8C8D]" />
-            <span className="font-medium text-[#2C3E50]">Japón Parts C.A.</span>
+            <span className="font-medium text-[#2C3E50]">Tokugawa Spare Parts C.A.</span>
             <span>•</span>
             <span>
               {orden.fecha
@@ -385,6 +388,73 @@ export function OrdenDetailPanel({ ordenId, onUpdated }: OrdenDetailPanelProps) 
           </div>
         </div>
 
+        {/* Financial Breakdown (Costos, Comisiones ML 12% y Ganancia Real) */}
+        {(() => {
+          const fin = calculateOrderFinancials(orden);
+          return (
+            <div className="p-4 rounded-xl border border-[#E2E8F0] bg-white space-y-3">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                <span className="text-xs font-bold text-[#2C3E50] uppercase tracking-wider flex items-center gap-1.5">
+                  <TrendingUp className="w-4 h-4 text-emerald-600" />
+                  Rendimiento Financiero & Ganancia Real
+                </span>
+                {fin.esMercadoLibre ? (
+                  <span className="text-[10px] font-mono font-bold bg-amber-50 text-amber-800 border border-amber-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    MercadoLibre (12% retención)
+                  </span>
+                ) : (
+                  <span className="text-[10px] font-mono font-bold bg-sky-50 text-sky-700 border border-sky-200 px-2.5 py-0.5 rounded-full">
+                    Venta Directa (0% comisión)
+                  </span>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                <div>
+                  <span className="text-[#7F8C8D] block text-[10px] uppercase font-semibold">Total Venta</span>
+                  <span className="font-mono font-bold text-[#2C3E50] text-sm block mt-0.5">
+                    ${fin.totalVenta.toFixed(2)}
+                  </span>
+                </div>
+
+                <div>
+                  <span className="text-[#7F8C8D] block text-[10px] uppercase font-semibold">
+                    {fin.esMercadoLibre ? 'Comisión ML (12%)' : 'Comisión Plataforma'}
+                  </span>
+                  <span
+                    className={`font-mono font-bold text-sm block mt-0.5 ${
+                      fin.esMercadoLibre ? 'text-amber-700' : 'text-[#7F8C8D]'
+                    }`}
+                  >
+                    {fin.esMercadoLibre ? `-$${fin.comisionPlataforma.toFixed(2)}` : '$0.00'}
+                  </span>
+                </div>
+
+                <div>
+                  <span className="text-[#7F8C8D] block text-[10px] uppercase font-semibold">Costo Repuestos</span>
+                  <span className="font-mono font-semibold text-slate-600 text-sm block mt-0.5">
+                    -${fin.costoMercancia.toFixed(2)}
+                  </span>
+                </div>
+
+                <div>
+                  <span className="text-[#7F8C8D] block text-[10px] uppercase font-semibold">Ganancia Neta</span>
+                  <div className="flex items-baseline gap-1 mt-0.5">
+                    <span
+                      className={`font-mono font-black text-sm ${
+                        fin.gananciaNeta >= 0 ? 'text-emerald-700' : 'text-red-600'
+                      }`}
+                    >
+                      ${fin.gananciaNeta.toFixed(2)}
+                    </span>
+                    <span className="text-[10px] text-[#7F8C8D] font-mono">({fin.margenPorcentaje}%)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Cancellation Box if prompted */}
         {showCancelPrompt && (
           <div className="p-4 rounded-xl bg-red-50 border border-red-200 space-y-3 animate-fadeIn">
@@ -423,32 +493,47 @@ export function OrdenDetailPanel({ ordenId, onUpdated }: OrdenDetailPanelProps) 
 
       {/* Totals Summary Bottom Row with Primary Accent Button (DESING.md) */}
       <div className="p-6 border-t border-[#E2E8F0] bg-[#F8F9FA] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mt-auto">
-        <div className="flex items-center gap-6 text-xs">
-          <div>
-            <span className="text-[#7F8C8D] block text-[11px] uppercase tracking-wider">
-              Sub Total
-            </span>
-            <span className="text-sm font-semibold text-[#2C3E50] font-mono">
-              ${Number(orden.total).toFixed(2)}
-            </span>
-          </div>
-          <div>
-            <span className="text-[#7F8C8D] block text-[11px] uppercase tracking-wider">
-              Impuesto / IVA
-            </span>
-            <span className="text-sm font-semibold text-[#7F8C8D] font-mono">
-              $0.00
-            </span>
-          </div>
-          <div className="pl-4 border-l border-[#E2E8F0]">
-            <span className="text-[#7F8C8D] block text-[11px] uppercase tracking-wider font-semibold">
-              Total a Pagar
-            </span>
-            <span className="text-xl font-bold text-[#2C3E50] font-mono">
-              ${Number(orden.total).toFixed(2)} USD
-            </span>
-          </div>
-        </div>
+        {(() => {
+          const fin = calculateOrderFinancials(orden);
+          return (
+            <div className="flex flex-wrap items-center gap-6 text-xs">
+              <div>
+                <span className="text-[#7F8C8D] block text-[11px] uppercase tracking-wider">
+                  Sub Total
+                </span>
+                <span className="text-sm font-semibold text-[#2C3E50] font-mono">
+                  ${Number(orden.total).toFixed(2)}
+                </span>
+              </div>
+              {fin.esMercadoLibre && (
+                <div>
+                  <span className="text-amber-800 block text-[11px] uppercase tracking-wider font-semibold">
+                    Comisión ML (12%)
+                  </span>
+                  <span className="text-sm font-bold text-amber-700 font-mono">
+                    -${fin.comisionPlataforma.toFixed(2)}
+                  </span>
+                </div>
+              )}
+              <div>
+                <span className="text-[#7F8C8D] block text-[11px] uppercase tracking-wider">
+                  {fin.esMercadoLibre ? 'Ingreso Neto' : 'Impuesto / IVA'}
+                </span>
+                <span className="text-sm font-semibold text-[#7F8C8D] font-mono">
+                  {fin.esMercadoLibre ? `$${fin.ingresoNeto.toFixed(2)}` : '$0.00'}
+                </span>
+              </div>
+              <div className="pl-4 border-l border-[#E2E8F0]">
+                <span className="text-[#7F8C8D] block text-[11px] uppercase tracking-wider font-semibold">
+                  Total Orden
+                </span>
+                <span className="text-xl font-bold text-[#2C3E50] font-mono">
+                  ${Number(orden.total).toFixed(2)} USD
+                </span>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Action Button: Primary Accent Button */}
         <div className="flex items-center gap-3 w-full md:w-auto justify-end">

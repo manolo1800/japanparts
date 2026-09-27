@@ -53,13 +53,37 @@ export class CompraService {
         (acc, item) => acc + item.cantidad * item.costo_unitario,
         0,
       );
+      const subtotalFinal =
+        dto.subtotal !== undefined ? Number(dto.subtotal) : Number(calculatedSubtotal.toFixed(2));
+      const totalFinal =
+        dto.total !== undefined ? Number(dto.total) : subtotalFinal;
+
+      let numeroFactura = dto.numero_factura?.trim().toUpperCase();
+      if (!numeroFactura) {
+        const year = new Date(dto.fecha || new Date()).getFullYear();
+        const prefix = `FAC-${year}-`;
+        const latest = await compraRepo
+          .createQueryBuilder('c')
+          .where('c.numero_factura LIKE :pattern', { pattern: `${prefix}%` })
+          .orderBy('c.numero_factura', 'DESC')
+          .getOne();
+
+        let nextNum = 1;
+        if (latest) {
+          const match = latest.numero_factura.match(/FAC-\d{4}-(\d+)/);
+          if (match) {
+            nextNum = parseInt(match[1], 10) + 1;
+          }
+        }
+        numeroFactura = `${prefix}${String(nextNum).padStart(4, '0')}`;
+      }
 
       const compra = compraRepo.create({
         proveedor_id: dto.proveedor_id,
-        numero_factura: dto.numero_factura.trim().toUpperCase(),
+        numero_factura: numeroFactura,
         fecha: new Date(dto.fecha),
-        subtotal: dto.subtotal !== undefined ? Number(dto.subtotal) : Number(calculatedSubtotal.toFixed(2)),
-        total: Number(dto.total),
+        subtotal: subtotalFinal,
+        total: totalFinal,
         condicion_pago: dto.condicion_pago,
         dias_credito: dto.condicion_pago === PurchasePaymentCondition.CREDITO ? (dto.dias_credito || 30) : 0,
         estado: PurchaseStatus.PENDIENTE,
@@ -89,7 +113,7 @@ export class CompraService {
         const pago = pagoRepo.create({
           compra_id: guardada.id,
           fecha: new Date(),
-          monto: Number(dto.total),
+          monto: totalFinal,
           metodo: 'contado_efectivo',
           referencia: `Pago automático factura ${guardada.numero_factura}`,
           usuario_id: usuarioId || null,

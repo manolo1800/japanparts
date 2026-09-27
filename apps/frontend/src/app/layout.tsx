@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Japón Parts — ERP Multicanal de Repuestos Automotrices',
+  title: 'Tokugawa Spare Parts — ERP Multicanal de Repuestos Automotrices',
   description: 'Sistema integral de gestión de inventario, compatibilidad vehicular y ventas multicanal',
 };
 

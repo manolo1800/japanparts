@@ -85,7 +85,7 @@ export function Header({
         {/* Branch / Sede */}
         <div className="branch-badge hidden sm:flex">
           <Building2 className="w-3.5 h-3.5 text-[#1A5276]" />
-          <span>Japón Parts — Sucursal Principal</span>
+          <span>Tokugawa Spare Parts — Sucursal Principal</span>
         </div>
 
         {/* Live Clock */}

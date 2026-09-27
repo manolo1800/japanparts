@@ -65,6 +65,10 @@ export class CreateSkuDto {
 export class UpdateSkuDto {
   @IsString()
   @IsOptional()
+  sku_interno?: string;
+
+  @IsString()
+  @IsOptional()
   nombre?: string;
 
   @IsString()
@@ -90,6 +94,12 @@ export class UpdateSkuDto {
   @Type(() => Number)
   @IsOptional()
   precio_base?: number;
+
+  @IsNumber()
+  @Min(0)
+  @Type(() => Number)
+  @IsOptional()
+  stock_actual?: number;
 
   @IsNumber()
   @Min(0)

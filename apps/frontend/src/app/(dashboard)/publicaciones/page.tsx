@@ -2,7 +2,11 @@
 
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { PublicacionSummary } from '@japonparts/shared';
+import {
+  PublicacionSummary,
+  calculateItemChannelFinancials,
+  MERCADOLIBRE_COMMISSION_RATE,
+} from '@japonparts/shared';
 import { apiClient } from '../../../lib/api-client';
 import { Header } from '../../../components/header';
 import {
@@ -55,7 +59,7 @@ export default function PublicacionesPage() {
             </div>
             <div className="flex items-baseline justify-between mt-2">
               <span className="text-2xl font-bold text-[#2C3E50]">{mlPubs.length}</span>
-              <span className="text-xs text-[#7F8C8D] font-mono">Publicaciones vinculadas</span>
+              <span className="text-xs text-amber-700 font-mono font-semibold">Comisión: 12% por venta</span>
             </div>
           </div>
 
@@ -123,6 +127,7 @@ export default function PublicacionesPage() {
                   <th className="py-3.5 px-4">SKU Asociado</th>
                   <th className="py-3.5 px-4">Título Publicación</th>
                   <th className="py-3.5 px-4 text-right">Precio Canal</th>
+                  <th className="py-3.5 px-4 text-right">Comisión / Neto</th>
                   <th className="py-3.5 px-4 text-center">Stock Publicado</th>
                   <th className="py-3.5 px-4 text-center">Estado</th>
                   <th className="py-3.5 px-4 text-right">Enlace / Ficha</th>
@@ -192,6 +197,23 @@ export default function PublicacionesPage() {
 
                         <td className="py-4 px-4 text-right whitespace-nowrap font-mono font-bold text-[#2C3E50] text-sm">
                           ${Number(pub.precio).toFixed(2)}
+                        </td>
+
+                        <td className="py-4 px-4 text-right whitespace-nowrap font-mono text-xs">
+                          {isMl ? (
+                            <div>
+                              <span className="text-amber-700 font-bold block text-[11px]">
+                                ML (12%): -${(Number(pub.precio) * MERCADOLIBRE_COMMISSION_RATE).toFixed(2)}
+                              </span>
+                              <span className="text-[10px] text-[#7F8C8D]">
+                                Neto: ${(Number(pub.precio) * (1 - MERCADOLIBRE_COMMISSION_RATE)).toFixed(2)}
+                              </span>
+                            </div>
+                          ) : (
+                            <span className="text-emerald-700 font-medium text-[11px]">
+                              0% com. (100% neto)
+                            </span>
+                          )}
                         </td>
 
                         <td className="py-4 px-4 text-center whitespace-nowrap font-mono font-bold text-[#2C3E50]">

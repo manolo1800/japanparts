@@ -43,10 +43,10 @@ export default function LoginPage() {
         {/* Logo and Brand */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#C4F82A] shadow-xl shadow-[#C4F82A]/20 mb-4">
-            <span className="font-black text-[#0A0D14] text-2xl tracking-tight">JP</span>
+            <span className="font-black text-[#0A0D14] text-2xl tracking-tight">TSP</span>
           </div>
           <h1 className="text-2xl font-black text-white tracking-tight">
-            JAPÓN<span className="text-[#C4F82A]">PARTS</span>
+            TOKUGAWA <span className="text-[#C4F82A]">SPARE PARTS</span>
           </h1>
           <p className="text-xs text-[#8B949E] mt-1 uppercase tracking-widest font-medium">
             ERP Repuestos Cloud — Dashboard Financiero
@@ -77,7 +77,7 @@ export default function LoginPage() {
                 <input
                   type="email"
                   required
-                  placeholder="usuario@japonparts.com"
+                  placeholder="usuario@tokugawaspareparts.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#1F2633] border border-[#2D3748] text-white text-sm placeholder-[#8B949E] focus:outline-none focus:border-[#C4F82A] transition"
