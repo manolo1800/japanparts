@@ -70,6 +70,8 @@ export enum ConversationStatus {
 export enum MessageRole {
   USER = 'user',
   BOT = 'bot',
+  ASSISTANT = 'assistant',
+  SYSTEM = 'system',
   HUMANO = 'humano',
 }
 
@@ -384,4 +386,70 @@ export interface CreateOrdenDto {
   generar_documento?: DocumentType;
   items: CreateOrdenItemDto[];
 }
+
+// ============================================================================
+// FASE 4: WhatsApp, Baileys, Conversaciones y DeepSeek Bot
+// ============================================================================
+
+export type WhatsAppConnectionState =
+  | 'desconectado'
+  | 'esperando_qr'
+  | 'conectando'
+  | 'conectado';
+
+export interface WhatsAppStatusSummary {
+  estado: WhatsAppConnectionState;
+  qrCode?: string | null;
+  telefonoVinculado?: string | null;
+  nombreVinculado?: string | null;
+  ultimaConexion?: string | null;
+}
+
+export type EstadoEnvioMensaje =
+  | 'pendiente'
+  | 'enviado'
+  | 'entregado'
+  | 'leido'
+  | 'fallido';
+
+export interface MensajeSummary {
+  id: string;
+  conversacion_id: string;
+  rol: MessageRole;
+  contenido: string;
+  timestamp: string;
+  id_whatsapp?: string | null;
+  estado_envio?: EstadoEnvioMensaje;
+  intentos_envio?: number;
+  error_envio?: string | null;
+}
+
+export interface ConversacionSummary {
+  id: string;
+  canal: Channel;
+  cuenta_id?: string | null;
+  cliente_id?: string | null;
+  telefono: string;
+  jid?: string | null;
+  estado: ConversationStatus;
+  orden_id?: string | null;
+
+  created_at: string;
+  updated_at: string;
+  cliente?: ClienteSummary | null;
+  orden?: OrdenSummary | null;
+  mensajes?: MensajeSummary[];
+  ultimo_mensaje?: MensajeSummary | null;
+  no_leidos?: number;
+}
+
+export interface EnviarMensajeWhatsappDto {
+  conversacion_id: string;
+  contenido: string;
+}
+
+export interface CambiarEstadoConversacionDto {
+  estado: ConversationStatus;
+}
+
 

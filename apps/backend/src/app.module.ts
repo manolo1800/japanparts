@@ -13,6 +13,8 @@ import { ProveedorModule } from './proveedor/proveedor.module';
 import { CompraModule } from './compra/compra.module';
 import { ClienteModule } from './cliente/cliente.module';
 import { OrdenModule } from './orden/orden.module';
+import { IntegrationsModule } from './integrations/integrations.module';
+import { ConversacionModule } from './conversacion/conversacion.module';
 import {
   Usuario,
   Sku,
@@ -28,6 +30,8 @@ import {
   Orden,
   OrdenDetalle,
   DocumentoVenta,
+  Conversacion,
+  Mensaje,
 } from './entities';
 
 @Module({
@@ -71,6 +75,8 @@ import {
             Orden,
             OrdenDetalle,
             DocumentoVenta,
+            Conversacion,
+            Mensaje,
           ],
           synchronize: false,
           logging: false,
@@ -88,6 +94,9 @@ import {
     CompraModule,
     ClienteModule,
     OrdenModule,
+    IntegrationsModule,
+    ConversacionModule,
   ],
 })
 export class AppModule {}
+

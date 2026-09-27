@@ -52,7 +52,7 @@ export default function InventarioPage() {
   const totalCriticos = skus.filter((s) => s.stock_actual <= s.stock_minimo).length;
 
   return (
-    <div className="pb-16">
+    <div className="pb-16 min-h-full">
       <Header
         title="Catálogo de SKUs & Inventario"
         subtitle="Gestión de repuestos maestros, compatibilidad vehicular y trazabilidad de stock"
@@ -60,46 +60,46 @@ export default function InventarioPage() {
         showNewSkuBtn={true}
       />
 
-      <div className="p-8 max-w-7xl mx-auto space-y-6">
+      <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
         {/* KPI Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="glass-card p-5 rounded-2xl">
-            <span className="text-xs font-semibold text-slate-400 block uppercase tracking-wider">
+          <div className="erp-card erp-card-hover">
+            <span className="text-xs font-semibold text-[#7F8C8D] block uppercase tracking-wider">
               Total SKUs Registrados
             </span>
             <div className="flex items-baseline justify-between mt-2">
-              <span className="text-2xl font-black text-white">{total}</span>
-              <span className="text-xs text-slate-400 font-mono">Maestro de piezas</span>
+              <span className="text-2xl lg:text-[28px] font-bold text-[#2C3E50] font-mono">{total}</span>
+              <span className="text-xs text-[#7F8C8D]">Maestro de piezas</span>
             </div>
           </div>
 
-          <div className="glass-card p-5 rounded-2xl border-l-4 border-l-amber-500">
-            <span className="text-xs font-semibold text-slate-400 block uppercase tracking-wider">
+          <div className="erp-card erp-card-hover">
+            <span className="text-xs font-semibold text-[#7F8C8D] block uppercase tracking-wider">
               Alertas de Stock Mínimo
             </span>
             <div className="flex items-baseline justify-between mt-2">
-              <span className="text-2xl font-black text-amber-400">{totalCriticos}</span>
-              <span className="text-xs text-amber-500/80 font-mono">En página actual</span>
+              <span className="text-2xl lg:text-[28px] font-bold text-amber-600 font-mono">{totalCriticos}</span>
+              <span className="text-xs text-amber-600 font-medium">En página actual</span>
             </div>
           </div>
 
-          <div className="glass-card p-5 rounded-2xl border-l-4 border-l-emerald-500">
-            <span className="text-xs font-semibold text-slate-400 block uppercase tracking-wider">
+          <div className="erp-card erp-card-hover">
+            <span className="text-xs font-semibold text-[#7F8C8D] block uppercase tracking-wider">
               Disponibilidad Inmediata
             </span>
             <div className="flex items-baseline justify-between mt-2">
-              <span className="text-2xl font-black text-emerald-400">
+              <span className="text-2xl lg:text-[28px] font-bold text-[#1A5276] font-mono">
                 {skus.filter((s) => s.stock_actual > 0).length}
               </span>
-              <span className="text-xs text-emerald-500/80 font-mono">Con stock activo</span>
+              <span className="text-xs text-[#7F8C8D]">Con stock activo</span>
             </div>
           </div>
         </div>
 
         {/* Filters and Search Bar */}
-        <div className="glass-panel p-4 rounded-2xl flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="bg-white p-4 rounded-2xl border border-[#E2E8F0] shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
           <div className="relative w-full md:w-96">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <Search className="w-4 h-4 text-[#7F8C8D] absolute left-3.5 top-3" />
             <input
               type="text"
               placeholder="Buscar por SKU interno, nombre, marca o código..."
@@ -108,7 +108,7 @@ export default function InventarioPage() {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-900 border border-slate-700/80 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-rose-500 transition"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] text-xs placeholder:text-[#95A5A6] focus:outline-none focus:border-[#4A90E2] focus:bg-white transition"
             />
           </div>
 
@@ -121,7 +121,7 @@ export default function InventarioPage() {
                 setMarcaFilter(e.target.value);
                 setPage(1);
               }}
-              className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-700/80 text-white text-xs w-36 focus:outline-none focus:border-rose-500 transition"
+              className="px-3.5 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] text-xs w-36 focus:outline-none focus:border-[#4A90E2] focus:bg-white transition"
             />
 
             <button
@@ -129,10 +129,10 @@ export default function InventarioPage() {
                 setBajoStockFilter(!bajoStockFilter);
                 setPage(1);
               }}
-              className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition ${
+              className={`px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 border transition ${
                 bajoStockFilter
-                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40 shadow-sm'
-                  : 'bg-slate-900 text-slate-400 border-slate-700/80 hover:bg-slate-800'
+                  ? 'bg-amber-500 text-white border-amber-500 font-bold shadow-sm'
+                  : 'bg-[#F8F9FA] text-[#7F8C8D] border-[#E2E8F0] hover:text-[#2C3E50] hover:bg-slate-100'
               }`}
             >
               <AlertTriangle className="w-3.5 h-3.5" />
@@ -142,10 +142,10 @@ export default function InventarioPage() {
         </div>
 
         {/* SKUs Table */}
-        <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
+        <div className="bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-900/90 text-slate-400 uppercase tracking-wider text-[10px] font-bold border-b border-slate-800">
+              <thead className="bg-[#F8F9FA] text-[#7F8C8D] uppercase tracking-wider text-[10px] font-bold border-b border-[#E2E8F0]">
                 <tr>
                   <th className="py-3.5 px-4">SKU / Marca</th>
                   <th className="py-3.5 px-4">Descripción Pieza</th>
@@ -157,16 +157,17 @@ export default function InventarioPage() {
                   <th className="py-3.5 px-4 text-right">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 font-medium">
+              <tbody className="divide-y divide-[#E2E8F0] font-medium">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={8} className="py-12 text-center text-slate-500 font-mono">
+                    <td colSpan={8} className="py-12 text-center text-[#7F8C8D]">
+                      <div className="w-8 h-8 border-3 border-[#1A5276] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
                       Cargando inventario de repuestos...
                     </td>
                   </tr>
                 ) : skus.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="py-12 text-center text-slate-500">
+                    <td colSpan={8} className="py-12 text-center text-[#7F8C8D]">
                       No se encontraron repuestos con los filtros indicados.
                     </td>
                   </tr>
@@ -178,20 +179,20 @@ export default function InventarioPage() {
                     return (
                       <tr
                         key={sku.id}
-                        className="hover:bg-slate-800/40 transition group"
+                        className="hover:bg-[#F8FBFF] transition group"
                       >
                         {/* SKU & Brand */}
                         <td className="py-4 px-4 whitespace-nowrap">
                           <div className="flex items-center gap-2">
-                            <span className="font-mono font-bold text-white bg-slate-800 px-2 py-1 rounded border border-slate-700">
+                            <span className="font-mono font-bold text-[#1A5276] bg-[#EFF6FF] px-2 py-1 rounded border border-[#BFDBFE]">
                               {sku.sku_interno}
                             </span>
-                            <span className="text-[11px] font-semibold text-rose-400">
+                            <span className="text-[11px] font-semibold text-[#2C3E50]">
                               {sku.marca}
                             </span>
                           </div>
                           {sku.codigo_fabricante && (
-                            <span className="text-[10px] text-slate-500 block mt-0.5">
+                            <span className="text-[10px] text-[#7F8C8D] block mt-0.5 font-mono">
                               OEM: {sku.codigo_fabricante}
                             </span>
                           )}
@@ -201,12 +202,12 @@ export default function InventarioPage() {
                         <td className="py-4 px-4 max-w-xs">
                           <Link
                             href={`/inventario/${sku.id}`}
-                            className="font-semibold text-slate-200 hover:text-rose-400 transition block truncate"
+                            className="font-semibold text-[#2C3E50] hover:text-[#1A5276] transition block truncate"
                           >
                             {sku.nombre}
                           </Link>
                           {sku.descripcion && (
-                            <span className="text-[11px] text-slate-500 line-clamp-1">
+                            <span className="text-[11px] text-[#7F8C8D] line-clamp-1">
                               {sku.descripcion}
                             </span>
                           )}
@@ -216,15 +217,15 @@ export default function InventarioPage() {
                         <td className="py-4 px-4 text-center whitespace-nowrap">
                           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold font-mono">
                             {isAgotado ? (
-                              <span className="text-red-400 bg-red-500/10 px-2.5 py-0.5 rounded-full border border-red-500/20 flex items-center gap-1">
+                              <span className="text-red-700 bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200 flex items-center gap-1">
                                 <XCircle className="w-3 h-3" /> Agotado (0)
                               </span>
                             ) : isCritico ? (
-                              <span className="text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20 flex items-center gap-1">
+                              <span className="text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200 flex items-center gap-1">
                                 <AlertTriangle className="w-3 h-3" /> Crítico ({sku.stock_actual}/{sku.stock_minimo})
                               </span>
                             ) : (
-                              <span className="text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20 flex items-center gap-1">
+                              <span className="text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1">
                                 <CheckCircle2 className="w-3 h-3" /> {sku.stock_actual} uds
                               </span>
                             )}
@@ -233,16 +234,16 @@ export default function InventarioPage() {
 
                         {/* Price & Cost */}
                         <td className="py-4 px-4 text-right whitespace-nowrap">
-                          <span className="font-bold text-white font-mono text-sm block">
+                          <span className="font-bold text-[#2C3E50] font-mono text-sm block">
                             ${Number(sku.precio_base).toFixed(2)}
                           </span>
-                          <span className="text-[10px] text-slate-500 font-mono">
+                          <span className="text-[10px] text-[#7F8C8D] font-mono">
                             Costo: ${Number(sku.costo_promedio).toFixed(2)}
                           </span>
                         </td>
 
                         {/* Location */}
-                        <td className="py-4 px-4 whitespace-nowrap text-slate-400 font-mono text-[11px]">
+                        <td className="py-4 px-4 whitespace-nowrap text-[#7F8C8D] font-mono text-[11px]">
                           {sku.ubicacion || '—'}
                         </td>
 
@@ -250,11 +251,11 @@ export default function InventarioPage() {
                         <td className="py-4 px-4 text-center whitespace-nowrap">
                           <button
                             onClick={() => setCompatModalSku(sku)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition font-mono text-xs"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#F8F9FA] text-[#2C3E50] hover:text-[#1A5276] hover:bg-[#EFF6FF] hover:border-[#BFDBFE] border border-[#E2E8F0] transition font-mono text-xs"
                           >
-                            <Car className="w-3 h-3 text-rose-400" />
+                            <Car className="w-3 h-3 text-[#1A5276]" />
                             <span>{sku.compatibilidades?.length || 0}</span>
-                            <span className="text-[10px] text-slate-500">+</span>
+                            <span className="text-[10px] text-[#7F8C8D]">+</span>
                           </button>
                         </td>
 
@@ -262,11 +263,11 @@ export default function InventarioPage() {
                         <td className="py-4 px-4 text-center whitespace-nowrap">
                           <button
                             onClick={() => setPubModalSku(sku)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition font-mono text-xs"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#F8F9FA] text-[#2C3E50] hover:text-[#1A5276] hover:bg-[#EFF6FF] hover:border-[#BFDBFE] border border-[#E2E8F0] transition font-mono text-xs"
                           >
-                            <Share2 className="w-3 h-3 text-sky-400" />
+                            <Share2 className="w-3 h-3 text-sky-600" />
                             <span>{sku.publicaciones?.length || 0}</span>
-                            <span className="text-[10px] text-slate-500">+</span>
+                            <span className="text-[10px] text-[#7F8C8D]">+</span>
                           </button>
                         </td>
 
@@ -275,7 +276,7 @@ export default function InventarioPage() {
                           <div className="flex items-center justify-end gap-1.5">
                             <button
                               onClick={() => setStockModalSku(sku)}
-                              className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition"
+                              className="px-2.5 py-1.5 rounded-lg bg-[#F8F9FA] hover:bg-slate-100 text-[#2C3E50] border border-[#E2E8F0] text-xs font-semibold transition"
                               title="Ajustar Stock"
                             >
                               Ajustar
@@ -283,7 +284,7 @@ export default function InventarioPage() {
 
                             <Link
                               href={`/inventario/${sku.id}`}
-                              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition"
+                              className="p-1.5 rounded-lg text-[#7F8C8D] hover:text-[#1A5276] hover:bg-[#EFF6FF] transition"
                               title="Ver Ficha Completa"
                             >
                               <ChevronRight className="w-4 h-4" />
@@ -300,23 +301,23 @@ export default function InventarioPage() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="px-6 py-4 border-t border-slate-800 bg-slate-900/50 flex items-center justify-between text-xs text-slate-400">
+            <div className="px-6 py-4 border-t border-[#E2E8F0] bg-[#F8F9FA] flex items-center justify-between text-xs text-[#7F8C8D]">
               <span>
-                Página <strong className="text-white">{page}</strong> de{' '}
-                <strong className="text-white">{totalPages}</strong> ({total} repuestos)
+                Página <strong className="text-[#2C3E50]">{page}</strong> de{' '}
+                <strong className="text-[#2C3E50]">{totalPages}</strong> ({total} repuestos)
               </span>
               <div className="flex items-center gap-2">
                 <button
                   disabled={page <= 1}
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white disabled:opacity-40 transition"
+                  className="px-3 py-1.5 rounded-lg bg-white border border-[#E2E8F0] text-[#2C3E50] hover:bg-slate-50 disabled:opacity-40 transition font-medium"
                 >
                   Anterior
                 </button>
                 <button
                   disabled={page >= totalPages}
                   onClick={() => setPage((p) => p + 1)}
-                  className="px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 hover:text-white disabled:opacity-40 transition"
+                  className="px-3 py-1.5 rounded-lg bg-white border border-[#E2E8F0] text-[#2C3E50] hover:bg-slate-50 disabled:opacity-40 transition font-medium"
                 >
                   Siguiente
                 </button>

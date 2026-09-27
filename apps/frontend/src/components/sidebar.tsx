@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '../context/auth-context';
+import { useSidebar } from '../context/sidebar-context';
 import {
   Package,
   Share2,
@@ -13,16 +14,25 @@ import {
   Building2,
   Store,
   ReceiptText,
+  MessageSquareText,
+  Menu,
 } from 'lucide-react';
 
 export function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const { collapsed, toggleSidebar } = useSidebar();
 
   const navSections = [
     {
-      title: 'Ventas & Facturación',
+      title: 'Principal',
       items: [
+        {
+          label: 'WhatsApp & Bot AI',
+          href: '/whatsapp',
+          icon: MessageSquareText,
+          badge: 'Bot AI',
+        },
         {
           label: 'Punto de Venta (POS)',
           href: '/pos',
@@ -79,102 +89,88 @@ export function Sidebar() {
     },
   ];
 
+  const userInitial = user?.nombre?.charAt(0).toUpperCase() || 'U';
+
   return (
-    <aside className="w-64 border-r border-slate-800/80 bg-[#0b101b] flex flex-col justify-between shrink-0 select-none">
-      <div className="overflow-y-auto">
-        {/* Brand Header */}
-        <div className="h-16 px-6 flex items-center gap-3 border-b border-slate-800/80 sticky top-0 bg-[#0b101b] z-10">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-rose-400 flex items-center justify-center shadow-lg shadow-rose-600/30">
-            <span className="font-black text-white text-lg tracking-wider">JP</span>
+    <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
+      {/* Brand Header */}
+      <div className="sidebar-brand">
+        <Link href="/whatsapp" className="brand-logo">
+          <div className="brand-icon">
+            <span>JP</span>
           </div>
-          <div>
-            <span className="font-bold text-base tracking-wide text-white block leading-tight">
-              JAPÓN<span className="text-rose-500 font-black">PARTS</span>
-            </span>
-            <span className="text-[10px] text-slate-400 uppercase tracking-widest block font-medium">
-              ERP Multicanal
-            </span>
+          <div className="brand-text">
+            <span className="brand-name">Japón Parts</span>
+            <span className="brand-sub">ERP Cloud Dashboard</span>
           </div>
-        </div>
+        </Link>
+      </div>
 
-        {/* Navigation Sections */}
-        <div className="px-3 py-4 space-y-5">
-          {navSections.map((section, idx) => (
-            <div key={idx}>
-              <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-1.5">
-                {section.title}
-              </div>
-              <nav className="space-y-0.5">
-                {section.items.map((item) => {
-                  const Icon = item.icon;
-                  const isActive =
-                    pathname === item.href ||
-                    (item.href !== '/' && pathname.startsWith(item.href));
-
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
-                        isActive
-                          ? 'bg-rose-500/10 text-rose-400 border border-rose-500/20 shadow-sm shadow-rose-500/10'
-                          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-rose-400' : 'text-slate-400'}`} />
-                        <span>{item.label}</span>
-                      </div>
-                      {item.badge && (
-                        <span className="text-[9px] px-1.5 py-0.2 rounded font-mono uppercase bg-rose-500/20 text-rose-300 border border-rose-500/30">
-                          {item.badge}
-                        </span>
-                      )}
-                    </Link>
-                  );
-                })}
-              </nav>
-            </div>
-          ))}
+      {/* User info card */}
+      <div className="sidebar-user" title={collapsed ? `${user?.nombre || 'Usuario'} (${user?.rol || 'Conectado'})` : undefined}>
+        <div className="user-avatar">{userInitial}</div>
+        <div className="user-info">
+          <div className="user-name">{user?.nombre || 'Administrador'}</div>
+          <div className="user-role">{user?.rol || 'Conectado'}</div>
         </div>
       </div>
 
+      {/* Navigation list */}
+      <nav className="sidebar-nav">
+        {navSections.map((section, sIdx) => (
+          <div key={sIdx} className="nav-section">
+            <div className="nav-section-label">{section.title}</div>
+            <ul>
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                const isActive =
+                  pathname === item.href ||
+                  (item.href !== '/' && pathname.startsWith(item.href));
 
-      {/* User Status & Logout Footer */}
-      <div className="p-3 border-t border-slate-800/80 bg-slate-900/30">
-        <div className="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800/60">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-xs text-rose-400 shrink-0">
-              {user?.nombre?.charAt(0) || 'U'}
-            </div>
-            <div className="truncate">
-              <p className="text-xs font-semibold text-slate-200 truncate leading-tight">
-                {user?.nombre || 'Usuario'}
-              </p>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                <span
-                  className={`text-[9px] px-1.5 py-0.2 rounded font-medium uppercase tracking-wide ${
-                    user?.rol === 'admin'
-                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                      : user?.rol === 'bodega'
-                        ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
-                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                  }`}
-                >
-                  {user?.rol || 'Rol'}
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              </div>
-            </div>
+                return (
+                  <li key={item.href} className="nav-item">
+                    <Link
+                      href={item.href}
+                      className={`nav-link ${isActive ? 'active' : ''}`}
+                      title={collapsed ? item.label : undefined}
+                    >
+                      <span className="nav-icon">
+                        <Icon className="w-4 h-4" />
+                      </span>
+                      <span>{item.label}</span>
+                      {item.badge && <span className="nav-badge">{item.badge}</span>}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-          <button
-            onClick={logout}
-            title="Cerrar sesión"
-            className="p-1.5 rounded-md text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition"
-          >
+        ))}
+      </nav>
+
+      {/* Footer with toggle and logout */}
+      <div className="sidebar-footer">
+        <button
+          onClick={toggleSidebar}
+          className="sidebar-toggle"
+          title={collapsed ? 'Expandir menú' : 'Contraer menú'}
+        >
+          <span className="nav-icon">
+            <Menu className="w-4 h-4" />
+          </span>
+          <span>Menú</span>
+        </button>
+
+        <button
+          onClick={logout}
+          className="logout-btn"
+          title={collapsed ? 'Cerrar Sesión' : undefined}
+        >
+          <span className="nav-icon">
             <LogOut className="w-4 h-4" />
-          </button>
-        </div>
+          </span>
+          <span>Cerrar Sesión</span>
+        </button>
       </div>
     </aside>
   );

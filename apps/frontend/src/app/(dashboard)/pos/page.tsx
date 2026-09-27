@@ -227,7 +227,7 @@ export default function PosPage() {
   };
 
   return (
-    <div className="pb-12 min-h-screen">
+    <div className="pb-12 min-h-full">
       <Header
         title="Punto de Venta Mostrador (POS)"
         subtitle="Venta rápida con descuento inmediato de stock, cobro en caja y emisión de factura o recibo"
@@ -242,21 +242,21 @@ export default function PosPage() {
           {/* LEFT: Search & Catalog Column (7 Cols) */}
           <div className="lg:col-span-7 space-y-4">
             {/* Search Controls Card */}
-            <div className="glass-card p-4 rounded-2xl space-y-3">
+            <div className="bg-white p-5 rounded-2xl border border-[#E2E8F0] shadow-sm space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                  <Store className="w-4 h-4 text-rose-400" />
+                <span className="text-xs font-bold text-[#2C3E50] uppercase tracking-wider flex items-center gap-2">
+                  <Store className="w-4 h-4 text-[#1A5276]" />
                   <span>Catálogo de Repuestos</span>
                 </span>
 
                 {/* Mode Selector Tabs */}
-                <div className="flex bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+                <div className="flex bg-[#F8F9FA] p-1 rounded-xl border border-[#E2E8F0]">
                   <button
                     onClick={() => setSearchMode('texto')}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
                       searchMode === 'texto'
-                        ? 'bg-rose-500 text-white shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-[#1A5276] text-white font-bold shadow-sm'
+                        : 'text-[#7F8C8D] hover:text-[#2C3E50]'
                     }`}
                   >
                     <Search className="w-3.5 h-3.5" />
@@ -264,10 +264,10 @@ export default function PosPage() {
                   </button>
                   <button
                     onClick={() => setSearchMode('vehiculo')}
-                    className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition ${
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
                       searchMode === 'vehiculo'
-                        ? 'bg-rose-500 text-white shadow-sm'
-                        : 'text-slate-400 hover:text-slate-200'
+                        ? 'bg-[#1A5276] text-white font-bold shadow-sm'
+                        : 'text-[#7F8C8D] hover:text-[#2C3E50]'
                     }`}
                   >
                     <Car className="w-3.5 h-3.5" />
@@ -279,20 +279,20 @@ export default function PosPage() {
               {/* Mode A: Text Search Input */}
               {searchMode === 'texto' ? (
                 <div className="relative">
-                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#7F8C8D]" />
                   <input
                     type="text"
                     placeholder="Escriba SKU, marca o descripción (ej: DEN-YKT22, bujía, filtro)..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-rose-500 transition"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#CBD5E1] text-sm text-[#2C3E50] placeholder-[#7F8C8D] focus:outline-none focus:border-[#1A5276] focus:bg-white transition"
                   />
                 </div>
               ) : (
                 /* Mode B: Vehicle Search Form */
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 pt-1">
                   <div>
-                    <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
+                    <label className="text-[10px] uppercase font-bold text-[#7F8C8D] block mb-1">
                       Marca
                     </label>
                     <input
@@ -300,11 +300,11 @@ export default function PosPage() {
                       value={vehicleBrand}
                       onChange={(e) => setVehicleBrand(e.target.value)}
                       placeholder="Toyota"
-                      className="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-rose-500"
+                      className="w-full px-3 py-1.5 rounded-xl bg-[#F8F9FA] border border-[#CBD5E1] text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
+                    <label className="text-[10px] uppercase font-bold text-[#7F8C8D] block mb-1">
                       Modelo
                     </label>
                     <input
@@ -312,11 +312,11 @@ export default function PosPage() {
                       value={vehicleModel}
                       onChange={(e) => setVehicleModel(e.target.value)}
                       placeholder="Corolla"
-                      className="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-rose-500"
+                      className="w-full px-3 py-1.5 rounded-xl bg-[#F8F9FA] border border-[#CBD5E1] text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
+                    <label className="text-[10px] uppercase font-bold text-[#7F8C8D] block mb-1">
                       Año
                     </label>
                     <input
@@ -324,11 +324,11 @@ export default function PosPage() {
                       value={vehicleYear}
                       onChange={(e) => setVehicleYear(e.target.value)}
                       placeholder="1995"
-                      className="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-rose-500"
+                      className="w-full px-3 py-1.5 rounded-xl bg-[#F8F9FA] border border-[#CBD5E1] text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white"
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">
+                    <label className="text-[10px] uppercase font-bold text-[#7F8C8D] block mb-1">
                       Motor
                     </label>
                     <input
@@ -336,7 +336,7 @@ export default function PosPage() {
                       value={vehicleMotor}
                       onChange={(e) => setVehicleMotor(e.target.value)}
                       placeholder="1.8"
-                      className="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-white focus:outline-none focus:border-rose-500"
+                      className="w-full px-3 py-1.5 rounded-xl bg-[#F8F9FA] border border-[#CBD5E1] text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white"
                     />
                   </div>
                 </div>
@@ -346,17 +346,17 @@ export default function PosPage() {
             {/* Products Grid */}
             <div className="space-y-3">
               {isLoadingProducts ? (
-                <div className="py-20 flex flex-col items-center justify-center gap-3 glass-card rounded-2xl">
-                  <div className="w-8 h-8 border-3 border-rose-500 border-t-transparent rounded-full animate-spin" />
-                  <span className="text-xs text-slate-400 font-mono">Buscando productos...</span>
+                <div className="py-20 flex flex-col items-center justify-center gap-3 bg-white border border-[#E2E8F0] rounded-2xl shadow-sm">
+                  <div className="w-8 h-8 border-3 border-[#1A5276] border-t-transparent rounded-full animate-spin" />
+                  <span className="text-xs text-[#7F8C8D] font-mono">Buscando productos...</span>
                 </div>
               ) : availableProducts.length === 0 ? (
-                <div className="py-16 text-center glass-card rounded-2xl p-6">
-                  <Tag className="w-8 h-8 mx-auto text-slate-600 mb-2" />
-                  <p className="text-sm font-semibold text-slate-300">
+                <div className="py-16 text-center bg-white border border-[#E2E8F0] rounded-2xl p-6 shadow-sm">
+                  <Tag className="w-8 h-8 mx-auto text-[#7F8C8D] mb-2" />
+                  <p className="text-sm font-semibold text-[#2C3E50]">
                     No se encontraron repuestos con los criterios de búsqueda
                   </p>
-                  <p className="text-xs text-slate-500 mt-1">
+                  <p className="text-xs text-[#7F8C8D] mt-1">
                     Pruebe con otro término o verifique la compatibilidad
                   </p>
                 </div>
@@ -370,49 +370,49 @@ export default function PosPage() {
                     return (
                       <div
                         key={sku.id}
-                        className="glass-card p-4 rounded-xl flex flex-col justify-between border border-slate-800/80 hover:border-slate-700 transition"
+                        className="bg-white p-4 rounded-2xl flex flex-col justify-between border border-[#E2E8F0] hover:border-[#1A5276]/40 hover:shadow-md transition shadow-sm group"
                       >
                         <div>
                           <div className="flex items-start justify-between gap-2">
-                            <span className="font-mono text-xs font-bold text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded border border-rose-500/20">
+                            <span className="font-mono text-xs font-bold text-[#1A5276] bg-[#EFF6FF] px-2 py-0.5 rounded border border-[#BFDBFE]">
                               {sku.sku_interno}
                             </span>
                             <span
                               className={`text-[10px] px-2 py-0.5 rounded-full font-mono font-bold uppercase ${
                                 sinStock
-                                  ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                                  ? 'bg-red-50 text-red-700 border border-red-200'
                                   : stockRestante <= 3
-                                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                    ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                    : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                               }`}
                             >
                               Stock: {stockRestante}
                             </span>
                           </div>
 
-                          <h3 className="text-sm font-semibold text-white mt-2 line-clamp-2 leading-snug">
+                          <h3 className="text-sm font-semibold text-[#2C3E50] mt-2 line-clamp-2 leading-snug group-hover:text-[#1A5276] transition">
                             {sku.nombre}
                           </h3>
 
                           {sku.marca && (
-                            <span className="text-[11px] text-slate-400 block mt-1">
-                              Marca: <span className="text-slate-300">{sku.marca}</span>
+                            <span className="text-[11px] text-[#7F8C8D] block mt-1">
+                              Marca: <span className="text-[#2C3E50] font-medium">{sku.marca}</span>
                             </span>
                           )}
 
                           {sku.ubicacion && (
-                            <span className="text-[10px] text-slate-500 font-mono block mt-0.5">
+                            <span className="text-[10px] text-[#7F8C8D] font-mono block mt-0.5">
                               Ubicación: {sku.ubicacion}
                             </span>
                           )}
                         </div>
 
-                        <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-800/80">
+                        <div className="flex items-center justify-between mt-4 pt-3 border-t border-[#E2E8F0]">
                           <div>
-                            <span className="text-[10px] text-slate-400 uppercase block font-semibold">
+                            <span className="text-[10px] text-[#7F8C8D] uppercase block font-semibold">
                               Precio Base
                             </span>
-                            <span className="text-base font-black text-white font-mono">
+                            <span className="text-base font-black text-[#2C3E50] font-mono">
                               ${Number(sku.precio_base).toFixed(2)} USD
                             </span>
                           </div>
@@ -422,8 +422,8 @@ export default function PosPage() {
                             disabled={sinStock}
                             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition shadow-sm ${
                               sinStock
-                                ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                                : 'bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white shadow-rose-600/20'
+                                ? 'bg-[#F8F9FA] text-[#CBD5E1] border border-[#E2E8F0] cursor-not-allowed'
+                                : 'bg-[#1A5276] hover:bg-[#154360] text-white'
                             }`}
                           >
                             <Plus className="w-3.5 h-3.5" />
@@ -440,18 +440,18 @@ export default function PosPage() {
 
           {/* RIGHT: POS Register & Cart Column (5 Cols) */}
           <div className="lg:col-span-5 sticky top-20 space-y-4">
-            <div className="glass-card p-5 rounded-2xl border-2 border-slate-800 space-y-4 shadow-xl">
+            <div className="bg-white p-5 rounded-2xl border border-[#E2E8F0] space-y-4 shadow-sm">
               {/* Cart Header */}
-              <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+              <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-rose-500/10 flex items-center justify-center text-rose-400">
+                  <div className="w-8 h-8 rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center text-[#1A5276]">
                     <ShoppingCart className="w-4 h-4" />
                   </div>
                   <div>
-                    <h2 className="text-sm font-bold text-white uppercase tracking-wide">
+                    <h2 className="text-sm font-bold text-[#2C3E50] uppercase tracking-wide">
                       Carrito de Venta
                     </h2>
-                    <span className="text-[10px] text-slate-400 font-mono">
+                    <span className="text-[10px] text-[#7F8C8D] font-mono">
                       {cart.length} {cart.length === 1 ? 'producto' : 'productos'} seleccionados
                     </span>
                   </div>
@@ -460,7 +460,7 @@ export default function PosPage() {
                 {cart.length > 0 && (
                   <button
                     onClick={clearCart}
-                    className="text-[11px] text-slate-400 hover:text-rose-400 transition"
+                    className="text-[11px] text-[#7F8C8D] hover:text-rose-600 transition font-medium"
                   >
                     Vaciar carrito
                   </button>
@@ -470,8 +470,8 @@ export default function PosPage() {
               {/* Cart Items List */}
               <div className="max-h-56 overflow-y-auto space-y-2 pr-1">
                 {cart.length === 0 ? (
-                  <div className="py-8 text-center border border-dashed border-slate-800 rounded-xl">
-                    <p className="text-xs text-slate-500">
+                  <div className="py-8 text-center border border-dashed border-[#CBD5E1] rounded-2xl bg-[#F8F9FA]">
+                    <p className="text-xs text-[#7F8C8D]">
                       El carrito está vacío. Agregue productos del catálogo.
                     </p>
                   </div>
@@ -479,18 +479,18 @@ export default function PosPage() {
                   cart.map((item) => (
                     <div
                       key={item.sku.id}
-                      className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80 flex items-center justify-between gap-3 text-xs"
+                      className="p-3 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] flex items-center justify-between gap-3 text-xs"
                     >
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-rose-400 text-[11px]">
+                          <span className="font-mono font-bold text-[#1A5276] text-[11px] bg-[#EFF6FF] px-1.5 py-0.5 rounded border border-[#BFDBFE]">
                             {item.sku.sku_interno}
                           </span>
                         </div>
-                        <p className="text-white truncate font-medium mt-0.5">
+                        <p className="text-[#2C3E50] truncate font-semibold mt-0.5">
                           {item.sku.nombre}
                         </p>
-                        <span className="text-[11px] font-mono text-slate-400">
+                        <span className="text-[11px] font-mono text-[#7F8C8D]">
                           ${item.precio_unitario.toFixed(2)} c/u
                         </span>
                       </div>
@@ -499,23 +499,23 @@ export default function PosPage() {
                       <div className="flex items-center gap-1.5 shrink-0">
                         <button
                           onClick={() => updateQuantity(item.sku.id, -1)}
-                          className="w-6 h-6 rounded-md bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-300 transition"
+                          className="w-6 h-6 rounded-lg bg-white border border-[#CBD5E1] hover:bg-[#EDF2F7] flex items-center justify-center text-[#2C3E50] transition shadow-sm"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="w-6 text-center font-bold text-white font-mono">
+                        <span className="w-6 text-center font-bold text-[#2C3E50] font-mono">
                           {item.cantidad}
                         </span>
                         <button
                           onClick={() => updateQuantity(item.sku.id, 1)}
                           disabled={item.cantidad >= item.sku.stock_actual}
-                          className="w-6 h-6 rounded-md bg-slate-800 hover:bg-slate-700 disabled:opacity-30 flex items-center justify-center text-slate-300 transition"
+                          className="w-6 h-6 rounded-lg bg-white border border-[#CBD5E1] hover:bg-[#EDF2F7] disabled:opacity-30 flex items-center justify-center text-[#2C3E50] transition shadow-sm"
                         >
                           <Plus className="w-3 h-3" />
                         </button>
                         <button
                           onClick={() => removeFromCart(item.sku.id)}
-                          className="p-1 text-slate-500 hover:text-red-400 transition ml-1"
+                          className="p-1 text-[#7F8C8D] hover:text-rose-600 transition ml-1"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -526,30 +526,30 @@ export default function PosPage() {
               </div>
 
               {/* Customer Selector Section */}
-              <div className="space-y-2 pt-2 border-t border-slate-800">
+              <div className="space-y-2 pt-3 border-t border-[#E2E8F0]">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
-                    <User className="w-3.5 h-3.5 text-rose-400" />
+                  <span className="text-[11px] font-bold text-[#2C3E50] uppercase tracking-wider flex items-center gap-1.5">
+                    <User className="w-3.5 h-3.5 text-[#1A5276]" />
                     <span>Cliente</span>
                   </span>
 
-                  <div className="flex bg-slate-900 p-0.5 rounded-lg border border-slate-800 text-[10px]">
+                  <div className="flex bg-[#F8F9FA] p-0.5 rounded-xl border border-[#E2E8F0] text-[10px]">
                     <button
                       onClick={() => setClienteModo('ocasional')}
-                      className={`px-2 py-0.5 rounded-md font-medium transition ${
+                      className={`px-2.5 py-1 rounded-lg font-semibold transition ${
                         clienteModo === 'ocasional'
-                          ? 'bg-rose-500 text-white'
-                          : 'text-slate-400'
+                          ? 'bg-[#1A5276] text-white font-bold shadow-sm'
+                          : 'text-[#7F8C8D] hover:text-[#2C3E50]'
                       }`}
                     >
                       Ocasional
                     </button>
                     <button
                       onClick={() => setClienteModo('datos')}
-                      className={`px-2 py-0.5 rounded-md font-medium transition ${
+                      className={`px-2.5 py-1 rounded-lg font-semibold transition ${
                         clienteModo === 'datos'
-                          ? 'bg-rose-500 text-white'
-                          : 'text-slate-400'
+                          ? 'bg-[#1A5276] text-white font-bold shadow-sm'
+                          : 'text-[#7F8C8D] hover:text-[#2C3E50]'
                       }`}
                     >
                       Registrar Datos
@@ -558,13 +558,13 @@ export default function PosPage() {
                 </div>
 
                 {clienteModo === 'datos' && (
-                  <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2 text-xs">
+                  <div className="p-3 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] space-y-2 text-xs">
                     <input
                       type="text"
                       placeholder="Nombre o Razón Social *"
                       value={clienteNombre}
                       onChange={(e) => setClienteNombre(e.target.value)}
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none focus:border-rose-500"
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#CBD5E1] text-[#2C3E50] focus:outline-none focus:border-[#1A5276]"
                     />
                     <div className="grid grid-cols-2 gap-2">
                       <input
@@ -572,14 +572,14 @@ export default function PosPage() {
                         placeholder="Teléfono (ej: 0414...)"
                         value={clienteTelefono}
                         onChange={(e) => setClienteTelefono(e.target.value)}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none focus:border-rose-500"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#CBD5E1] text-[#2C3E50] focus:outline-none focus:border-[#1A5276]"
                       />
                       <input
                         type="email"
                         placeholder="Email (opcional)"
                         value={clienteEmail}
                         onChange={(e) => setClienteEmail(e.target.value)}
-                        className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none focus:border-rose-500"
+                        className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#CBD5E1] text-[#2C3E50] focus:outline-none focus:border-[#1A5276]"
                       />
                     </div>
                     <input
@@ -587,17 +587,17 @@ export default function PosPage() {
                       placeholder="Dirección fiscal o de entrega"
                       value={clienteDireccion}
                       onChange={(e) => setClienteDireccion(e.target.value)}
-                      className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none focus:border-rose-500"
+                      className="w-full px-2.5 py-1.5 rounded-lg bg-white border border-[#CBD5E1] text-[#2C3E50] focus:outline-none focus:border-[#1A5276]"
                     />
                   </div>
                 )}
               </div>
 
               {/* Delivery and Payment Controls */}
-              <div className="space-y-3 pt-2 border-t border-slate-800 text-xs">
+              <div className="space-y-3 pt-3 border-t border-[#E2E8F0] text-xs">
                 {/* Delivery Type */}
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                  <span className="text-[10px] font-bold text-[#7F8C8D] uppercase tracking-wider block mb-1.5">
                     Modalidad de Entrega
                   </span>
                   <div className="grid grid-cols-3 gap-1.5">
@@ -612,8 +612,8 @@ export default function PosPage() {
                         onClick={() => setTipoEntrega(d.id)}
                         className={`py-1.5 px-2 rounded-lg font-semibold text-[10px] border transition ${
                           tipoEntrega === d.id
-                            ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
-                            : 'bg-slate-900/60 text-slate-400 border-slate-800 hover:text-slate-200'
+                            ? 'bg-[#EFF6FF] text-[#1A5276] border-[#1A5276] font-bold shadow-sm'
+                            : 'bg-[#F8F9FA] text-[#7F8C8D] border-[#CBD5E1] hover:text-[#2C3E50]'
                         }`}
                       >
                         {d.label}
@@ -627,20 +627,20 @@ export default function PosPage() {
                       placeholder="Dirección de entrega o empresa (MRW, Zoom)..."
                       value={direccionEntrega}
                       onChange={(e) => setDireccionEntrega(e.target.value)}
-                      className="w-full mt-2 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none focus:border-rose-500 text-xs"
+                      className="w-full mt-2 px-2.5 py-1.5 rounded-xl bg-[#F8F9FA] border border-[#CBD5E1] text-[#2C3E50] focus:outline-none focus:border-[#1A5276] text-xs"
                     />
                   )}
                 </div>
 
                 {/* Payment Method */}
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                  <span className="text-[10px] font-bold text-[#7F8C8D] uppercase tracking-wider block mb-1.5">
                     Método de Pago
                   </span>
                   <select
                     value={metodoPago}
                     onChange={(e) => setMetodoPago(e.target.value)}
-                    className="w-full px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-white focus:outline-none focus:border-rose-500 text-xs font-medium"
+                    className="w-full px-2.5 py-2 rounded-xl bg-[#F8F9FA] border border-[#CBD5E1] text-[#2C3E50] focus:outline-none focus:border-[#1A5276] text-xs font-semibold"
                   >
                     <option value="efectivo">Efectivo ($ USD / Bs)</option>
                     <option value="pago_movil">Pago Móvil</option>
@@ -652,7 +652,7 @@ export default function PosPage() {
 
                 {/* Payment Status */}
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                  <span className="text-[10px] font-bold text-[#7F8C8D] uppercase tracking-wider block mb-1.5">
                     Estado del Cobro
                   </span>
                   <div className="grid grid-cols-2 gap-1.5">
@@ -661,8 +661,8 @@ export default function PosPage() {
                       onClick={() => setEstadoPago(PaymentStatus.CONFIRMADO)}
                       className={`py-1.5 px-2 rounded-lg font-semibold text-[10px] border transition ${
                         estadoPago === PaymentStatus.CONFIRMADO
-                          ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                          : 'bg-slate-900/60 text-slate-400 border-slate-800'
+                          ? 'bg-emerald-50 text-emerald-700 border-emerald-300 font-bold shadow-sm'
+                          : 'bg-[#F8F9FA] text-[#7F8C8D] border-[#CBD5E1]'
                       }`}
                     >
                       Cobro Confirmado
@@ -672,8 +672,8 @@ export default function PosPage() {
                       onClick={() => setEstadoPago(PaymentStatus.PENDIENTE)}
                       className={`py-1.5 px-2 rounded-lg font-semibold text-[10px] border transition ${
                         estadoPago === PaymentStatus.PENDIENTE
-                          ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
-                          : 'bg-slate-900/60 text-slate-400 border-slate-800'
+                          ? 'bg-amber-50 text-amber-700 border-amber-300 font-bold shadow-sm'
+                          : 'bg-[#F8F9FA] text-[#7F8C8D] border-[#CBD5E1]'
                       }`}
                     >
                       Cobro Pendiente
@@ -682,9 +682,8 @@ export default function PosPage() {
                 </div>
 
                 {/* Document Type to Emit */}
-
                 <div>
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">
+                  <span className="text-[10px] font-bold text-[#7F8C8D] uppercase tracking-wider block mb-1.5">
                     Emitir Documento Interno
                   </span>
                   <div className="grid grid-cols-3 gap-1.5">
@@ -699,8 +698,8 @@ export default function PosPage() {
                         onClick={() => setGenerarDocumento(doc.id as any)}
                         className={`py-1.5 px-2 rounded-lg font-semibold text-[10px] border transition ${
                           generarDocumento === doc.id
-                            ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
-                            : 'bg-slate-900/60 text-slate-400 border-slate-800 hover:text-slate-200'
+                            ? 'bg-[#EFF6FF] text-[#1A5276] border-[#1A5276] font-bold shadow-sm'
+                            : 'bg-[#F8F9FA] text-[#7F8C8D] border-[#CBD5E1] hover:text-[#2C3E50]'
                         }`}
                       >
                         {doc.label}
@@ -711,19 +710,19 @@ export default function PosPage() {
               </div>
 
               {/* Totals & Submit */}
-              <div className="pt-3 border-t border-slate-800 space-y-3">
+              <div className="pt-3 border-t border-[#E2E8F0] space-y-3">
                 <div className="flex items-baseline justify-between">
-                  <span className="text-xs uppercase font-bold text-slate-400">
+                  <span className="text-xs uppercase font-bold text-[#7F8C8D]">
                     Total a Cobrar:
                   </span>
-                  <span className="text-2xl font-black text-rose-400 font-mono">
+                  <span className="text-2xl font-black text-[#2C3E50] font-mono">
                     ${cartTotal.toFixed(2)} USD
                   </span>
                 </div>
 
                 {submitError && (
-                  <div className="p-2.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 shrink-0" />
+                  <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+                    <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600" />
                     <span>{submitError}</span>
                   </div>
                 )}
@@ -731,7 +730,7 @@ export default function PosPage() {
                 <button
                   onClick={handleProcesarVenta}
                   disabled={cart.length === 0 || submitting}
-                  className="w-full py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white shadow-lg shadow-rose-600/30 transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-sm transition flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <CreditCard className="w-4 h-4" />
                   <span>
@@ -746,18 +745,18 @@ export default function PosPage() {
 
       {/* Success Modal upon Order Completion */}
       {createdOrder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-md p-6 rounded-2xl bg-[#0b101b] border border-slate-800 text-center space-y-4 shadow-2xl">
-            <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn">
+          <div className="w-full max-w-md p-6 rounded-2xl bg-white border border-[#E2E8F0] text-center space-y-4 shadow-2xl">
+            <div className="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-8 h-8" />
             </div>
 
             <div>
-              <h3 className="text-lg font-bold text-white">¡Venta Registrada Exitosamente!</h3>
-              <p className="text-xs text-slate-400 mt-1">
+              <h3 className="text-lg font-bold text-[#2C3E50]">¡Venta Registrada Exitosamente!</h3>
+              <p className="text-xs text-[#7F8C8D] mt-1">
                 El stock fue descontado y los movimientos quedaron asentados en kardex.
               </p>
-              <div className="mt-3 p-3 rounded-xl bg-slate-900/80 border border-slate-800 inline-block font-mono font-bold text-rose-400 text-sm">
+              <div className="mt-3 p-3 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] inline-block font-mono font-bold text-[#1A5276] text-sm">
                 Orden: {createdOrder.numero_orden}
               </div>
             </div>
@@ -768,7 +767,7 @@ export default function PosPage() {
                 href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/orden/${createdOrder.id}/pdf?tipo=factura`}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-xs font-bold bg-rose-500 hover:bg-rose-400 text-white transition shadow-md shadow-rose-600/20"
+                className="w-full py-2.5 rounded-xl bg-[#1A5276] hover:bg-[#154360] text-white text-xs font-bold transition shadow-sm flex items-center justify-center gap-2"
               >
                 <Printer className="w-4 h-4" />
                 <span>Ver / Imprimir Factura PDF</span>
@@ -778,7 +777,7 @@ export default function PosPage() {
                 href={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'}/orden/${createdOrder.id}/pdf?tipo=recibo`}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-center gap-2 w-full py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition"
+                className="w-full py-2.5 rounded-xl bg-white hover:bg-[#F8F9FA] border border-[#CBD5E1] text-[#2C3E50] text-xs font-semibold transition shadow-sm flex items-center justify-center gap-2"
               >
                 <Receipt className="w-4 h-4" />
                 <span>Ver Recibo de Entrega PDF</span>
@@ -788,7 +787,7 @@ export default function PosPage() {
             <div className="pt-2">
               <button
                 onClick={() => setCreatedOrder(null)}
-                className="flex items-center justify-center gap-1.5 w-full py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition"
+                className="flex items-center justify-center gap-1.5 w-full py-2 rounded-xl text-xs font-bold text-[#7F8C8D] hover:text-[#2C3E50] transition"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Iniciar Nueva Venta Mostrador</span>

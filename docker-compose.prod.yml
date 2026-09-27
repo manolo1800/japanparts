@@ -10,6 +10,7 @@ volumes:
   pgdata_prod:
   redisdata_prod:
   miniodata_prod:
+  whatsappdata_prod:
 
 services:
   postgres:
@@ -79,6 +80,8 @@ services:
     restart: always
     env_file:
       - .env.prod
+    volumes:
+      - whatsappdata_prod:/data/whatsapp-sessions
     depends_on:
       postgres:
         condition: service_healthy
@@ -110,6 +113,8 @@ services:
     restart: always
     env_file:
       - .env.prod
+    volumes:
+      - whatsappdata_prod:/data/whatsapp-sessions
     depends_on:
       postgres:
         condition: service_healthy
@@ -117,3 +122,4 @@ services:
         condition: service_healthy
     networks:
       - app-net
+

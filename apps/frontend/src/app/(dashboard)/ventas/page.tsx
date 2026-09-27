@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -11,6 +11,7 @@ import {
 import { apiClient } from '../../../lib/api-client';
 import { Header } from '../../../components/header';
 import { DetalleOrdenModal } from '../../../components/detalle-orden-modal';
+import { OrdenDetailPanel } from '../../../components/orden-detail-panel';
 import {
   ReceiptText,
   Plus,
@@ -20,14 +21,18 @@ import {
   Share2,
   Store,
   MessageSquare,
+  Calendar,
+  LayoutGrid,
+  List,
 } from 'lucide-react';
-
 
 export default function VentasPage() {
   const [estadoFilter, setEstadoFilter] = useState<string>('todos');
   const [canalFilter, setCanalFilter] = useState<string>('todos');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedOrdenId, setSelectedOrdenId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<'master-detail' | 'table'>('master-detail');
+  const [modalOrdenId, setModalOrdenId] = useState<string | null>(null);
 
   const {
     data: ordenes = [],
@@ -45,6 +50,16 @@ export default function VentasPage() {
       return res.data || [];
     },
   });
+
+  // Automatically select first order when list loads or changes
+  useEffect(() => {
+    if (ordenes.length > 0 && !selectedOrdenId) {
+      setSelectedOrdenId(ordenes[0].id);
+    } else if (ordenes.length > 0 && selectedOrdenId) {
+      const exists = ordenes.some((o) => o.id === selectedOrdenId);
+      if (!exists) setSelectedOrdenId(ordenes[0].id);
+    }
+  }, [ordenes, selectedOrdenId]);
 
   // Calculate KPIs
   const totalOrdenes = ordenes.length;
@@ -67,72 +82,222 @@ export default function VentasPage() {
   };
 
   return (
-    <div className="pb-16 min-h-screen">
+    <div className="pb-16 min-h-full">
+      {/* Top Header */}
       <Header
-        title="Órdenes de Venta & Documentos"
-        subtitle="Control centralizado multicanal de ventas por mostrador, MercadoLibre y WhatsApp con facturación correlativa"
+        title="Órdenes de Venta & Facturación"
+        subtitle="Gestión financiera, emisión multicanal y correlativos fiscales (ERP Cloud)"
         onRefresh={() => refetch()}
         actionSlot={
-          <Link
-            href="/pos"
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white text-xs font-bold transition shadow-lg shadow-rose-600/20"
-          >
-            <Plus className="w-4 h-4" />
-            <span>+ Nueva Venta POS</span>
-          </Link>
+          <div className="flex items-center gap-2.5">
+            {/* View Mode Toggle */}
+            <div className="hidden sm:flex items-center p-1 rounded-xl bg-white border border-[#E2E8F0] shadow-sm">
+              <button
+                onClick={() => setViewMode('master-detail')}
+                className={`p-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition ${
+                  viewMode === 'master-detail'
+                    ? 'bg-[#1A5276] text-white font-bold shadow-sm'
+                    : 'text-[#7F8C8D] hover:text-[#2C3E50]'
+                }`}
+                title="Vista Master-Detail (Split View)"
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                <span className="text-[11px]">Split View</span>
+              </button>
+              <button
+                onClick={() => setViewMode('table')}
+                className={`p-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition ${
+                  viewMode === 'table'
+                    ? 'bg-[#1A5276] text-white font-bold shadow-sm'
+                    : 'text-[#7F8C8D] hover:text-[#2C3E50]'
+                }`}
+                title="Vista Tabla Completa"
+              >
+                <List className="w-3.5 h-3.5" />
+                <span className="text-[11px]">Tabla</span>
+              </button>
+            </div>
+
+            <Link
+              href="/pos"
+              className="erp-btn-primary text-xs"
+            >
+              <Plus className="w-4 h-4" />
+              <span>+ Nueva Venta POS</span>
+            </Link>
+          </div>
         }
       />
 
-      <div className="p-8 max-w-7xl mx-auto space-y-6">
-        {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="glass-card p-5 rounded-2xl">
-            <span className="text-xs font-semibold text-slate-400 block uppercase tracking-wider">
-              Total Órdenes
-            </span>
-            <div className="flex items-baseline justify-between mt-2">
-              <span className="text-2xl font-black text-white">{totalOrdenes}</span>
-              <span className="text-xs text-slate-400 font-mono">En sistema</span>
+      <div className="p-6 md:p-8 max-w-7xl mx-auto space-y-6">
+        {/* KPI Grid (4 columns of equal width with mini bar charts and stacked avatars) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Card 1: Total Facturado with Mini Bar Chart */}
+          <div className="erp-card erp-card-hover relative overflow-hidden flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-[#7F8C8D] uppercase tracking-wider block">
+                  Total Facturado
+                </span>
+                <span className="w-2 h-2 rounded-full bg-[#1A5276]" />
+              </div>
+              <div className="mt-2">
+                <span className="text-2xl lg:text-[28px] font-bold text-[#2C3E50] font-mono tracking-tight block">
+                  ${totalVendido.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                </span>
+                <span className="text-xs text-[#7F8C8D] font-medium block mt-0.5">
+                  Ventas activas USD
+                </span>
+              </div>
             </div>
-          </div>
 
-          <div className="glass-card p-5 rounded-2xl border-l-4 border-l-amber-500">
-            <span className="text-xs font-semibold text-slate-400 block uppercase tracking-wider">
-              Pendientes / Por Despachar
-            </span>
-            <div className="flex items-baseline justify-between mt-2">
-              <span className="text-2xl font-black text-amber-400">{pendientesDespacho}</span>
-              <span className="text-xs text-amber-500/80 font-mono">Requieren atención</span>
-            </div>
-          </div>
-
-          <div className="glass-card p-5 rounded-2xl border-l-4 border-l-emerald-500">
-            <span className="text-xs font-semibold text-slate-400 block uppercase tracking-wider">
-              Despachadas / Entregadas
-            </span>
-            <div className="flex items-baseline justify-between mt-2">
-              <span className="text-2xl font-black text-emerald-400">{despachadas}</span>
-              <span className="text-xs text-emerald-500/80 font-mono">Completadas</span>
-            </div>
-          </div>
-
-          <div className="glass-card p-5 rounded-2xl border-l-4 border-l-rose-500">
-            <span className="text-xs font-semibold text-slate-400 block uppercase tracking-wider">
-              Total Facturado (Activas)
-            </span>
-            <div className="flex items-baseline justify-between mt-2">
-              <span className="text-2xl font-black text-rose-400 font-mono">
-                ${totalVendido.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+            {/* Mini Bar Chart (DESING.md) */}
+            <div className="mt-5 pt-3 border-t border-[#E2E8F0] flex items-end justify-between">
+              <div className="flex items-end gap-1.5 h-8">
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-2.5 h-4 bg-slate-200 rounded-t-sm" />
+                  <span className="text-[9px] text-[#7F8C8D] font-mono">Jul</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-2.5 h-5 bg-slate-200 rounded-t-sm" />
+                  <span className="text-[9px] text-[#7F8C8D] font-mono">Ago</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-2.5 h-7 bg-[#1A5276] rounded-t-sm" />
+                  <span className="text-[9px] text-[#1A5276] font-bold font-mono">Sep</span>
+                </div>
+              </div>
+              <span className="text-[11px] font-semibold text-[#1A5276] font-mono">
+                +14.2% mes
               </span>
-              <span className="text-xs text-rose-400/80 font-mono">USD</span>
+            </div>
+          </div>
+
+          {/* Card 2: Pendientes / Por Despachar with Stacked Avatars */}
+          <div className="erp-card erp-card-hover flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-[#7F8C8D] uppercase tracking-wider block">
+                  Por Despachar
+                </span>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 border border-amber-500/20">
+                  Urgente
+                </span>
+              </div>
+              <div className="mt-2">
+                <span className="text-2xl lg:text-[28px] font-bold text-amber-600 font-mono tracking-tight block">
+                  {pendientesDespacho}
+                </span>
+                <span className="text-xs text-[#7F8C8D] font-medium block mt-0.5">
+                  Requieren atención de bodega
+                </span>
+              </div>
+            </div>
+
+            {/* Stacked Avatars (DESING.md) */}
+            <div className="mt-5 pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
+              <div className="flex -space-x-2">
+                <div className="w-6 h-6 rounded-full bg-[#1A5276] border-2 border-white flex items-center justify-center text-[10px] font-bold text-white">
+                  JP
+                </div>
+                <div className="w-6 h-6 rounded-full bg-slate-600 border-2 border-white flex items-center justify-center text-[10px] font-bold text-white">
+                  ML
+                </div>
+                <div className="w-6 h-6 rounded-full bg-emerald-600 border-2 border-white flex items-center justify-center text-[10px] font-bold text-white">
+                  WA
+                </div>
+              </div>
+              <span className="text-[11px] text-[#7F8C8D] font-medium">
+                Multicanal activo
+              </span>
+            </div>
+          </div>
+
+          {/* Card 3: Despachadas / Completadas with Mini Bar Chart */}
+          <div className="erp-card erp-card-hover flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-[#7F8C8D] uppercase tracking-wider block">
+                  Despachadas
+                </span>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  Exitosas
+                </span>
+              </div>
+              <div className="mt-2">
+                <span className="text-2xl lg:text-[28px] font-bold text-[#2C3E50] font-mono tracking-tight block">
+                  {despachadas}
+                </span>
+                <span className="text-xs text-[#7F8C8D] font-medium block mt-0.5">
+                  Entregas completadas
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-5 pt-3 border-t border-[#E2E8F0] flex items-end justify-between">
+              <div className="flex items-end gap-1.5 h-8">
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-2.5 h-3 bg-slate-200 rounded-t-sm" />
+                  <span className="text-[9px] text-[#7F8C8D] font-mono">Jul</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-2.5 h-5 bg-slate-200 rounded-t-sm" />
+                  <span className="text-[9px] text-[#7F8C8D] font-mono">Ago</span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-2.5 h-6 bg-[#1A5276] rounded-t-sm" />
+                  <span className="text-[9px] text-[#1A5276] font-bold font-mono">Sep</span>
+                </div>
+              </div>
+              <span className="text-[11px] font-semibold text-[#2C3E50] font-mono">
+                {totalOrdenes > 0 ? `${Math.round((despachadas / totalOrdenes) * 100)}%` : '100%'} ratio
+              </span>
+            </div>
+          </div>
+
+          {/* Card 4: Total Órdenes Registradas with Stacked Avatars */}
+          <div className="erp-card erp-card-hover flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-[#7F8C8D] uppercase tracking-wider block">
+                  Total Órdenes
+                </span>
+                <span className="text-[10px] font-mono text-[#7F8C8D]">
+                  Historial
+                </span>
+              </div>
+              <div className="mt-2">
+                <span className="text-2xl lg:text-[28px] font-bold text-[#2C3E50] font-mono tracking-tight block">
+                  {totalOrdenes}
+                </span>
+                <span className="text-xs text-[#7F8C8D] font-medium block mt-0.5">
+                  Emitidas en sistema
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-5 pt-3 border-t border-[#E2E8F0] flex items-center justify-between">
+              <div className="flex -space-x-2">
+                {ordenes.slice(0, 3).map((ord, idx) => (
+                  <div
+                    key={idx}
+                    className="w-6 h-6 rounded-full bg-[#1A5276] border-2 border-white flex items-center justify-center text-[10px] font-bold text-white uppercase"
+                  >
+                    {ord.cliente?.nombre ? ord.cliente.nombre.charAt(0) : 'C'}
+                  </div>
+                ))}
+              </div>
+              <span className="text-[11px] text-[#8B949E] font-mono">
+                Trazabilidad 100%
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Filters Toolbar */}
-        <div className="glass-card p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Status Tabs */}
-          <div className="flex flex-wrap gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 w-full md:w-auto">
+        {/* Filter Bar (Horizontal row with tabs, date selectors, and local search) */}
+        <div className="bg-white p-4 rounded-2xl border border-[#E2E8F0] shadow-sm flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4">
+          {/* Status Tabs (Pill shape adhering to DESING.md) */}
+          <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-full bg-[#F8F9FA] border border-[#E2E8F0] w-full xl:w-auto overflow-x-auto">
             {[
               { id: 'todos', label: 'Todas' },
               { id: OrderStatus.PENDIENTE, label: 'Pendientes' },
@@ -144,10 +309,8 @@ export default function VentasPage() {
               <button
                 key={tab.id}
                 onClick={() => setEstadoFilter(tab.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-                  estadoFilter === tab.id
-                    ? 'bg-rose-500 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                className={`erp-tab whitespace-nowrap ${
+                  estadoFilter === tab.id ? 'erp-tab-active' : 'erp-tab-inactive'
                 }`}
               >
                 {tab.label}
@@ -155,12 +318,19 @@ export default function VentasPage() {
             ))}
           </div>
 
-          {/* Channel Filter & Search Input */}
-          <div className="flex items-center gap-3 w-full md:w-auto">
+          {/* Date Selector, Channel Filter, and Search Bar */}
+          <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+            {/* Date Pill Selector */}
+            <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-xs text-[#7F8C8D]">
+              <Calendar className="w-3.5 h-3.5 text-[#1A5276]" />
+              <span className="text-[#2C3E50] font-medium">Mes Actual (2026)</span>
+            </div>
+
+            {/* Channel Selector */}
             <select
               value={canalFilter}
               onChange={(e) => setCanalFilter(e.target.value)}
-              className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-medium text-slate-300 focus:outline-none focus:border-rose-500"
+              className="px-3 py-2 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-xs font-medium text-[#2C3E50] focus:outline-none focus:border-[#1A5276] transition"
             >
               <option value="todos">Todos los Canales</option>
               <option value="mostrador">Mostrador (Tienda)</option>
@@ -168,187 +338,312 @@ export default function VentasPage() {
               <option value="whatsapp">WhatsApp</option>
             </select>
 
-            <div className="relative flex-1 md:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
+            {/* Local Search Input */}
+            <div className="relative flex-1 sm:w-64">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#7F8C8D]" />
               <input
                 type="text"
                 placeholder="Buscar por N° orden o cliente..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-rose-500"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-xs text-[#2C3E50] placeholder-[#7F8C8D] focus:outline-none focus:border-[#1A5276] transition"
               />
             </div>
           </div>
         </div>
 
-        {/* Orders Table */}
-        <div className="glass-card rounded-2xl overflow-hidden border border-slate-800/80">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-900/90 text-slate-400 uppercase font-mono text-[10px] tracking-wider border-b border-slate-800">
-                <tr>
-                  <th className="px-5 py-3.5">N° Orden</th>
-                  <th className="px-5 py-3.5">Fecha</th>
-                  <th className="px-5 py-3.5">Canal</th>
-                  <th className="px-5 py-3.5">Cliente</th>
-                  <th className="px-5 py-3.5">Entrega</th>
-                  <th className="px-5 py-3.5">Pago</th>
-                  <th className="px-5 py-3.5">Estado</th>
-                  <th className="px-5 py-3.5 text-right">Total ($ USD)</th>
-                  <th className="px-5 py-3.5 text-center">Acciones</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/60">
+        {/* Master-Detail Split View (DESING.md Section 4 & 5) */}
+        {viewMode === 'master-detail' ? (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Left Panel (List: ~40% width / 5 cols) */}
+            <div className="lg:col-span-5 space-y-3">
+              <div className="flex items-center justify-between px-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-[#7F8C8D]">
+                  Lista de Órdenes ({ordenes.length})
+                </span>
+                <span className="text-[11px] text-[#7F8C8D]">
+                  Selecciona para ver detalle
+                </span>
+              </div>
+
+              <div className="space-y-2.5 max-h-[calc(100vh-280px)] overflow-y-auto pr-1">
                 {isLoading ? (
-                  <tr>
-                    <td colSpan={9} className="py-20 text-center">
-                      <div className="flex flex-col items-center justify-center gap-2">
-                        <div className="w-8 h-8 border-3 border-rose-500 border-t-transparent rounded-full animate-spin" />
-                        <span className="text-xs text-slate-400 font-mono">Cargando órdenes de venta...</span>
-                      </div>
-                    </td>
-                  </tr>
+                  <div className="py-20 text-center bg-white rounded-2xl border border-[#E2E8F0] shadow-sm">
+                    <div className="w-8 h-8 border-3 border-[#1A5276] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                    <span className="text-xs text-[#7F8C8D] font-medium">Cargando órdenes...</span>
+                  </div>
                 ) : ordenes.length === 0 ? (
-                  <tr>
-                    <td colSpan={9} className="py-16 text-center text-slate-400">
-                      <ReceiptText className="w-8 h-8 mx-auto text-slate-600 mb-2" />
-                      <p className="text-sm font-semibold text-slate-300">
-                        No hay órdenes registradas con los filtros seleccionados
-                      </p>
-                      <p className="text-xs text-slate-500 mt-1">
-                        Use el Punto de Venta (POS) para emitir una nueva orden
-                      </p>
-                    </td>
-                  </tr>
+                  <div className="py-16 text-center bg-white rounded-2xl border border-[#E2E8F0] p-6 shadow-sm">
+                    <ReceiptText className="w-8 h-8 mx-auto text-[#7F8C8D] mb-2" />
+                    <p className="text-sm font-semibold text-[#2C3E50]">
+                      Sin órdenes con los filtros actuales
+                    </p>
+                    <p className="text-xs text-[#7F8C8D] mt-1">
+                      Emite una venta desde el POS para verla reflejada aquí.
+                    </p>
+                  </div>
                 ) : (
-                  ordenes.map((orden) => (
-                    <tr
-                      key={orden.id}
-                      className="hover:bg-slate-900/40 transition group"
-                    >
-                      {/* N° Orden */}
-                      <td className="px-5 py-4 font-mono font-bold text-rose-400">
-                        {orden.numero_orden}
-                      </td>
+                  ordenes.map((orden) => {
+                    const isSelected = selectedOrdenId === orden.id;
+                    const isPaid = orden.estado_pago === PaymentStatus.CONFIRMADO;
 
-                      {/* Fecha */}
-                      <td className="px-5 py-4 text-slate-400 font-mono text-[11px]">
-                        {new Date(orden.fecha || orden.created_at).toLocaleDateString('es-VE', {
-                          day: '2-digit',
-                          month: 'short',
-                          year: 'numeric',
-                        })}
-                      </td>
+                    return (
+                      <div
+                        key={orden.id}
+                        onClick={() => setSelectedOrdenId(orden.id)}
+                        className={`p-4 rounded-2xl border cursor-pointer transition-all duration-200 select-none ${
+                          isSelected
+                            ? 'bg-[#1A5276]/5 border-[#1A5276] border-l-4 shadow-md'
+                            : 'bg-white border-[#E2E8F0] hover:bg-[#F8F9FA] hover:border-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          {/* Client Avatar & Order Info */}
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-[#1A5276]/10 border border-[#1A5276]/20 flex items-center justify-center font-bold text-xs text-[#1A5276] shrink-0">
+                              {orden.cliente?.nombre ? orden.cliente.nombre.charAt(0).toUpperCase() : 'C'}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="font-mono font-bold text-[#2C3E50] text-xs">
+                                  {orden.numero_orden}
+                                </span>
+                                <span
+                                  className={`inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] font-semibold uppercase ${
+                                    orden.canal === 'mostrador'
+                                      ? 'bg-amber-500/10 text-amber-700 border border-amber-500/20'
+                                      : orden.canal === 'ml'
+                                        ? 'bg-yellow-500/10 text-yellow-800 border border-yellow-500/20'
+                                        : 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20'
+                                  }`}
+                                >
+                                  {orden.canal === 'mostrador' && <Store className="w-2.5 h-2.5" />}
+                                  {orden.canal === 'ml' && <Share2 className="w-2.5 h-2.5" />}
+                                  {orden.canal === 'whatsapp' && <MessageSquare className="w-2.5 h-2.5" />}
+                                  <span>{orden.canal}</span>
+                                </span>
+                              </div>
+                              <p className="text-xs font-semibold text-[#2C3E50] mt-0.5 truncate max-w-[170px]">
+                                {orden.cliente?.nombre || 'Cliente Mostrador'}
+                              </p>
+                            </div>
+                          </div>
 
-                      {/* Canal */}
-                      <td className="px-5 py-4">
-                        <span
-                          className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
-                            orden.canal === 'mostrador'
-                              ? 'bg-amber-500/10 text-amber-300 border border-amber-500/20'
-                              : orden.canal === 'ml'
-                                ? 'bg-yellow-500/10 text-yellow-300 border border-yellow-500/20'
-                                : 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20'
-                          }`}
-                        >
-                          {orden.canal === 'mostrador' && <Store className="w-3 h-3" />}
-                          {orden.canal === 'ml' && <Share2 className="w-3 h-3" />}
-                          {orden.canal === 'whatsapp' && <MessageSquare className="w-3 h-3" />}
-                          <span>{orden.canal}</span>
-                        </span>
-                      </td>
+                          {/* Right Aligned Amount & Status */}
+                          <div className="text-right">
+                            <span className="font-mono font-bold text-sm text-[#2C3E50] block">
+                              ${Number(orden.total).toFixed(2)}
+                            </span>
+                            <span
+                              className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full uppercase mt-1 ${
+                                isPaid
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                  : 'bg-slate-100 text-[#7F8C8D] border border-slate-200'
+                              }`}
+                            >
+                              {orden.estado_pago === PaymentStatus.CONFIRMADO ? 'Pagado' : 'Pendiente'}
+                            </span>
+                          </div>
+                        </div>
 
-                      {/* Cliente */}
-                      <td className="px-5 py-4">
-                        <span className="font-semibold text-white block">
-                          {orden.cliente?.nombre || 'Cliente Mostrador'}
-                        </span>
-                        {orden.cliente?.telefono && (
-                          <span className="text-[10px] text-slate-500 font-mono block">
-                            {orden.cliente.telefono}
+                        {/* Card Sub-row (Date & Delivery) */}
+                        <div className="mt-3 pt-2 border-t border-[#E2E8F0] flex items-center justify-between text-[11px] text-[#7F8C8D]">
+                          <span className="font-mono">
+                            {new Date(orden.fecha || orden.created_at).toLocaleDateString('es-VE', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric',
+                            })}
                           </span>
-                        )}
-                      </td>
+                          <span className="capitalize text-[#2C3E50] text-[10px]">
+                            {orden.tipo_entrega}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
 
-                      {/* Entrega */}
-                      <td className="px-5 py-4 capitalize text-slate-300 text-[11px]">
-                        {orden.tipo_entrega}
-                      </td>
-
-                      {/* Pago */}
-                      <td className="px-5 py-4">
-                        <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                            orden.estado_pago === PaymentStatus.CONFIRMADO
-                              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                              : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                          }`}
-                        >
-                          {orden.estado_pago}
-                        </span>
-                      </td>
-
-                      {/* Estado */}
-                      <td className="px-5 py-4">
-                        <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                            orden.estado === OrderStatus.DESPACHADA || orden.estado === OrderStatus.CERRADA
-                              ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                              : orden.estado === OrderStatus.CANCELADA
-                                ? 'bg-red-500/20 text-red-300 border border-red-500/30'
-                                : orden.estado === OrderStatus.CONFIRMADA || orden.estado === OrderStatus.POR_DESPACHAR
-                                  ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
-                                  : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                          }`}
-                        >
-                          {orden.estado.replace('_', ' ')}
-                        </span>
-                      </td>
-
-                      {/* Total */}
-                      <td className="px-5 py-4 text-right font-mono font-bold text-white text-sm">
-                        ${Number(orden.total).toFixed(2)}
-                      </td>
-
-                      {/* Acciones */}
-                      <td className="px-5 py-4 text-center">
-                        <div className="flex items-center justify-center gap-1.5">
-                          <button
-                            onClick={() => setSelectedOrdenId(orden.id)}
-                            title="Ver Detalle de Orden"
-                            className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition"
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                          </button>
-
-                          <a
-                            href={getPdfUrl(orden.id, 'factura')}
-                            target="_blank"
-                            rel="noreferrer"
-                            title="Imprimir / Ver Factura PDF"
-                            className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 transition"
-                          >
-                            <Printer className="w-3.5 h-3.5" />
-                          </a>
+            {/* Right Panel (Detail: ~60% width / 7 cols) */}
+            <div className="lg:col-span-7 sticky top-20">
+              <OrdenDetailPanel
+                ordenId={selectedOrdenId}
+                onUpdated={() => refetch()}
+              />
+            </div>
+          </div>
+        ) : (
+          /* Table View Alternative */
+          <div className="bg-white rounded-2xl overflow-hidden border border-[#E2E8F0] shadow-sm">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-[#F8F9FA] text-[#7F8C8D] uppercase font-mono text-[10px] tracking-wider border-b border-[#E2E8F0]">
+                  <tr>
+                    <th className="px-5 py-4">N° Orden</th>
+                    <th className="px-5 py-4">Fecha</th>
+                    <th className="px-5 py-4">Canal</th>
+                    <th className="px-5 py-4">Cliente</th>
+                    <th className="px-5 py-4">Entrega</th>
+                    <th className="px-5 py-4">Pago</th>
+                    <th className="px-5 py-4">Estado</th>
+                    <th className="px-5 py-4 text-right">Total ($ USD)</th>
+                    <th className="px-5 py-4 text-center">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#E2E8F0]">
+                  {isLoading ? (
+                    <tr>
+                      <td colSpan={9} className="py-20 text-center">
+                        <div className="flex flex-col items-center justify-center gap-2">
+                          <div className="w-8 h-8 border-3 border-[#1A5276] border-t-transparent rounded-full animate-spin" />
+                          <span className="text-xs text-[#7F8C8D] font-medium">Cargando órdenes de venta...</span>
                         </div>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ) : ordenes.length === 0 ? (
+                    <tr>
+                      <td colSpan={9} className="py-16 text-center text-[#7F8C8D]">
+                        <ReceiptText className="w-8 h-8 mx-auto text-[#7F8C8D] mb-2" />
+                        <p className="text-sm font-semibold text-[#2C3E50]">
+                          No hay órdenes registradas con los filtros seleccionados
+                        </p>
+                      </td>
+                    </tr>
+                  ) : (
+                    ordenes.map((orden) => (
+                      <tr
+                        key={orden.id}
+                        onClick={() => {
+                          setSelectedOrdenId(orden.id);
+                          setViewMode('master-detail');
+                        }}
+                        className="hover:bg-[#F8F9FA] cursor-pointer transition group"
+                      >
+                        {/* N° Orden */}
+                        <td className="px-5 py-4 font-mono font-bold text-[#1A5276]">
+                          {orden.numero_orden}
+                        </td>
+
+                        {/* Fecha */}
+                        <td className="px-5 py-4 text-[#7F8C8D] font-mono text-[11px]">
+                          {new Date(orden.fecha || orden.created_at).toLocaleDateString('es-VE', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                          })}
+                        </td>
+
+                        {/* Canal */}
+                        <td className="px-5 py-4">
+                          <span
+                            className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
+                              orden.canal === 'mostrador'
+                                ? 'bg-amber-500/10 text-amber-700 border border-amber-500/20'
+                                : orden.canal === 'ml'
+                                  ? 'bg-yellow-500/10 text-yellow-800 border border-yellow-500/20'
+                                  : 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20'
+                            }`}
+                          >
+                            {orden.canal === 'mostrador' && <Store className="w-3 h-3" />}
+                            {orden.canal === 'ml' && <Share2 className="w-3 h-3" />}
+                            {orden.canal === 'whatsapp' && <MessageSquare className="w-3 h-3" />}
+                            <span>{orden.canal}</span>
+                          </span>
+                        </td>
+
+                        {/* Cliente */}
+                        <td className="px-5 py-4">
+                          <span className="font-semibold text-[#2C3E50] block">
+                            {orden.cliente?.nombre || 'Cliente Mostrador'}
+                          </span>
+                          {orden.cliente?.telefono && (
+                            <span className="text-[10px] text-[#7F8C8D] font-mono block">
+                              {orden.cliente.telefono}
+                            </span>
+                          )}
+                        </td>
+
+                        {/* Entrega */}
+                        <td className="px-5 py-4 capitalize text-[#2C3E50] text-[11px]">
+                          {orden.tipo_entrega}
+                        </td>
+
+                        {/* Pago */}
+                        <td className="px-5 py-4">
+                          <span
+                            className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                              orden.estado_pago === PaymentStatus.CONFIRMADO
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : 'bg-slate-100 text-[#7F8C8D] border border-slate-200'
+                            }`}
+                          >
+                            {orden.estado_pago}
+                          </span>
+                        </td>
+
+                        {/* Estado */}
+                        <td className="px-5 py-4">
+                          <span
+                            className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                              orden.estado === OrderStatus.DESPACHADA || orden.estado === OrderStatus.CERRADA
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : orden.estado === OrderStatus.CANCELADA
+                                  ? 'bg-red-500/20 text-red-600 border border-red-500/30'
+                                  : 'bg-slate-100 text-[#2C3E50] border border-slate-200'
+                            }`}
+                          >
+                            {orden.estado.replace('_', ' ')}
+                          </span>
+                        </td>
+
+                        {/* Total */}
+                        <td className="px-5 py-4 text-right font-mono font-bold text-[#2C3E50] text-sm">
+                          ${Number(orden.total).toFixed(2)}
+                        </td>
+
+                        {/* Acciones */}
+                        <td className="px-5 py-4 text-center">
+                          <div className="flex items-center justify-center gap-1.5" onClick={(e) => e.stopPropagation()}>
+                            <button
+                              onClick={() => setModalOrdenId(orden.id)}
+                              title="Ver Detalle en Modal"
+                              className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-[#7F8C8D] hover:text-[#2C3E50] border border-slate-200 transition"
+                            >
+                              <Eye className="w-3.5 h-3.5" />
+                            </button>
+
+                            <a
+                              href={getPdfUrl(orden.id, 'factura')}
+                              target="_blank"
+                              rel="noreferrer"
+                              title="Imprimir / Ver Factura PDF"
+                              className="p-1.5 rounded-lg bg-[#1A5276]/10 hover:bg-[#1A5276]/20 text-[#1A5276] border border-[#1A5276]/30 transition"
+                            >
+                              <Printer className="w-3.5 h-3.5" />
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Detalle Orden Modal */}
-      {selectedOrdenId && (
+      {/* Detalle Orden Modal (Alternative floating modal view) */}
+      {modalOrdenId && (
         <DetalleOrdenModal
-          ordenId={selectedOrdenId}
-          onClose={() => setSelectedOrdenId(null)}
+          ordenId={modalOrdenId}
+          onClose={() => setModalOrdenId(null)}
           onUpdated={() => refetch()}
         />
       )}
     </div>
   );
 }
+

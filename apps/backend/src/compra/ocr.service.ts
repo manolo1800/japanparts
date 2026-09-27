@@ -1,8 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Sku } from '../entities/sku.entity';
 import { Proveedor } from '../entities/proveedor.entity';
+import { DeepSeekService } from '../integrations/deepseek/deepseek.service';
 import {
   OcrParsedFacturaResult,
   OcrFacturaItem,
@@ -18,6 +19,8 @@ export class OcrService {
     private skuRepository: Repository<Sku>,
     @InjectRepository(Proveedor)
     private proveedorRepository: Repository<Proveedor>,
+    @Optional()
+    private readonly deepSeekService?: DeepSeekService,
   ) {}
 
   async parseDocument(
@@ -36,8 +39,106 @@ export class OcrService {
       rawText = buffer.toString('utf-8');
     }
 
+    // Si DeepSeek está disponible, intentar parseo avanzado con IA
+    if (this.deepSeekService?.isReady() && rawText.trim().length > 20) {
+      try {
+        const aiResult = await this.parseWithDeepSeek(rawText, filename);
+        if (aiResult && aiResult.items && aiResult.items.length > 0) {
+          this.logger.log(`Parseo exitoso con DeepSeek AI para factura: ${aiResult.numero_factura}`);
+          return aiResult;
+        }
+      } catch (err: any) {
+        this.logger.warn(`Fallback a heurística regex tras error en DeepSeek OCR: ${err?.message}`);
+      }
+    }
+
     return await this.extractStructuredData(rawText, filename);
   }
+
+  private async parseWithDeepSeek(
+    rawText: string,
+    filename: string,
+  ): Promise<OcrParsedFacturaResult | null> {
+    const prompt = `Analiza el siguiente texto extraído de una factura de repuestos automotrices (${filename}) y extrae los datos clave en formato JSON.`;
+    const schema = `{
+  "proveedor_nombre": "Nombre de la empresa o distribuidor emisor",
+  "rif": "RIF en formato J-12345678-9",
+  "numero_factura": "Número o correlativo de la factura",
+  "fecha": "YYYY-MM-DD",
+  "condicion_pago": "contado | credito",
+  "dias_credito": 0,
+  "subtotal": 0.00,
+  "total": 0.00,
+  "items": [
+    {
+      "sku_interno": "código o número de parte si existe",
+      "descripcion": "descripción de la pieza",
+      "cantidad": 1,
+      "costo_unitario": 0.00,
+      "subtotal": 0.00
+    }
+  ]
+}`;
+
+    const parsed = await this.deepSeekService!.extractStructuredJson<any>(
+      'Eres un sistema experto contable en lectura de facturas para Japón Parts.',
+      `${prompt}\n\nTexto crudo extraído:\n${rawText.slice(0, 3000)}`,
+      schema,
+    );
+
+    if (!parsed) return null;
+
+    // Vincular con catálogo de SKUs y proveedores
+    const allSkus = await this.skuRepository.find({ where: { activo: true } });
+    const items: OcrFacturaItem[] = (parsed.items || []).map((it: any) => {
+      let matchedSkuId: string | null = null;
+      if (it.sku_interno) {
+        const found = allSkus.find(
+          (s) =>
+            s.sku_interno.toLowerCase() === String(it.sku_interno).toLowerCase(),
+        );
+        if (found) matchedSkuId = found.id;
+      }
+      if (!matchedSkuId && it.descripcion) {
+        const found = allSkus.find((s) =>
+          it.descripcion.toLowerCase().includes(s.marca.toLowerCase()),
+        );
+        if (found) matchedSkuId = found.id;
+      }
+
+      return {
+        sku_interno: it.sku_interno || undefined,
+        descripcion: it.descripcion || 'Repuesto',
+        cantidad: Number(it.cantidad) || 1,
+        costo_unitario: Number(it.costo_unitario) || 0,
+        subtotal: Number(it.subtotal) || Number(it.cantidad || 1) * Number(it.costo_unitario || 0),
+        sku_id_coincidente: matchedSkuId,
+      };
+    });
+
+    let proveedorNombre = parsed.proveedor_nombre || 'Distribuidora Automotriz';
+    if (parsed.rif) {
+      const prov = await this.proveedorRepository.findOne({ where: { rif: parsed.rif } });
+      if (prov) proveedorNombre = prov.nombre;
+    }
+
+    return {
+      proveedor_nombre: proveedorNombre,
+      rif: parsed.rif || 'J-00000000-0',
+      numero_factura: parsed.numero_factura || `FAC-${Date.now().toString().slice(-6)}`,
+      fecha: parsed.fecha || new Date().toISOString().split('T')[0],
+      condicion_pago:
+        parsed.condicion_pago === 'credito'
+          ? PurchasePaymentCondition.CREDITO
+          : PurchasePaymentCondition.CONTADO,
+      dias_credito: Number(parsed.dias_credito) || (parsed.condicion_pago === 'credito' ? 30 : 0),
+      subtotal: Number(parsed.subtotal) || items.reduce((acc, i) => acc + i.subtotal, 0),
+      total: Number(parsed.total) || items.reduce((acc, i) => acc + i.subtotal, 0),
+      items,
+      raw_text: rawText.slice(0, 500),
+    };
+  }
+
 
   private extractTextFromPdfBuffer(buffer: Buffer): string {
     // Extracción de streams de texto en PDFs sin dependencias binarias pesadas

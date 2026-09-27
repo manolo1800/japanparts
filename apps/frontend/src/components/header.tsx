@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, RefreshCw } from 'lucide-react';
+import { Plus, RefreshCw, Building2, Clock, Bell, Menu } from 'lucide-react';
 import { useAuth } from '../context/auth-context';
+import { useSidebar } from '../context/sidebar-context';
 
 interface HeaderProps {
   title: string;
@@ -21,40 +22,85 @@ export function Header({
   actionSlot,
 }: HeaderProps) {
   const { isBodega } = useAuth();
+  const { toggleSidebar } = useSidebar();
+  const [timeString, setTimeString] = useState<string>('');
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setTimeString(
+        now.toLocaleTimeString('es-ES', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true,
+        }),
+      );
+    };
+
+    updateTime();
+    const interval = setInterval(updateTime, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <header className="h-16 px-8 border-b border-slate-800/80 bg-[#090d16]/80 backdrop-blur-md flex items-center justify-between sticky top-0 z-30">
-      <div>
-        <h1 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-          {title}
-        </h1>
-        {subtitle && (
-          <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>
-        )}
+    <header className="topbar">
+      <div className="topbar-left">
+        <button
+          onClick={toggleSidebar}
+          className="topbar-btn md:hidden"
+          title="Alternar menú"
+        >
+          <Menu className="w-4 h-4" />
+        </button>
+
+        <div>
+          <h1 className="page-title">{title}</h1>
+          {subtitle && <p className="page-subtitle">{subtitle}</p>}
+        </div>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="topbar-right">
+        {actionSlot}
+
         {onRefresh && (
           <button
             onClick={onRefresh}
-            className="p-2 rounded-lg bg-slate-800/60 border border-slate-700/60 text-slate-300 hover:text-white hover:bg-slate-800 transition"
+            className="topbar-btn"
             title="Recargar datos"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-4 h-4 text-slate-600" />
           </button>
         )}
-
-        {actionSlot}
 
         {showNewSkuBtn && isBodega && (
           <Link
             href="/inventario/nuevo"
-            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold shadow-lg shadow-rose-600/25 transition active:scale-95"
+            className="btn btn-primary !text-xs !py-2 !px-3.5"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="w-4 h-4" />
             <span>Nuevo SKU</span>
           </Link>
         )}
+
+        {/* Branch / Sede */}
+        <div className="branch-badge hidden sm:flex">
+          <Building2 className="w-3.5 h-3.5 text-[#1A5276]" />
+          <span>Japón Parts — Sucursal Principal</span>
+        </div>
+
+        {/* Live Clock */}
+        {timeString && (
+          <div className="current-time hidden md:flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-slate-400" />
+            <span>{timeString}</span>
+          </div>
+        )}
+
+        {/* Notification Bell */}
+        <button className="topbar-btn" title="Notificaciones del sistema">
+          <Bell className="w-4 h-4 text-slate-600" />
+          <span className="notif-dot" />
+        </button>
       </div>
     </header>
   );

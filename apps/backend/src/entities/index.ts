@@ -12,4 +12,7 @@ export * from './cliente.entity';
 export * from './orden.entity';
 export * from './orden-detalle.entity';
 export * from './documento-venta.entity';
+export * from './conversacion.entity';
+export * from './mensaje.entity';
+
 

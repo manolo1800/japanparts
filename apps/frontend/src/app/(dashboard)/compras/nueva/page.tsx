@@ -281,7 +281,7 @@ export default function NuevaCompraPage() {
         actionSlot={
           <Link
             href="/compras"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-[#F8F9FA] text-[#2C3E50] border border-[#E2E8F0] text-xs font-semibold transition shadow-sm"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Volver a Compras</span>
@@ -291,14 +291,14 @@ export default function NuevaCompraPage() {
 
       <div className="p-8 max-w-6xl mx-auto space-y-6">
         {/* Mode Selector Tabs */}
-        <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
+        <div className="flex items-center gap-3 border-b border-[#E2E8F0] pb-4">
           <button
             type="button"
             onClick={() => setMode('ocr')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm ${
               mode === 'ocr'
-                ? 'bg-gradient-to-r from-rose-600 to-rose-500 text-white shadow-lg shadow-rose-600/20'
-                : 'bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800'
+                ? 'bg-[#1A5276] text-white'
+                : 'bg-white text-[#7F8C8D] hover:text-[#2C3E50] border border-[#E2E8F0]'
             }`}
           >
             <Sparkles className="w-4 h-4" />
@@ -308,10 +308,10 @@ export default function NuevaCompraPage() {
           <button
             type="button"
             onClick={() => setMode('manual')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm ${
               mode === 'manual'
-                ? 'bg-gradient-to-r from-rose-600 to-rose-500 text-white shadow-lg shadow-rose-600/20'
-                : 'bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800'
+                ? 'bg-[#1A5276] text-white'
+                : 'bg-white text-[#7F8C8D] hover:text-[#2C3E50] border border-[#E2E8F0]'
             }`}
           >
             <FileText className="w-4 h-4" />
@@ -320,7 +320,7 @@ export default function NuevaCompraPage() {
         </div>
 
         {error && (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-3">
+          <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-3">
             <AlertCircle className="w-5 h-5 shrink-0" />
             <span>{error}</span>
           </div>
@@ -328,21 +328,21 @@ export default function NuevaCompraPage() {
 
         {/* OCR File Upload Zone (visible in OCR mode) */}
         {mode === 'ocr' && (
-          <div className="glass-card p-6 rounded-2xl border-2 border-dashed border-rose-500/30 hover:border-rose-500/60 transition bg-rose-950/5">
+          <div className="bg-white p-6 rounded-2xl border-2 border-dashed border-[#CBD5E1] hover:border-[#1A5276] transition shadow-sm">
             <div className="flex flex-col items-center justify-center text-center py-4">
-              <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mb-3">
-                <UploadCloud className="w-7 h-7 text-rose-400" />
+              <div className="w-14 h-14 rounded-2xl bg-[#EFF6FF] border border-[#BFDBFE] flex items-center justify-center mb-3">
+                <UploadCloud className="w-7 h-7 text-[#1A5276]" />
               </div>
 
-              <h4 className="text-base font-bold text-white mb-1">
+              <h4 className="text-base font-bold text-[#2C3E50] mb-1">
                 Sube la Factura o Comprobante en PDF / Imagen
               </h4>
-              <p className="text-xs text-slate-400 max-w-md mb-4">
+              <p className="text-xs text-[#7F8C8D] max-w-md mb-4">
                 El motor OCR procesará automáticamente el RIF, Nº Factura, ítems de repuestos,
                 cantidades y costos unitarios, almacenando el archivo en MinIO.
               </p>
 
-              <label className="cursor-pointer px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow-lg shadow-rose-600/25 flex items-center gap-2">
+              <label className="cursor-pointer px-5 py-2.5 rounded-xl bg-[#1A5276] hover:bg-[#154360] text-white text-xs font-bold transition shadow-sm flex items-center gap-2">
                 <span>Seleccionar Archivo (PDF, JPG, PNG)</span>
                 <input
                   type="file"
@@ -354,14 +354,14 @@ export default function NuevaCompraPage() {
               </label>
 
               {ocrLoading && (
-                <div className="mt-4 flex items-center gap-2.5 text-xs text-rose-300 font-medium">
-                  <div className="w-4 h-4 border-2 border-rose-400 border-t-transparent rounded-full animate-spin" />
+                <div className="mt-4 flex items-center gap-2.5 text-xs text-[#1A5276] font-medium">
+                  <div className="w-4 h-4 border-2 border-[#1A5276] border-t-transparent rounded-full animate-spin" />
                   <span>Digitalizando documento y analizando con OCR...</span>
                 </div>
               )}
 
               {ocrSuccess && (
-                <div className="mt-4 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs flex items-center gap-2">
+                <div className="mt-4 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4" />
                   <span>Factura digitalizada exitosamente. Revisa y edita los campos extraídos abajo.</span>
                   {archivoUrl && (
@@ -369,7 +369,7 @@ export default function NuevaCompraPage() {
                       href={getStorageUrl(archivoUrl)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="ml-2 underline flex items-center gap-1 text-emerald-300"
+                      className="ml-2 underline flex items-center gap-1 text-emerald-800 font-semibold"
                     >
                       <span>Ver archivo</span>
                       <ExternalLink className="w-3 h-3" />
@@ -382,13 +382,13 @@ export default function NuevaCompraPage() {
         )}
 
         {/* Invoice Form */}
-        <div className="glass-card p-6 rounded-2xl border border-slate-800 space-y-6">
-          <div className="border-b border-slate-800 pb-4">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
-              <FileText className="w-4 h-4 text-rose-400" />
+        <div className="bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-sm space-y-6">
+          <div className="border-b border-[#E2E8F0] pb-4">
+            <h3 className="text-base font-bold text-[#2C3E50] flex items-center gap-2">
+              <FileText className="w-4 h-4 text-[#1A5276]" />
               Datos de Cabecera de la Factura
             </h3>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-[#7F8C8D] mt-0.5">
               Identificación del proveedor emisor, número fiscal y condiciones comerciales
             </p>
           </div>
@@ -396,7 +396,7 @@ export default function NuevaCompraPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Proveedor Existente */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-[#2C3E50] mb-1.5">
                 Proveedor Comercial
               </label>
               <select
@@ -410,7 +410,7 @@ export default function NuevaCompraPage() {
                     setProveedorRif(p.rif);
                   }
                 }}
-                className="w-full bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#F8F9FA] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white"
               >
                 <option value="">-- Registrar Nuevo o Seleccionar --</option>
                 {proveedores.map((p) => (
@@ -423,7 +423,7 @@ export default function NuevaCompraPage() {
 
             {/* Proveedor Nombre (si es nuevo o extraído por OCR) */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-[#2C3E50] mb-1.5">
                 Nombre / Razón Social *
               </label>
               <input
@@ -432,13 +432,13 @@ export default function NuevaCompraPage() {
                 value={proveedorNombre}
                 onChange={(e) => setProveedorNombre(e.target.value)}
                 placeholder="Distribuidora ToyoPartes C.A."
-                className="w-full bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500"
+                className="w-full bg-[#F8F9FA] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white"
               />
             </div>
 
             {/* RIF */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-[#2C3E50] mb-1.5">
                 RIF / Identificación Fiscal *
               </label>
               <input
@@ -447,13 +447,13 @@ export default function NuevaCompraPage() {
                 value={proveedorRif}
                 onChange={(e) => setProveedorRif(e.target.value)}
                 placeholder="J-30495822-1"
-                className="w-full bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500 font-mono"
+                className="w-full bg-[#F8F9FA] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white font-mono"
               />
             </div>
 
             {/* Número de Factura */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-[#2C3E50] mb-1.5">
                 Nº de Factura / Control *
               </label>
               <input
@@ -462,13 +462,13 @@ export default function NuevaCompraPage() {
                 value={numeroFactura}
                 onChange={(e) => setNumeroFactura(e.target.value)}
                 placeholder="FAC-2024-001"
-                className="w-full bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500 font-mono font-bold"
+                className="w-full bg-[#F8F9FA] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white font-mono font-bold"
               />
             </div>
 
             {/* Fecha */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-[#2C3E50] mb-1.5">
                 Fecha de Emisión *
               </label>
               <input
@@ -476,23 +476,23 @@ export default function NuevaCompraPage() {
                 required
                 value={fecha}
                 onChange={(e) => setFecha(e.target.value)}
-                className="w-full bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500 font-mono"
+                className="w-full bg-[#F8F9FA] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white font-mono"
               />
             </div>
 
             {/* Condición de Pago */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              <label className="block text-xs font-semibold text-[#2C3E50] mb-1.5">
                 Condición de Pago *
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setCondicionPago(PurchasePaymentCondition.CONTADO)}
-                  className={`py-2 px-3 rounded-lg border text-xs font-semibold transition ${
+                  className={`py-2 px-3 rounded-xl border text-xs font-semibold transition ${
                     condicionPago === PurchasePaymentCondition.CONTADO
-                      ? 'bg-rose-500/10 border-rose-500 text-rose-400'
-                      : 'bg-slate-900/40 border-slate-700 text-slate-400 hover:border-slate-600'
+                      ? 'bg-[#EFF6FF] border-[#1A5276] text-[#1A5276] font-bold'
+                      : 'bg-[#F8F9FA] border-[#CBD5E1] text-[#7F8C8D] hover:border-[#94A3B8]'
                   }`}
                 >
                   Contado
@@ -500,10 +500,10 @@ export default function NuevaCompraPage() {
                 <button
                   type="button"
                   onClick={() => setCondicionPago(PurchasePaymentCondition.CREDITO)}
-                  className={`py-2 px-3 rounded-lg border text-xs font-semibold transition ${
+                  className={`py-2 px-3 rounded-xl border text-xs font-semibold transition ${
                     condicionPago === PurchasePaymentCondition.CREDITO
-                      ? 'bg-rose-500/10 border-rose-500 text-rose-400'
-                      : 'bg-slate-900/40 border-slate-700 text-slate-400 hover:border-slate-600'
+                      ? 'bg-[#EFF6FF] border-[#1A5276] text-[#1A5276] font-bold'
+                      : 'bg-[#F8F9FA] border-[#CBD5E1] text-[#7F8C8D] hover:border-[#94A3B8]'
                   }`}
                 >
                   Crédito
@@ -514,7 +514,7 @@ export default function NuevaCompraPage() {
             {/* Días de Crédito (si aplica) */}
             {condicionPago === PurchasePaymentCondition.CREDITO && (
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                <label className="block text-xs font-semibold text-[#2C3E50] mb-1.5">
                   Días de Crédito (Plazo de Pago)
                 </label>
                 <input
@@ -523,21 +523,21 @@ export default function NuevaCompraPage() {
                   value={diasCredito}
                   onChange={(e) => setDiasCredito(parseInt(e.target.value) || 0)}
                   placeholder="30"
-                  className="w-full bg-slate-900/60 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-rose-500 font-mono"
+                  className="w-full bg-[#F8F9FA] border border-[#CBD5E1] rounded-xl px-3 py-2 text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white font-mono"
                 />
               </div>
             )}
           </div>
 
           {/* Line items section */}
-          <div className="border-t border-slate-800 pt-6">
+          <div className="border-t border-[#E2E8F0] pt-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                  <Calculator className="w-4 h-4 text-emerald-400" />
+                <h4 className="text-sm font-bold text-[#2C3E50] flex items-center gap-2">
+                  <Calculator className="w-4 h-4 text-[#1A5276]" />
                   Líneas de la Factura (Repuestos & SKUs)
                 </h4>
-                <p className="text-xs text-slate-400 mt-0.5">
+                <p className="text-xs text-[#7F8C8D] mt-0.5">
                   Asigna a cada ítem de la factura un SKU del catálogo maestro para actualizar su
                   stock y costo promedio.
                 </p>
@@ -545,7 +545,7 @@ export default function NuevaCompraPage() {
               <button
                 type="button"
                 onClick={handleAddItem}
-                className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition"
+                className="px-3 py-1.5 rounded-xl bg-white hover:bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] text-xs font-semibold flex items-center gap-1.5 transition shadow-sm"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Agregar Línea</span>
@@ -553,22 +553,22 @@ export default function NuevaCompraPage() {
             </div>
 
             {/* Table */}
-            <div className="border border-slate-800 rounded-xl overflow-hidden bg-slate-900/40">
+            <div className="border border-[#E2E8F0] rounded-2xl overflow-hidden bg-white shadow-sm">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-900/80 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                <thead className="bg-[#F8F9FA] text-[10px] font-bold text-[#7F8C8D] uppercase tracking-wider border-b border-[#E2E8F0]">
                   <tr>
-                    <th className="py-2.5 px-3 w-1/3">SKU Catálogo Maestro *</th>
-                    <th className="py-2.5 px-3">Descripción en Factura</th>
-                    <th className="py-2.5 px-3 w-24 text-right">Cantidad *</th>
-                    <th className="py-2.5 px-3 w-32 text-right">Costo Unit ($) *</th>
-                    <th className="py-2.5 px-3 w-28 text-right">Subtotal</th>
-                    <th className="py-2.5 px-2 w-10 text-center"></th>
+                    <th className="py-3 px-3 w-1/3">SKU Catálogo Maestro *</th>
+                    <th className="py-3 px-3">Descripción en Factura</th>
+                    <th className="py-3 px-3 w-24 text-right">Cantidad *</th>
+                    <th className="py-3 px-3 w-32 text-right">Costo Unit ($) *</th>
+                    <th className="py-3 px-3 w-28 text-right">Subtotal</th>
+                    <th className="py-3 px-2 w-10 text-center"></th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-[#E2E8F0] font-medium">
                   {items.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-500">
+                      <td colSpan={6} className="py-8 text-center text-[#7F8C8D]">
                         No hay ítems registrados. Sube una factura con OCR o haz clic en "Agregar
                         Línea".
                       </td>
@@ -579,14 +579,14 @@ export default function NuevaCompraPage() {
                         (Number(item.cantidad) || 0) * (Number(item.costo_unitario) || 0);
 
                       return (
-                        <tr key={item.id} className="hover:bg-slate-800/20">
+                        <tr key={item.id} className="hover:bg-[#F8FBFF] transition group">
                           <td className="py-2.5 px-3">
                             <select
                               value={item.sku_id}
                               onChange={(e) =>
                                 handleItemChange(item.id, 'sku_id', e.target.value)
                               }
-                              className="w-full bg-slate-900/90 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-rose-500 font-mono"
+                              className="w-full bg-[#F8F9FA] border border-[#CBD5E1] rounded-lg px-2.5 py-1.5 text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white font-mono"
                             >
                               <option value="">-- Seleccionar SKU --</option>
                               {skus.map((s) => (
@@ -605,7 +605,7 @@ export default function NuevaCompraPage() {
                                 handleItemChange(item.id, 'descripcion', e.target.value)
                               }
                               placeholder="Descripción del repuesto"
-                              className="w-full bg-slate-900/60 border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-rose-500"
+                              className="w-full bg-[#F8F9FA] border border-[#CBD5E1] rounded-lg px-2.5 py-1.5 text-xs text-[#2C3E50] focus:outline-none focus:border-[#1A5276] focus:bg-white"
                             />
                           </td>
                           <td className="py-2.5 px-3 text-right">
@@ -620,7 +620,7 @@ export default function NuevaCompraPage() {
                                   parseInt(e.target.value) || 0,
                                 )
                               }
-                              className="w-full bg-slate-900/60 border border-slate-700/80 rounded-lg px-2 py-1.5 text-xs text-white text-right focus:outline-none focus:border-rose-500 font-mono"
+                              className="w-full bg-[#F8F9FA] border border-[#CBD5E1] rounded-lg px-2 py-1.5 text-xs text-[#2C3E50] text-right focus:outline-none focus:border-[#1A5276] focus:bg-white font-mono font-bold"
                             />
                           </td>
                           <td className="py-2.5 px-3 text-right">
@@ -636,17 +636,17 @@ export default function NuevaCompraPage() {
                                   parseFloat(e.target.value) || 0,
                                 )
                               }
-                              className="w-full bg-slate-900/60 border border-slate-700/80 rounded-lg px-2 py-1.5 text-xs text-white text-right focus:outline-none focus:border-rose-500 font-mono"
+                              className="w-full bg-[#F8F9FA] border border-[#CBD5E1] rounded-lg px-2 py-1.5 text-xs text-[#2C3E50] text-right focus:outline-none focus:border-[#1A5276] focus:bg-white font-mono font-bold"
                             />
                           </td>
-                          <td className="py-2.5 px-3 text-right font-mono font-bold text-white">
+                          <td className="py-2.5 px-3 text-right font-mono font-bold text-[#2C3E50]">
                             ${lineSubtotal.toFixed(2)}
                           </td>
                           <td className="py-2.5 px-2 text-center">
                             <button
                               type="button"
                               onClick={() => handleRemoveItem(item.id)}
-                              className="p-1 rounded text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition"
+                              className="p-1 rounded-lg text-[#7F8C8D] hover:text-rose-600 hover:bg-rose-50 transition"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -660,23 +660,23 @@ export default function NuevaCompraPage() {
             </div>
 
             {/* Total Footer */}
-            <div className="mt-4 flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/80 border border-slate-800">
-              <div className="flex items-center gap-2 text-xs text-slate-400">
-                <ShieldCheck className="w-4 h-4 text-rose-400 shrink-0" />
+            <div className="mt-4 flex flex-col md:flex-row items-center justify-between gap-4 p-4 rounded-2xl bg-[#F8F9FA] border border-[#E2E8F0]">
+              <div className="flex items-center gap-2 text-xs text-[#7F8C8D]">
+                <ShieldCheck className="w-4 h-4 text-[#1A5276] shrink-0" />
                 <span>
                   Al aprobar la compra, se aumentará el stock físico y se recalculará el costo
                   promedio ponderado según la fórmula oficial:
-                  <span className="font-mono text-slate-300 ml-1">
+                  <span className="font-mono text-[#2C3E50] font-bold ml-1">
                     ((costo_ant * stock_ant) + (costo_nuevo * cant)) / stock_total
                   </span>
                 </span>
               </div>
 
               <div className="flex items-baseline gap-4 shrink-0">
-                <span className="text-xs text-slate-400 uppercase font-semibold">
+                <span className="text-xs text-[#7F8C8D] uppercase font-semibold">
                   Total Factura:
                 </span>
-                <span className="text-2xl font-black text-white font-mono">
+                <span className="text-2xl font-black text-[#2C3E50] font-mono">
                   ${total.toFixed(2)} USD
                 </span>
               </div>
@@ -684,10 +684,10 @@ export default function NuevaCompraPage() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-[#E2E8F0]">
             <Link
               href="/compras"
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 transition"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-[#7F8C8D] hover:text-[#2C3E50] hover:bg-[#F8F9FA] transition"
             >
               Cancelar
             </Link>
@@ -696,7 +696,7 @@ export default function NuevaCompraPage() {
               type="button"
               disabled={saving || items.length === 0}
               onClick={() => handleSavePurchase(false)}
-              className="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition border border-slate-700 disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl bg-white hover:bg-[#F8F9FA] text-[#2C3E50] text-xs font-bold transition border border-[#CBD5E1] shadow-sm disabled:opacity-50"
             >
               {saving ? 'Guardando...' : 'Guardar como Borrador (Pendiente)'}
             </button>
@@ -705,7 +705,7 @@ export default function NuevaCompraPage() {
               type="button"
               disabled={saving || items.length === 0}
               onClick={() => handleSavePurchase(true)}
-              className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white text-xs font-bold transition shadow-lg shadow-emerald-600/25 flex items-center gap-2 disabled:opacity-50"
+              className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm flex items-center gap-2 disabled:opacity-50"
             >
               <CheckCircle2 className="w-4 h-4" />
               <span>{saving ? 'Procesando...' : 'Guardar y Aprobar Inmediatamente'}</span>

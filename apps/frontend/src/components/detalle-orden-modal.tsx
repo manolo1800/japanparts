@@ -124,26 +124,26 @@ export function DetalleOrdenModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-4xl max-h-[92vh] flex flex-col bg-[#0b101b] border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fadeIn select-none">
+      <div className="relative w-full max-w-4xl max-h-[92vh] flex flex-col bg-white border border-[#E2E8F0] rounded-2xl shadow-2xl overflow-hidden">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/40">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E2E8F0] bg-[#F8F9FA]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400">
-              <Receipt className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-[#1A5276]/10 border border-[#1A5276]/20 flex items-center justify-center text-[#1A5276]">
+              <Receipt className="w-5 h-5 text-[#1A5276]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-white tracking-wide">
+                <h2 className="text-lg font-bold text-[#2C3E50] tracking-wide">
                   {orden?.numero_orden || 'Cargando orden...'}
                 </h2>
                 {orden && (
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full uppercase bg-slate-800 text-slate-300 border border-slate-700">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full uppercase bg-slate-100 text-[#7F8C8D] border border-slate-200">
                     Canal: {orden.canal}
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-[#7F8C8D]">
                 {orden?.fecha
                   ? `Emitida el ${new Date(orden.fecha).toLocaleString('es-VE')}`
                   : 'Detalle de orden de venta'}
@@ -157,7 +157,7 @@ export function DetalleOrdenModal({
                 href={getPdfDirectUrl('factura')}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 transition"
+                className="erp-btn-secondary text-xs"
               >
                 <Printer className="w-3.5 h-3.5" />
                 <span>Imprimir Factura PDF</span>
@@ -165,9 +165,9 @@ export function DetalleOrdenModal({
             )}
             <button
               onClick={onClose}
-              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+              className="w-9 h-9 rounded-full bg-white border border-[#E2E8F0] text-[#7F8C8D] hover:text-[#2C3E50] flex items-center justify-center transition"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
@@ -175,35 +175,33 @@ export function DetalleOrdenModal({
         {/* Modal Content */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {errorMsg && (
-            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 shrink-0" />
+            <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-600 text-xs flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 shrink-0 text-red-500" />
               <span>{errorMsg}</span>
             </div>
           )}
 
           {isLoading ? (
             <div className="py-20 flex flex-col items-center justify-center gap-3">
-              <div className="w-8 h-8 border-3 border-rose-500 border-t-transparent rounded-full animate-spin" />
-              <span className="text-xs text-slate-400 font-mono">Cargando detalles de orden...</span>
+              <div className="w-8 h-8 border-3 border-[#1A5276] border-t-transparent rounded-full animate-spin" />
+              <span className="text-xs text-[#7F8C8D] font-mono">Cargando detalles de orden...</span>
             </div>
           ) : orden ? (
             <>
               {/* Badges Bar */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+                <div className="p-3.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0]">
+                  <span className="text-[10px] text-[#7F8C8D] uppercase font-semibold block">
                     Estado de Orden
                   </span>
                   <div className="mt-1 flex items-center gap-2">
                     <span
-                      className={`text-xs px-2 py-0.5 rounded-md font-semibold uppercase ${
+                      className={`text-xs px-2.5 py-0.5 rounded-full font-bold uppercase ${
                         orden.estado === OrderStatus.DESPACHADA || orden.estado === OrderStatus.CERRADA
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                           : orden.estado === OrderStatus.CANCELADA
-                            ? 'bg-red-500/20 text-red-300 border border-red-500/30'
-                            : orden.estado === OrderStatus.CONFIRMADA || orden.estado === OrderStatus.POR_DESPACHAR
-                              ? 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
-                              : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                            ? 'bg-red-500/20 text-red-600 border border-red-500/30'
+                            : 'bg-slate-100 text-[#2C3E50] border border-slate-200'
                       }`}
                     >
                       {orden.estado.replace('_', ' ')}
@@ -211,16 +209,16 @@ export function DetalleOrdenModal({
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+                <div className="p-3.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0]">
+                  <span className="text-[10px] text-[#7F8C8D] uppercase font-semibold block">
                     Estado de Pago
                   </span>
                   <div className="mt-1 flex items-center gap-1.5">
                     <span
-                      className={`text-xs px-2 py-0.5 rounded-md font-semibold uppercase ${
+                      className={`text-xs px-2.5 py-0.5 rounded-full font-bold uppercase ${
                         orden.estado_pago === PaymentStatus.CONFIRMADO
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                          : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                          : 'bg-slate-100 text-[#7F8C8D] border border-slate-200'
                       }`}
                     >
                       {orden.estado_pago}
@@ -228,20 +226,20 @@ export function DetalleOrdenModal({
                   </div>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+                <div className="p-3.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0]">
+                  <span className="text-[10px] text-[#7F8C8D] uppercase font-semibold block">
                     Tipo de Entrega
                   </span>
-                  <span className="mt-1 block text-xs font-semibold text-slate-200 capitalize">
+                  <span className="mt-1 block text-xs font-semibold text-[#2C3E50] capitalize">
                     {orden.tipo_entrega}
                   </span>
                 </div>
 
-                <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800/80">
-                  <span className="text-[10px] text-slate-400 uppercase font-semibold block">
+                <div className="p-3.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0]">
+                  <span className="text-[10px] text-[#7F8C8D] uppercase font-semibold block">
                     Total Facturado
                   </span>
-                  <span className="mt-1 block text-base font-black text-rose-400 font-mono">
+                  <span className="mt-1 block text-base font-bold text-[#2C3E50] font-mono">
                     ${Number(orden.total).toFixed(2)} USD
                   </span>
                 </div>
@@ -249,58 +247,58 @@ export function DetalleOrdenModal({
 
               {/* Client & Shipping Box */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800">
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-300 mb-3 uppercase tracking-wider">
-                    <User className="w-3.5 h-3.5 text-rose-400" />
+                <div className="p-4 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0]">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#2C3E50] mb-3 uppercase tracking-wider">
+                    <User className="w-3.5 h-3.5 text-[#1A5276]" />
                     <span>Datos del Cliente</span>
                   </div>
-                  <div className="space-y-1.5 text-xs text-slate-300">
+                  <div className="space-y-1.5 text-xs text-[#7F8C8D]">
                     <div>
-                      <span className="text-slate-500 font-mono">Nombre: </span>
-                      <span className="font-semibold text-white">
+                      <span className="text-[#7F8C8D] font-mono">Nombre: </span>
+                      <span className="font-semibold text-[#2C3E50]">
                         {orden.cliente?.nombre || 'Cliente Mostrador / Ocasional'}
                       </span>
                     </div>
                     {orden.cliente?.telefono && (
                       <div>
-                        <span className="text-slate-500 font-mono">Teléfono: </span>
-                        <span>{orden.cliente.telefono}</span>
+                        <span className="text-[#7F8C8D] font-mono">Teléfono: </span>
+                        <span className="text-[#2C3E50]">{orden.cliente.telefono}</span>
                       </div>
                     )}
                     {orden.cliente?.email && (
                       <div>
-                        <span className="text-slate-500 font-mono">Email: </span>
-                        <span>{orden.cliente.email}</span>
+                        <span className="text-[#7F8C8D] font-mono">Email: </span>
+                        <span className="text-[#2C3E50]">{orden.cliente.email}</span>
                       </div>
                     )}
                     {orden.vendedor && (
                       <div>
-                        <span className="text-slate-500 font-mono">Vendedor Asignado: </span>
-                        <span>{orden.vendedor.nombre}</span>
+                        <span className="text-[#7F8C8D] font-mono">Vendedor: </span>
+                        <span className="text-[#2C3E50]">{orden.vendedor.nombre}</span>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800">
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-300 mb-3 uppercase tracking-wider">
-                    <MapPin className="w-3.5 h-3.5 text-rose-400" />
+                <div className="p-4 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0]">
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#2C3E50] mb-3 uppercase tracking-wider">
+                    <MapPin className="w-3.5 h-3.5 text-[#1A5276]" />
                     <span>Entrega y Método de Pago</span>
                   </div>
-                  <div className="space-y-1.5 text-xs text-slate-300">
+                  <div className="space-y-1.5 text-xs text-[#7F8C8D]">
                     <div>
-                      <span className="text-slate-500 font-mono">Método de Pago: </span>
-                      <span className="font-semibold uppercase text-emerald-400">
-                        {orden.metodo_pago.replace('_', ' ')}
+                      <span className="text-[#7F8C8D] font-mono">Método de Pago: </span>
+                      <span className="font-semibold uppercase text-emerald-700">
+                        {orden.metodo_pago ? orden.metodo_pago.replace('_', ' ') : 'N/A'}
                       </span>
                     </div>
                     <div>
-                      <span className="text-slate-500 font-mono">Modalidad Entrega: </span>
-                      <span className="capitalize">{orden.tipo_entrega}</span>
+                      <span className="text-[#7F8C8D] font-mono">Modalidad: </span>
+                      <span className="capitalize text-[#2C3E50]">{orden.tipo_entrega}</span>
                     </div>
                     <div>
-                      <span className="text-slate-500 font-mono">Dirección / Destino: </span>
-                      <span>
+                      <span className="text-[#7F8C8D] font-mono">Dirección: </span>
+                      <span className="text-[#2C3E50]">
                         {orden.direccion_entrega ||
                           orden.cliente?.direccion ||
                           'Retiro en mostrador'}
@@ -312,12 +310,12 @@ export function DetalleOrdenModal({
 
               {/* Items Table */}
               <div>
-                <h3 className="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <h3 className="text-xs font-bold text-[#2C3E50] uppercase tracking-wider mb-2">
                   Ítems Vendidos & Descuento de Stock
                 </h3>
-                <div className="overflow-x-auto rounded-xl border border-slate-800">
+                <div className="overflow-x-auto rounded-xl border border-[#E2E8F0]">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-900/80 text-slate-400 uppercase font-mono text-[10px]">
+                    <thead className="bg-[#F8F9FA] text-[#7F8C8D] uppercase font-mono text-[10px]">
                       <tr>
                         <th className="px-4 py-2.5">SKU</th>
                         <th className="px-4 py-2.5">Descripción</th>
@@ -326,38 +324,38 @@ export function DetalleOrdenModal({
                         <th className="px-4 py-2.5 text-right">Subtotal</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-800/80">
+                    <tbody className="divide-y divide-[#E2E8F0] bg-white">
                       {orden.detalles?.map((det) => (
-                        <tr key={det.id} className="hover:bg-slate-900/30 transition">
-                          <td className="px-4 py-2.5 font-mono font-bold text-rose-400">
+                        <tr key={det.id} className="hover:bg-[#F8F9FA] transition">
+                          <td className="px-4 py-2.5 font-mono font-bold text-[#1A5276]">
                             {det.sku?.sku_interno || 'N/A'}
                           </td>
-                          <td className="px-4 py-2.5 text-slate-200">
+                          <td className="px-4 py-2.5 text-[#2C3E50]">
                             <span className="font-medium block">{det.sku?.nombre}</span>
                             {det.sku?.marca && (
-                              <span className="text-[10px] text-slate-500">
+                              <span className="text-[10px] text-[#7F8C8D]">
                                 Marca: {det.sku.marca}
                               </span>
                             )}
                           </td>
-                          <td className="px-4 py-2.5 text-center font-bold text-white">
+                          <td className="px-4 py-2.5 text-center font-bold text-[#2C3E50]">
                             {det.cantidad}
                           </td>
-                          <td className="px-4 py-2.5 text-right font-mono text-slate-300">
+                          <td className="px-4 py-2.5 text-right font-mono text-[#7F8C8D]">
                             ${Number(det.precio_unitario).toFixed(2)}
                           </td>
-                          <td className="px-4 py-2.5 text-right font-mono font-bold text-white">
+                          <td className="px-4 py-2.5 text-right font-mono font-bold text-[#2C3E50]">
                             ${Number(det.subtotal).toFixed(2)}
                           </td>
                         </tr>
                       ))}
                     </tbody>
-                    <tfoot className="bg-slate-900/90 font-bold border-t border-slate-800">
+                    <tfoot className="bg-[#F8F9FA] font-bold border-t border-[#E2E8F0]">
                       <tr>
-                        <td colSpan={4} className="px-4 py-3 text-right text-slate-400 uppercase">
+                        <td colSpan={4} className="px-4 py-3 text-right text-[#7F8C8D] uppercase">
                           Total Venta:
                         </td>
-                        <td className="px-4 py-3 text-right font-mono text-rose-400 text-sm">
+                        <td className="px-4 py-3 text-right font-mono text-[#2C3E50] text-base">
                           ${Number(orden.total).toFixed(2)} USD
                         </td>
                       </tr>
@@ -367,24 +365,24 @@ export function DetalleOrdenModal({
               </div>
 
               {/* Documents Section */}
-              <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800 space-y-3">
+              <div className="p-4 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs font-bold text-slate-300 uppercase tracking-wider">
-                    <FileText className="w-3.5 h-3.5 text-rose-400" />
+                  <div className="flex items-center gap-2 text-xs font-bold text-[#2C3E50] uppercase tracking-wider">
+                    <FileText className="w-3.5 h-3.5 text-[#1A5276]" />
                     <span>Documentos Internos Generados</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleGenerarDoc(DocumentType.FACTURA)}
                       disabled={loadingAction === 'doc-factura'}
-                      className="px-2.5 py-1 rounded text-[11px] font-semibold bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 transition disabled:opacity-50"
+                      className="erp-btn-secondary text-[11px] py-1 px-3"
                     >
                       + Factura
                     </button>
                     <button
                       onClick={() => handleGenerarDoc(DocumentType.RECIBO)}
                       disabled={loadingAction === 'doc-recibo'}
-                      className="px-2.5 py-1 rounded text-[11px] font-semibold bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 border border-sky-500/30 transition disabled:opacity-50"
+                      className="erp-btn-secondary text-[11px] py-1 px-3"
                     >
                       + Recibo
                     </button>
@@ -396,20 +394,20 @@ export function DetalleOrdenModal({
                     {orden.documentos.map((doc) => (
                       <div
                         key={doc.id}
-                        className="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 text-xs"
+                        className="flex items-center justify-between p-2.5 rounded-lg bg-white border border-[#E2E8F0] text-xs"
                       >
                         <div className="flex items-center gap-3">
                           <span
                             className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
                               doc.tipo === DocumentType.FACTURA
-                                ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                                : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                : 'bg-sky-50 text-sky-700 border border-sky-200'
                             }`}
                           >
                             {doc.tipo}
                           </span>
-                          <span className="font-mono font-bold text-white">{doc.numero}</span>
-                          <span className="text-slate-500 text-[10px]">
+                          <span className="font-mono font-bold text-[#2C3E50]">{doc.numero}</span>
+                          <span className="text-[#7F8C8D] text-[10px]">
                             {new Date(doc.fecha).toLocaleDateString('es-VE')}
                           </span>
                         </div>
@@ -419,7 +417,7 @@ export function DetalleOrdenModal({
                             href={getPdfDirectUrl(doc.tipo)}
                             target="_blank"
                             rel="noreferrer"
-                            className="flex items-center gap-1 px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs transition"
+                            className="flex items-center gap-1 px-2.5 py-1 rounded bg-slate-100 hover:bg-slate-200 text-[#2C3E50] text-xs border border-slate-200 transition"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
                             <span>Ver PDF</span>
@@ -429,7 +427,7 @@ export function DetalleOrdenModal({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-xs text-slate-500 italic">
+                  <p className="text-xs text-[#7F8C8D] italic">
                     No se ha generado ningún documento aún. Puede emitir factura o recibo con los botones superiores.
                   </p>
                 )}
@@ -437,12 +435,12 @@ export function DetalleOrdenModal({
 
               {/* Cancellation prompt if opened */}
               {showCancelPrompt && (
-                <div className="p-4 rounded-xl bg-red-950/40 border border-red-800/80 space-y-3">
-                  <div className="flex items-center gap-2 text-xs font-bold text-red-300">
-                    <AlertTriangle className="w-4 h-4 text-red-400" />
+                <div className="p-4 rounded-xl bg-red-50 border border-red-200 space-y-3">
+                  <div className="flex items-center gap-2 text-xs font-bold text-red-700">
+                    <AlertTriangle className="w-4 h-4 text-red-500" />
                     <span>¿Confirmar cancelación de la orden?</span>
                   </div>
-                  <p className="text-xs text-red-200/80">
+                  <p className="text-xs text-red-600">
                     Esta acción restaurará automáticamente el stock de los productos vendidos y generará movimientos de entrada por reposición en el kardex.
                   </p>
                   <div>
@@ -451,13 +449,13 @@ export function DetalleOrdenModal({
                       placeholder="Motivo de cancelación (opcional)..."
                       value={cancelMotivo}
                       onChange={(e) => setCancelMotivo(e.target.value)}
-                      className="w-full px-3 py-1.5 rounded-lg bg-slate-900 border border-red-800/60 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-red-500"
+                      className="w-full px-3 py-1.5 rounded-lg bg-white border border-red-200 text-xs text-[#2C3E50] placeholder-[#7F8C8D] focus:outline-none focus:border-red-500"
                     />
                   </div>
                   <div className="flex justify-end gap-2">
                     <button
                       onClick={() => setShowCancelPrompt(false)}
-                      className="px-3 py-1 rounded-lg text-xs font-semibold text-slate-300 hover:bg-slate-800 transition"
+                      className="erp-btn-secondary text-xs py-1"
                     >
                       Atrás
                     </button>
@@ -477,12 +475,12 @@ export function DetalleOrdenModal({
 
         {/* Modal Footer Workflow Actions */}
         {orden && (
-          <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800 bg-slate-900/60">
+          <div className="flex items-center justify-between px-6 py-4 border-t border-[#E2E8F0] bg-[#F8F9FA]">
             <div>
               {orden.estado !== OrderStatus.CANCELADA && !showCancelPrompt && (
                 <button
                   onClick={() => setShowCancelPrompt(true)}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-red-400 hover:bg-red-950/40 border border-red-900/50 transition"
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 border border-red-200 transition"
                 >
                   <Ban className="w-3.5 h-3.5" />
                   <span>Cancelar Orden</span>
@@ -496,9 +494,9 @@ export function DetalleOrdenModal({
                   <button
                     onClick={handleConfirmarPago}
                     disabled={loadingAction === 'pago'}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white transition shadow-lg shadow-emerald-600/20 disabled:opacity-50"
+                    className="erp-btn-primary text-xs"
                   >
-                    <CheckCircle className="w-3.5 h-3.5" />
+                    <CheckCircle className="w-4 h-4" />
                     <span>
                       {loadingAction === 'pago' ? 'Confirmando...' : 'Confirmar Pago'}
                     </span>
@@ -511,9 +509,9 @@ export function DetalleOrdenModal({
                   <button
                     onClick={handleDespachar}
                     disabled={loadingAction === 'despacho'}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-gradient-to-r from-rose-600 to-rose-500 hover:from-rose-500 hover:to-rose-400 text-white transition shadow-lg shadow-rose-600/20 disabled:opacity-50"
+                    className="erp-btn-primary text-xs"
                   >
-                    <Truck className="w-3.5 h-3.5" />
+                    <Truck className="w-4 h-4" />
                     <span>
                       {loadingAction === 'despacho'
                         ? 'Despachando...'
@@ -524,7 +522,7 @@ export function DetalleOrdenModal({
 
               <button
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-300 bg-slate-800 hover:bg-slate-700 transition"
+                className="erp-btn-secondary text-xs"
               >
                 Cerrar
               </button>

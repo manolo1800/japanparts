@@ -8,6 +8,7 @@ volumes:
   pgdata_dev:
   redisdata_dev:
   miniodata_dev:
+  whatsappdata_dev:
 
 services:
   postgres:
@@ -86,6 +87,7 @@ services:
       - /app/node_modules
       - /app/apps/backend/node_modules
       - /app/packages/shared/node_modules
+      - whatsappdata_dev:/data/whatsapp-sessions
     depends_on:
       postgres:
         condition: service_healthy
@@ -132,6 +134,7 @@ services:
       - /app/node_modules
       - /app/apps/worker/node_modules
       - /app/packages/shared/node_modules
+      - whatsappdata_dev:/data/whatsapp-sessions
     depends_on:
       postgres:
         condition: service_healthy
@@ -139,3 +142,4 @@ services:
         condition: service_healthy
     networks:
       - app-net
+

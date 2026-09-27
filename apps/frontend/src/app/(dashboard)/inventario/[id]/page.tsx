@@ -122,7 +122,7 @@ export default function SkuDetailPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <Link
             href="/inventario"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-[#7F8C8D] hover:text-[#1A5276] transition"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Volver al Inventario</span>
@@ -131,23 +131,23 @@ export default function SkuDetailPage() {
           <div className="flex items-center gap-2.5">
             <button
               onClick={() => setIsStockModalOpen(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-xs font-semibold shadow-sm transition"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#2C3E50] text-xs font-semibold shadow-sm transition"
             >
-              <SlidersHorizontal className="w-3.5 h-3.5 text-rose-400" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-[#1A5276]" />
               <span>Ajustar Stock</span>
             </button>
 
             <button
               onClick={() => setIsCompatModalOpen(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white text-xs font-semibold shadow-sm transition"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#2C3E50] text-xs font-semibold shadow-sm transition"
             >
-              <Car className="w-3.5 h-3.5 text-rose-400" />
+              <Car className="w-3.5 h-3.5 text-[#7F8C8D]" />
               <span>+ Vehículo</span>
             </button>
 
             <button
               onClick={() => setIsPubModalOpen(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold shadow-lg shadow-rose-600/25 transition"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#1A5276] hover:bg-[#154360] text-white text-xs font-bold shadow-md shadow-[#1A5276]/20 transition"
             >
               <Share2 className="w-3.5 h-3.5" />
               <span>+ Publicación</span>
@@ -156,60 +156,60 @@ export default function SkuDetailPage() {
         </div>
 
         {/* Hero Card with Status */}
-        <div className="glass-panel p-6 rounded-3xl border border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-1.5">
             <div className="flex items-center gap-3">
-              <span className="font-mono font-black text-xl text-white bg-slate-900 px-3 py-1 rounded-xl border border-slate-700">
+              <span className="font-mono font-black text-xl text-[#1A5276] bg-[#EFF6FF] px-3.5 py-1.5 rounded-xl border border-[#BFDBFE]">
                 {sku.sku_interno}
               </span>
-              <span className="text-sm font-bold text-rose-400 bg-rose-500/10 px-2.5 py-1 rounded-lg border border-rose-500/20">
+              <span className="text-sm font-bold text-[#2C3E50] bg-[#F8F9FA] px-2.5 py-1 rounded-lg border border-[#E2E8F0]">
                 {sku.marca}
               </span>
               {sku.codigo_fabricante && (
-                <span className="text-xs text-slate-400 font-mono">
+                <span className="text-xs text-[#7F8C8D] font-mono">
                   OEM: {sku.codigo_fabricante}
                 </span>
               )}
             </div>
-            <h2 className="text-lg font-bold text-white">{sku.nombre}</h2>
+            <h2 className="text-lg font-bold text-[#2C3E50]">{sku.nombre}</h2>
             {sku.ubicacion && (
-              <p className="text-xs text-slate-400">
-                Ubicación almacén: <span className="text-slate-200 font-mono font-semibold">{sku.ubicacion}</span>
+              <p className="text-xs text-[#7F8C8D]">
+                Ubicación almacén: <span className="text-[#2C3E50] font-mono font-semibold">{sku.ubicacion}</span>
               </p>
             )}
           </div>
 
-          <div className="flex items-center gap-6 divide-x divide-slate-800">
+          <div className="flex items-center gap-6 divide-x divide-[#E2E8F0]">
             <div className="text-right">
-              <span className="text-[11px] text-slate-400 uppercase font-semibold tracking-wider block">
+              <span className="text-[11px] text-[#7F8C8D] uppercase font-semibold tracking-wider block">
                 Stock Actual
               </span>
               <div className="flex items-center gap-2 mt-1 justify-end">
                 {isAgotado ? (
-                  <span className="text-red-400 font-black text-xl flex items-center gap-1 font-mono">
+                  <span className="text-red-600 font-black text-xl flex items-center gap-1 font-mono">
                     <XCircle className="w-4 h-4" /> 0
                   </span>
                 ) : isCritico ? (
-                  <span className="text-amber-400 font-black text-xl flex items-center gap-1 font-mono">
+                  <span className="text-amber-600 font-black text-xl flex items-center gap-1 font-mono">
                     <AlertTriangle className="w-4 h-4" /> {sku.stock_actual}
                   </span>
                 ) : (
-                  <span className="text-emerald-400 font-black text-xl flex items-center gap-1 font-mono">
+                  <span className="text-emerald-600 font-black text-xl flex items-center gap-1 font-mono">
                     <CheckCircle2 className="w-4 h-4" /> {sku.stock_actual}
                   </span>
                 )}
-                <span className="text-[11px] text-slate-500 font-mono">/ mín {sku.stock_minimo}</span>
+                <span className="text-[11px] text-[#95A5A6] font-mono">/ mín {sku.stock_minimo}</span>
               </div>
             </div>
 
             <div className="pl-6 text-right">
-              <span className="text-[11px] text-slate-400 uppercase font-semibold tracking-wider block">
+              <span className="text-[11px] text-[#7F8C8D] uppercase font-semibold tracking-wider block">
                 Precio Base
               </span>
-              <span className="text-2xl font-black text-white font-mono block mt-0.5">
+              <span className="text-2xl font-black text-[#2C3E50] font-mono block mt-0.5">
                 ${Number(sku.precio_base).toFixed(2)}
               </span>
-              <span className="text-[10px] text-slate-500 font-mono">
+              <span className="text-[10px] text-[#7F8C8D] font-mono">
                 Costo: ${Number(sku.costo_promedio).toFixed(2)}
               </span>
             </div>
@@ -217,7 +217,7 @@ export default function SkuDetailPage() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex items-center gap-2 border-b border-slate-800 pb-px">
+        <div className="flex items-center gap-2 border-b border-[#E2E8F0] pb-px">
           {[
             { id: 'info', label: 'Información General', icon: Info, count: null },
             { id: 'compat', label: 'Compatibilidad Vehicular', icon: Car, count: compatibilidades?.length || 0 },
@@ -232,15 +232,15 @@ export default function SkuDetailPage() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2 px-4 py-3 text-xs font-bold border-b-2 transition -mb-px ${
                   isActive
-                    ? 'border-rose-500 text-rose-400'
-                    : 'border-transparent text-slate-400 hover:text-slate-200 hover:border-slate-700'
+                    ? 'border-[#1A5276] text-[#1A5276]'
+                    : 'border-transparent text-[#7F8C8D] hover:text-[#2C3E50] hover:border-slate-300'
                 }`}
               >
                 <Icon className="w-4 h-4" />
                 <span>{tab.label}</span>
                 {tab.count !== null && (
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono ${
-                    isActive ? 'bg-rose-500/20 text-rose-300' : 'bg-slate-800 text-slate-400'
+                    isActive ? 'bg-[#EFF6FF] text-[#1A5276]' : 'bg-[#F8F9FA] text-[#7F8C8D] border border-[#E2E8F0]'
                   }`}>
                     {tab.count}
                   </span>
@@ -252,53 +252,53 @@ export default function SkuDetailPage() {
 
         {/* Tab 1: Info General */}
         {activeTab === 'info' && (
-          <div className="glass-panel p-6 rounded-2xl border border-slate-800 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white p-6 rounded-2xl border border-[#E2E8F0] shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+              <h3 className="text-sm font-bold text-[#2C3E50] uppercase tracking-wider">
                 Detalles Técnicos
               </h3>
               <div className="space-y-3 text-xs">
-                <div className="flex justify-between py-2 border-b border-slate-800/80">
-                  <span className="text-slate-400">SKU Interno:</span>
-                  <span className="font-mono font-bold text-white">{sku.sku_interno}</span>
+                <div className="flex justify-between py-2 border-b border-[#E2E8F0]">
+                  <span className="text-[#7F8C8D]">SKU Interno:</span>
+                  <span className="font-mono font-bold text-[#1A5276]">{sku.sku_interno}</span>
                 </div>
-                <div className="flex justify-between py-2 border-b border-slate-800/80">
-                  <span className="text-slate-400">Marca:</span>
-                  <span className="text-white font-semibold">{sku.marca}</span>
+                <div className="flex justify-between py-2 border-b border-[#E2E8F0]">
+                  <span className="text-[#7F8C8D]">Marca:</span>
+                  <span className="text-[#2C3E50] font-semibold">{sku.marca}</span>
                 </div>
-                <div className="flex justify-between py-2 border-b border-slate-800/80">
-                  <span className="text-slate-400">Código Fabricante:</span>
-                  <span className="font-mono text-slate-200">{sku.codigo_fabricante || 'N/A'}</span>
+                <div className="flex justify-between py-2 border-b border-[#E2E8F0]">
+                  <span className="text-[#7F8C8D]">Código Fabricante:</span>
+                  <span className="font-mono text-[#2C3E50]">{sku.codigo_fabricante || 'N/A'}</span>
                 </div>
-                <div className="flex justify-between py-2 border-b border-slate-800/80">
-                  <span className="text-slate-400">Ubicación Almacén:</span>
-                  <span className="text-slate-200">{sku.ubicacion || 'Sin asignar'}</span>
+                <div className="flex justify-between py-2 border-b border-[#E2E8F0]">
+                  <span className="text-[#7F8C8D]">Ubicación Almacén:</span>
+                  <span className="text-[#2C3E50] font-medium">{sku.ubicacion || 'Sin asignar'}</span>
                 </div>
               </div>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+              <h3 className="text-sm font-bold text-[#2C3E50] uppercase tracking-wider">
                 Métricas & Descripción
               </h3>
               <div className="space-y-3 text-xs">
-                <div className="flex justify-between py-2 border-b border-slate-800/80">
-                  <span className="text-slate-400">Precio Base Venta:</span>
-                  <span className="font-mono font-bold text-emerald-400">${Number(sku.precio_base).toFixed(2)}</span>
+                <div className="flex justify-between py-2 border-b border-[#E2E8F0]">
+                  <span className="text-[#7F8C8D]">Precio Base Venta:</span>
+                  <span className="font-mono font-bold text-emerald-700">${Number(sku.precio_base).toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between py-2 border-b border-slate-800/80">
-                  <span className="text-slate-400">Costo Promedio:</span>
-                  <span className="font-mono text-slate-200">${Number(sku.costo_promedio).toFixed(2)}</span>
+                <div className="flex justify-between py-2 border-b border-[#E2E8F0]">
+                  <span className="text-[#7F8C8D]">Costo Promedio:</span>
+                  <span className="font-mono text-[#2C3E50]">${Number(sku.costo_promedio).toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between py-2 border-b border-slate-800/80">
-                  <span className="text-slate-400">Margen Bruto Unitario:</span>
-                  <span className="font-mono text-rose-400 font-bold">
+                <div className="flex justify-between py-2 border-b border-[#E2E8F0]">
+                  <span className="text-[#7F8C8D]">Margen Bruto Unitario:</span>
+                  <span className="font-mono text-[#1A5276] font-bold">
                     ${(Number(sku.precio_base) - Number(sku.costo_promedio)).toFixed(2)}
                   </span>
                 </div>
                 <div className="pt-2">
-                  <span className="text-slate-400 block mb-1">Descripción:</span>
-                  <p className="text-slate-300 text-xs bg-slate-900/60 p-3 rounded-xl border border-slate-800">
+                  <span className="text-[#7F8C8D] block mb-1">Descripción:</span>
+                  <p className="text-[#2C3E50] text-xs bg-[#F8F9FA] p-3.5 rounded-xl border border-[#E2E8F0]">
                     {sku.descripcion || 'Sin descripción registrada para esta pieza.'}
                   </p>
                 </div>
@@ -309,14 +309,14 @@ export default function SkuDetailPage() {
 
         {/* Tab 2: Compatibilidad Vehicular */}
         {activeTab === 'compat' && (
-          <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/60">
-              <div className="text-xs text-slate-300 font-semibold">
+          <div className="bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between bg-[#F8F9FA]">
+              <div className="text-xs text-[#2C3E50] font-semibold">
                 Vehículos compatibles con este repuesto ({compatibilidades?.length || 0})
               </div>
               <button
                 onClick={() => setIsCompatModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1A5276] hover:bg-[#154360] text-white text-xs font-bold shadow-md shadow-[#1A5276]/20 transition"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Agregar Vehículo</span>
@@ -325,7 +325,7 @@ export default function SkuDetailPage() {
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-900/90 text-slate-400 uppercase tracking-wider text-[10px] font-bold border-b border-slate-800">
+                <thead className="bg-[#F8F9FA] text-[#7F8C8D] uppercase tracking-wider text-[10px] font-bold border-b border-[#E2E8F0]">
                   <tr>
                     <th className="py-3 px-4">Marca Vehículo</th>
                     <th className="py-3 px-4">Modelo</th>
@@ -335,27 +335,27 @@ export default function SkuDetailPage() {
                     <th className="py-3 px-4 text-right">Acción</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-[#E2E8F0]">
                   {compatibilidades?.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-500">
+                      <td colSpan={6} className="py-8 text-center text-[#7F8C8D]">
                         No hay vehículos compatibles registrados aún.
                       </td>
                     </tr>
                   ) : (
                     compatibilidades?.map((comp) => (
-                      <tr key={comp.id} className="hover:bg-slate-800/40 transition">
-                        <td className="py-3 px-4 font-bold text-white">{comp.marca_vehiculo}</td>
-                        <td className="py-3 px-4 font-semibold text-rose-300">{comp.modelo}</td>
-                        <td className="py-3 px-4 text-center font-mono text-slate-300">
+                      <tr key={comp.id} className="hover:bg-[#F8FBFF] transition">
+                        <td className="py-3 px-4 font-bold text-[#2C3E50]">{comp.marca_vehiculo}</td>
+                        <td className="py-3 px-4 font-semibold text-[#1A5276]">{comp.modelo}</td>
+                        <td className="py-3 px-4 text-center font-mono text-[#2C3E50]">
                           {comp.anio_desde} — {comp.anio_hasta || 'Presente'}
                         </td>
-                        <td className="py-3 px-4 font-mono text-slate-400">{comp.motor || 'Todos'}</td>
-                        <td className="py-3 px-4 text-slate-400 text-[11px] max-w-xs">{comp.notas || '—'}</td>
+                        <td className="py-3 px-4 font-mono text-[#7F8C8D]">{comp.motor || 'Todos'}</td>
+                        <td className="py-3 px-4 text-[#7F8C8D] text-[11px] max-w-xs">{comp.notas || '—'}</td>
                         <td className="py-3 px-4 text-right">
                           <button
                             onClick={() => handleDeleteCompat(comp.id)}
-                            className="p-1 rounded text-slate-400 hover:text-red-400 hover:bg-slate-800 transition"
+                            className="p-1 rounded text-[#7F8C8D] hover:text-red-600 hover:bg-red-50 transition"
                             title="Eliminar"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -372,14 +372,14 @@ export default function SkuDetailPage() {
 
         {/* Tab 3: Publicaciones Multicanal */}
         {activeTab === 'pubs' && (
-          <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/60">
-              <div className="text-xs text-slate-300 font-semibold">
+          <div className="bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between bg-[#F8F9FA]">
+              <div className="text-xs text-[#2C3E50] font-semibold">
                 Publicaciones en Canales de Venta ({publicaciones?.length || 0})
               </div>
               <button
                 onClick={() => setIsPubModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold transition"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1A5276] hover:bg-[#154360] text-white text-xs font-bold shadow-md shadow-[#1A5276]/20 transition"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Nueva Publicación</span>
@@ -388,7 +388,7 @@ export default function SkuDetailPage() {
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-900/90 text-slate-400 uppercase tracking-wider text-[10px] font-bold border-b border-slate-800">
+                <thead className="bg-[#F8F9FA] text-[#7F8C8D] uppercase tracking-wider text-[10px] font-bold border-b border-[#E2E8F0]">
                   <tr>
                     <th className="py-3 px-4">Canal</th>
                     <th className="py-3 px-4">Título Publicación</th>
@@ -398,45 +398,45 @@ export default function SkuDetailPage() {
                     <th className="py-3 px-4 text-right">Acción</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-[#E2E8F0]">
                   {publicaciones?.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-500">
+                      <td colSpan={6} className="py-8 text-center text-[#7F8C8D]">
                         No hay publicaciones registradas para este SKU.
                       </td>
                     </tr>
                   ) : (
                     publicaciones?.map((pub) => (
-                      <tr key={pub.id} className="hover:bg-slate-800/40 transition">
+                      <tr key={pub.id} className="hover:bg-[#F8FBFF] transition">
                         <td className="py-3 px-4 whitespace-nowrap">
                           <span
                             className={`px-2 py-0.5 rounded font-mono text-[10px] uppercase font-bold ${
                               pub.canal === 'ml'
-                                ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                                ? 'bg-amber-50 text-amber-700 border border-amber-200'
                                 : pub.canal === 'whatsapp'
-                                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                                  : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                  : 'bg-blue-50 text-blue-700 border border-blue-200'
                             }`}
                           >
                             {pub.canal}
                           </span>
                         </td>
-                        <td className="py-3 px-4 font-semibold text-white">{pub.titulo}</td>
-                        <td className="py-3 px-4 text-right font-mono font-bold text-white">
+                        <td className="py-3 px-4 font-semibold text-[#2C3E50]">{pub.titulo}</td>
+                        <td className="py-3 px-4 text-right font-mono font-bold text-[#2C3E50]">
                           ${Number(pub.precio).toFixed(2)}
                         </td>
-                        <td className="py-3 px-4 text-center font-mono text-slate-300">
+                        <td className="py-3 px-4 text-center font-mono text-[#2C3E50]">
                           {pub.stock_publicado}
                         </td>
                         <td className="py-3 px-4 text-center">
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/20 text-emerald-300">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                             {pub.estado}
                           </span>
                         </td>
                         <td className="py-3 px-4 text-right">
                           <button
                             onClick={() => handleDeletePub(pub.id)}
-                            className="p-1 rounded text-slate-400 hover:text-red-400 hover:bg-slate-800 transition"
+                            className="p-1 rounded text-[#7F8C8D] hover:text-red-600 hover:bg-red-50 transition"
                             title="Eliminar"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -453,23 +453,23 @@ export default function SkuDetailPage() {
 
         {/* Tab 4: Historial de Stock */}
         {activeTab === 'history' && (
-          <div className="glass-panel rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/60">
-              <div className="text-xs text-slate-300 font-semibold">
+          <div className="bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-[#E2E8F0] flex items-center justify-between bg-[#F8F9FA]">
+              <div className="text-xs text-[#2C3E50] font-semibold">
                 Trazabilidad y Auditoría de Movimientos ({movimientos?.length || 0})
               </div>
               <button
                 onClick={() => setIsStockModalOpen(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#2C3E50] text-xs font-semibold shadow-sm transition"
               >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-rose-400" />
+                <SlidersHorizontal className="w-3.5 h-3.5 text-[#1A5276]" />
                 <span>Registrar Ajuste</span>
               </button>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-900/90 text-slate-400 uppercase tracking-wider text-[10px] font-bold border-b border-slate-800">
+                <thead className="bg-[#F8F9FA] text-[#7F8C8D] uppercase tracking-wider text-[10px] font-bold border-b border-[#E2E8F0]">
                   <tr>
                     <th className="py-3 px-4">Fecha / Hora</th>
                     <th className="py-3 px-4">Tipo Movimiento</th>
@@ -479,10 +479,10 @@ export default function SkuDetailPage() {
                     <th className="py-3 px-4">Notas del Movimiento</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60 font-medium">
+                <tbody className="divide-y divide-[#E2E8F0] font-medium">
                   {movimientos?.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="py-8 text-center text-slate-500">
+                      <td colSpan={6} className="py-8 text-center text-[#7F8C8D]">
                         No hay movimientos registrados para este repuesto.
                       </td>
                     </tr>
@@ -492,10 +492,10 @@ export default function SkuDetailPage() {
                       const isSalida = mov.tipo === 'salida';
 
                       return (
-                        <tr key={mov.id} className="hover:bg-slate-800/40 transition">
-                          <td className="py-3 px-4 font-mono text-[11px] text-slate-400 whitespace-nowrap">
+                        <tr key={mov.id} className="hover:bg-[#F8FBFF] transition">
+                          <td className="py-3 px-4 font-mono text-[11px] text-[#7F8C8D] whitespace-nowrap">
                             <div className="flex items-center gap-1.5">
-                              <Clock className="w-3.5 h-3.5 text-slate-500" />
+                              <Clock className="w-3.5 h-3.5 text-[#95A5A6]" />
                               <span>{new Date(mov.created_at).toLocaleString()}</span>
                             </div>
                           </td>
@@ -503,10 +503,10 @@ export default function SkuDetailPage() {
                             <span
                               className={`px-2 py-0.5 rounded font-mono text-[10px] uppercase font-bold ${
                                 isEntrada
-                                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                                   : isSalida
-                                    ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                                    : 'bg-sky-500/20 text-sky-300 border border-sky-500/30'
+                                    ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                                    : 'bg-amber-50 text-amber-700 border border-amber-200'
                               }`}
                             >
                               {mov.tipo}
@@ -516,25 +516,25 @@ export default function SkuDetailPage() {
                             <span
                               className={
                                 isEntrada
-                                  ? 'text-emerald-400'
+                                  ? 'text-emerald-700'
                                   : isSalida
-                                    ? 'text-rose-400'
-                                    : 'text-sky-400'
+                                    ? 'text-blue-700'
+                                    : 'text-[#2C3E50]'
                               }
                             >
                               {isEntrada ? `+${mov.cantidad}` : isSalida ? `-${mov.cantidad}` : mov.cantidad}
                             </span>
                           </td>
-                          <td className="py-3 px-4 font-mono text-[11px] text-slate-400">
+                          <td className="py-3 px-4 font-mono text-[11px] text-[#7F8C8D]">
                             {mov.referencia_tipo || 'Manual'}
                           </td>
-                          <td className="py-3 px-4 whitespace-nowrap text-slate-300 text-[11px]">
+                          <td className="py-3 px-4 whitespace-nowrap text-[#2C3E50] text-[11px]">
                             <div className="flex items-center gap-1.5">
-                              <User className="w-3.5 h-3.5 text-slate-500" />
+                              <User className="w-3.5 h-3.5 text-[#95A5A6]" />
                               <span>{mov.usuario?.nombre || 'Sistema'}</span>
                             </div>
                           </td>
-                          <td className="py-3 px-4 text-slate-400 text-[11px]">
+                          <td className="py-3 px-4 text-[#7F8C8D] text-[11px]">
                             {mov.notas || '—'}
                           </td>
                         </tr>

@@ -64,15 +64,15 @@ export default function NuevoSkuPage() {
       <div className="p-8 max-w-4xl mx-auto">
         <Link
           href="/inventario"
-          className="inline-flex items-center gap-2 text-xs font-semibold text-slate-400 hover:text-white transition mb-6"
+          className="inline-flex items-center gap-2 text-xs font-semibold text-[#7F8C8D] hover:text-[#1A5276] transition mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Volver al Catálogo</span>
         </Link>
 
-        <div className="glass-panel p-8 rounded-3xl border border-slate-800 shadow-2xl">
+        <div className="bg-white p-8 rounded-2xl border border-[#E2E8F0] shadow-sm">
           {error && (
-            <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs flex items-center gap-2.5">
+            <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2.5">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -81,7 +81,7 @@ export default function NuevoSkuPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#2C3E50] uppercase tracking-wider mb-2">
                   SKU Interno *
                 </label>
                 <input
@@ -90,12 +90,12 @@ export default function NuevoSkuPage() {
                   placeholder="Ej: DEN-YKT22"
                   value={skuInterno}
                   onChange={(e) => setSkuInterno(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-rose-500 transition uppercase"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] font-mono text-sm focus:outline-none focus:border-[#4A90E2] focus:bg-white transition uppercase placeholder:text-[#95A5A6]"
                 />
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#2C3E50] uppercase tracking-wider mb-2">
                   Nombre del Repuesto *
                 </label>
                 <input
@@ -104,14 +104,14 @@ export default function NuevoSkuPage() {
                   placeholder="Ej: Bujía de Iridio Denso YKT22 Power"
                   value={nombre}
                   onChange={(e) => setNombre(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-rose-500 transition"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] text-sm focus:outline-none focus:border-[#4A90E2] focus:bg-white transition placeholder:text-[#95A5A6]"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#2C3E50] uppercase tracking-wider mb-2">
                   Marca de la Pieza *
                 </label>
                 <input
@@ -120,12 +120,12 @@ export default function NuevoSkuPage() {
                   placeholder="Ej: Denso, Bosch, NGK, Aisin..."
                   value={marca}
                   onChange={(e) => setMarca(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-rose-500 transition"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] text-sm focus:outline-none focus:border-[#4A90E2] focus:bg-white transition placeholder:text-[#95A5A6]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#2C3E50] uppercase tracking-wider mb-2">
                   Código de Fabricante / OEM
                 </label>
                 <input
@@ -133,14 +133,14 @@ export default function NuevoSkuPage() {
                   placeholder="Ej: YKT22-11"
                   value={codigoFabricante}
                   onChange={(e) => setCodigoFabricante(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-rose-500 transition"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] text-sm focus:outline-none focus:border-[#4A90E2] focus:bg-white transition placeholder:text-[#95A5A6]"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#2C3E50] uppercase tracking-wider mb-2">
                   Precio Base ($) *
                 </label>
                 <input
@@ -150,12 +150,12 @@ export default function NuevoSkuPage() {
                   required
                   value={precioBase}
                   onChange={(e) => setPrecioBase(parseFloat(e.target.value) || 0)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-rose-500 transition"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] font-mono text-sm focus:outline-none focus:border-[#4A90E2] focus:bg-white transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#2C3E50] uppercase tracking-wider mb-2">
                   Costo Promedio ($)
                 </label>
                 <input
@@ -164,12 +164,12 @@ export default function NuevoSkuPage() {
                   min="0"
                   value={costoPromedio}
                   onChange={(e) => setCostoPromedio(parseFloat(e.target.value) || 0)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-rose-500 transition"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] font-mono text-sm focus:outline-none focus:border-[#4A90E2] focus:bg-white transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#2C3E50] uppercase tracking-wider mb-2">
                   Stock Inicial
                 </label>
                 <input
@@ -177,12 +177,12 @@ export default function NuevoSkuPage() {
                   min="0"
                   value={stockActual}
                   onChange={(e) => setStockActual(parseInt(e.target.value) || 0)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-rose-500 transition"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] font-mono text-sm focus:outline-none focus:border-[#4A90E2] focus:bg-white transition"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                <label className="block text-xs font-bold text-[#2C3E50] uppercase tracking-wider mb-2">
                   Stock Mínimo
                 </label>
                 <input
@@ -190,13 +190,13 @@ export default function NuevoSkuPage() {
                   min="0"
                   value={stockMinimo}
                   onChange={(e) => setStockMinimo(parseInt(e.target.value) || 0)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white font-mono text-sm focus:outline-none focus:border-rose-500 transition"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] font-mono text-sm focus:outline-none focus:border-[#4A90E2] focus:bg-white transition"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-[#2C3E50] uppercase tracking-wider mb-2">
                 Ubicación en Bodega / Almacén
               </label>
               <input
@@ -204,12 +204,12 @@ export default function NuevoSkuPage() {
                 placeholder="Ej: Pasillo A - Estante 3 - Casillero 12"
                 value={ubicacion}
                 onChange={(e) => setUbicacion(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-rose-500 transition"
+                className="w-full px-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] text-sm focus:outline-none focus:border-[#4A90E2] focus:bg-white transition placeholder:text-[#95A5A6]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+              <label className="block text-xs font-bold text-[#2C3E50] uppercase tracking-wider mb-2">
                 Descripción Detallada
               </label>
               <textarea
@@ -217,21 +217,21 @@ export default function NuevoSkuPage() {
                 placeholder="Detalles sobre especificaciones, material, compatibilidad general..."
                 value={descripcion}
                 onChange={(e) => setDescripcion(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-rose-500 transition"
+                className="w-full px-4 py-2.5 rounded-xl bg-[#F8F9FA] border border-[#E2E8F0] text-[#2C3E50] text-xs placeholder:text-[#95A5A6] focus:outline-none focus:border-[#4A90E2] focus:bg-white transition"
               />
             </div>
 
-            <div className="pt-4 border-t border-slate-800 flex justify-end gap-3">
+            <div className="pt-4 border-t border-[#E2E8F0] flex justify-end gap-3">
               <Link
                 href="/inventario"
-                className="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                className="px-4 py-2.5 rounded-xl border border-[#E2E8F0] bg-white text-[#2C3E50] hover:bg-slate-50 font-medium text-xs transition"
               >
                 Cancelar
               </Link>
               <button
                 type="submit"
                 disabled={loading}
-                className="px-6 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-lg shadow-rose-600/30 transition flex items-center gap-2 disabled:opacity-50"
+                className="px-5 py-2.5 rounded-xl bg-[#1A5276] hover:bg-[#154360] text-white font-bold text-xs shadow-md shadow-[#1A5276]/20 transition flex items-center gap-2 disabled:opacity-50"
               >
                 <Save className="w-4 h-4" />
                 <span>{loading ? 'Guardando SKU...' : 'Guardar y Configurar Compatibilidad'}</span>

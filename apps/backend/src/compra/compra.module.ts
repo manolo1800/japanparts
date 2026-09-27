@@ -11,6 +11,7 @@ import { CompraController } from './compra.controller';
 import { OcrService } from './ocr.service';
 import { StorageModule } from '../storage/storage.module';
 import { AuthModule } from '../auth/auth.module';
+import { IntegrationsModule } from '../integrations/integrations.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { AuthModule } from '../auth/auth.module';
     ]),
     StorageModule,
     AuthModule,
+    IntegrationsModule,
   ],
   controllers: [CompraController],
   providers: [CompraService, OcrService],

@@ -1,78 +1,189 @@
+@import './dashboard.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 220 20% 98%;
-    --foreground: 222 47% 11%;
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --primary: 350 89% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 215 28% 93%;
-    --secondary-foreground: 222 47% 11%;
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 210 40% 94%;
-    --accent-foreground: 222 47% 11%;
-    --border: 214 32% 91%;
-  }
-
-  .dark, body {
-    --background: 224 71% 4%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 7%;
-    --card-foreground: 210 40% 98%;
-    --primary: 350 89% 60%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 217 33% 15%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 12%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 16%;
-    --accent-foreground: 210 40% 98%;
-    --border: 217 33% 16%;
+  body {
+    background-color: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-sans), 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
   }
 }
 
-body {
-  color: #f8fafc;
-  background-color: #080c14;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  overflow-x: hidden;
-}
-
-/* Custom modern scrollbars */
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0d131f;
+  background: #F1F5F9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #253349;
+  background: #CBD5E1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b82f6;
+  background: #94A3B8;
 }
 
-/* Glassmorphism helpers */
+/* Design System Utilities (Invenfarma Design Architecture) */
+@layer components {
+  /* Cards */
+  .erp-card {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-in-out;
+  }
+
+  .erp-card-hover:hover {
+    border-color: #CBD5E1;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Sub surfaces / Panels */
+  .erp-panel {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+  }
+
+  .erp-subsurface {
+    background-color: #F8F9FA;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+  }
+
+  /* Buttons */
+  .erp-btn-primary {
+    background-color: #1A5276;
+    color: #FFFFFF;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 8px 16px;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 2px 8px 0 rgba(26, 82, 118, 0.22);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .erp-btn-primary:hover {
+    background-color: #154360;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px 0 rgba(26, 82, 118, 0.35);
+  }
+
+  .erp-btn-primary:active {
+    transform: translateY(0);
+  }
+
+  .erp-btn-secondary {
+    background-color: #FFFFFF;
+    color: #2C3E50;
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: all 0.15s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .erp-btn-secondary:hover {
+    background-color: #F8F9FA;
+    border-color: #CBD5E1;
+    color: #1A5276;
+  }
+
+  .erp-btn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #F8F9FA;
+    border: 1px solid #E2E8F0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #7F8C8D;
+    transition: all 0.2s ease;
+  }
+
+  .erp-btn-icon:hover {
+    color: #1A5276;
+    border-color: #4A90E2;
+    background-color: #EFF6FF;
+  }
+
+  /* Status Badges */
+  .erp-badge-accent {
+    background-color: #EFF6FF;
+    color: #1A5276;
+    border: 1px solid #BFDBFE;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 9999px;
+  }
+
+  .erp-badge-neutral {
+    background-color: #F8F9FA;
+    color: #7F8C8D;
+    border: 1px solid #E2E8F0;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 10px;
+    border-radius: 9999px;
+  }
+
+  /* Filters & Tabs */
+  .erp-tab {
+    padding: 6px 14px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .erp-tab-active {
+    background-color: #1A5276;
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px rgba(26, 82, 118, 0.25);
+  }
+
+  .erp-tab-inactive {
+    background-color: #F8F9FA;
+    color: #7F8C8D;
+    border: 1px solid #E2E8F0;
+  }
+
+  .erp-tab-inactive:hover {
+    color: #2C3E50;
+    background-color: #EDF2F7;
+  }
+}
+
+/* Glass & Glow utilities aligned with light surfaces */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .glass-card {
-  background: rgba(17, 24, 39, 0.65);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .glass-card:hover {
-  border-color: rgba(225, 29, 72, 0.35);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(225, 29, 72, 0.1);
+  border-color: #CBD5E1;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
