@@ -16,6 +16,7 @@ import {
   ReceiptText,
   MessageSquareText,
   Menu,
+  TrendingUp,
 } from 'lucide-react';
 
 export function Sidebar() {
@@ -27,6 +28,12 @@ export function Sidebar() {
     {
       title: 'Principal',
       items: [
+        {
+          label: 'Dashboard & Reportes',
+          href: '/reportes',
+          icon: TrendingUp,
+          badge: 'KPIs',
+        },
         {
           label: 'WhatsApp & Bot AI',
           href: '/whatsapp',

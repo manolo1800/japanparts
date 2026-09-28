@@ -22,7 +22,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-japonparts_dev}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-5433}:5432"
     volumes:
       - pgdata_dev:/var/lib/postgresql/data
     healthcheck:
@@ -40,7 +40,7 @@ services:
     env_file:
       - .env.dev
     ports:
-      - "${REDIS_HOST_PORT:-6380}:6379"
+      - "${REDIS_HOST_PORT:-6381}:6379"
     volumes:
       - redisdata_dev:/data
     healthcheck:
@@ -104,7 +104,7 @@ services:
     restart: unless-stopped
     command: pnpm --filter @japonparts/frontend dev
     ports:
-      - "${FRONTEND_PORT:-3001}:3000"
+      - "${FRONTEND_PORT:-3005}:3000"
     environment:
       CI: "true"
     env_file:

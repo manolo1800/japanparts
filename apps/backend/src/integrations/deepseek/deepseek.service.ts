@@ -120,4 +120,133 @@ export class DeepSeekService {
       return null;
     }
   }
+
+  /**
+   * Análisis inteligente y sugerencia de precios para autopartes
+   */
+  async sugerirPrecio(
+    skuData: {
+      id: string;
+      sku_interno: string;
+      nombre: string;
+      marca: string;
+      costo_promedio: number;
+      precio_base: number;
+      stock_actual: number;
+      descripcion?: string | null;
+    },
+    margenObjetivoPct?: number,
+    notasAdicionales?: string,
+  ): Promise<{
+    sku_id: string;
+    sku_interno: string;
+    nombre: string;
+    costo_promedio: number;
+    precio_actual: number;
+    precio_sugerido: number;
+    margen_estimado_pct: number;
+    margen_ganancia_unidad: number;
+    razonamiento: string;
+    factores: string[];
+    confianza: 'alta' | 'media' | 'estimada';
+  }> {
+    const costo = Number(skuData.costo_promedio) || 0;
+    const precioActual = Number(skuData.precio_base) || 0;
+    const targetMargin = margenObjetivoPct && margenObjetivoPct > 0 ? margenObjetivoPct : 35;
+
+    // Intentar con DeepSeek si está activo
+    if (this.isReady()) {
+      try {
+        const { PRICING_ANALYSIS_SYSTEM_PROMPT } = await import(
+          './prompts/pricing-analysis.prompt'
+        );
+
+        const promptInput = `
+Por favor analiza este repuesto automotriz y calcula el precio de venta sugerido:
+- SKU Interno: ${skuData.sku_interno}
+- Descripción: ${skuData.nombre}
+- Marca: ${skuData.marca}
+- Costo Promedio Unitario: $${costo.toFixed(2)}
+- Precio Base Actual: $${precioActual.toFixed(2)}
+- Stock Actual: ${skuData.stock_actual} unidades
+- Margen Bruto Objetivo: ${targetMargin}%
+${notasAdicionales ? `- Notas del vendedor: ${notasAdicionales}` : ''}
+        `.trim();
+
+        const llmResult = await this.extractStructuredJson<{
+          precio_sugerido: number;
+          margen_estimado_pct: number;
+          margen_ganancia_unidad: number;
+          razonamiento: string;
+          factores: string[];
+          confianza: 'alta' | 'media' | 'estimada';
+        }>(PRICING_ANALYSIS_SYSTEM_PROMPT, promptInput);
+
+        if (llmResult && llmResult.precio_sugerido > 0) {
+          return {
+            sku_id: skuData.id,
+            sku_interno: skuData.sku_interno,
+            nombre: skuData.nombre,
+            costo_promedio: costo,
+            precio_actual: precioActual,
+            precio_sugerido: Number(llmResult.precio_sugerido),
+            margen_estimado_pct: Number(llmResult.margen_estimado_pct),
+            margen_ganancia_unidad: Number(llmResult.margen_ganancia_unidad),
+            razonamiento: llmResult.razonamiento,
+            factores: llmResult.factores || [],
+            confianza: llmResult.confianza || 'alta',
+          };
+        }
+      } catch (err: any) {
+        this.logger.warn(
+          `Fallback a cálculo heurístico de precio para SKU ${skuData.sku_interno}: ${err?.message}`,
+        );
+      }
+    }
+
+    // Heurística asistida para autopartes cuando no hay API o como fallback
+    let suggestedPrice = 0;
+    let marginPct = targetMargin;
+
+    if (costo > 0) {
+      // Fórmula clásica de margen sobre venta: Costo / (1 - Margen)
+      const rawPrice = costo / (1 - targetMargin / 100);
+      // Redondeo psicológico de repuestos: si > 50 redondea a entero, si < 50 a .00 o .50
+      suggestedPrice =
+        rawPrice > 50
+          ? Math.ceil(rawPrice)
+          : Math.round(rawPrice * 2) / 2;
+      marginPct = ((suggestedPrice - costo) / suggestedPrice) * 100;
+    } else if (precioActual > 0) {
+      suggestedPrice = precioActual;
+      marginPct = targetMargin;
+    } else {
+      suggestedPrice = 10;
+      marginPct = 30;
+    }
+
+    const profitUnit = Math.max(0, suggestedPrice - costo);
+
+    return {
+      sku_id: skuData.id,
+      sku_interno: skuData.sku_interno,
+      nombre: skuData.nombre,
+      costo_promedio: costo,
+      precio_actual: precioActual,
+      precio_sugerido: Math.round(suggestedPrice * 100) / 100,
+      margen_estimado_pct: Math.round(marginPct * 10) / 10,
+      margen_ganancia_unidad: Math.round(profitUnit * 100) / 100,
+      razonamiento: `Precio optimizado sobre un margen objetivo de ${targetMargin}%. Para la marca ${skuData.marca} y un costo unitario de $${costo.toFixed(2)}, se fija en $${suggestedPrice.toFixed(2)} garantizando una ganancia bruta de $${profitUnit.toFixed(2)} por unidad.`,
+      factores: [
+        `Margen comercial sobre costo: ${targetMargin}%`,
+        `Prestigio y demanda de marca: ${skuData.marca}`,
+        costo > 0
+          ? `Costo promedio de adquisición verificado: $${costo.toFixed(2)}`
+          : 'Estimación basada en precio base (sin costo histórico)',
+        'Ajuste psicológico de retail automotriz',
+      ],
+      confianza: costo > 0 ? 'media' : 'estimada',
+    };
+  }
 }
+

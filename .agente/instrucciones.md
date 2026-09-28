@@ -283,20 +283,21 @@ apps/backend/src/integrations/
 
 **Objetivo:** analítica comercial, alertas de inventario y optimización continua de procesos asistida por IA.
 
-- [ ] Reportes analíticos:
-  - Ventas por canal (mostrador, WhatsApp).
-  - Ventas y comisiones por vendedor.
-  - Ranking de SKUs más vendidos y margen de contribución.
-- [ ] Sistema de Alertas automáticas:
-  - Stock bajo / mínimo alcanzado (notificación al administrador por email/panel).
-  - Conversaciones de WhatsApp en espera o escaladas a humano sin respuesta.
-- [ ] Sugerencia inteligente de precios con DeepSeek:
-  - Endpoint `POST /sku/:id/sugerir-precio` que analiza costo promedio, margen histórico y categoría del repuesto.
-- [ ] Exportación de reportes a formatos Excel y CSV.
-- [ ] Dashboard ejecutivo para dirección: KPIs del mes, ticket promedio, tasa de conversión del bot.
-- [ ] Monitoreo de colas BullMQ y salud de sesiones Baileys.
+- [x] Reportes analíticos:
+  - [x] Ventas por canal (mostrador, WhatsApp).
+  - [x] Ventas y comisiones por vendedor (3% estimado).
+  - [x] Ranking de SKUs más vendidos y margen de contribución sobre costo ponderado.
+- [x] Sistema de Alertas automáticas:
+  - [x] Stock bajo / mínimo alcanzado (notificación al administrador por email/panel).
+  - [x] Conversaciones de WhatsApp en espera o escaladas a humano sin respuesta.
+- [x] Sugerencia inteligente de precios con DeepSeek:
+  - [x] Endpoint `POST /sku/:id/sugerir-precio` que analiza costo promedio, margen histórico y categoría del repuesto.
+  - [x] Modal interactivo de optimización con 1-click para aplicar precio al SKU.
+- [x] Exportación de reportes a formatos Excel (.xlsx con diseño estructurado vía ExcelJS) y CSV.
+- [x] Dashboard ejecutivo para dirección: KPIs del mes, ticket promedio, tasa de conversión del bot, gráfico interactivo de tendencia diaria.
+- [x] Monitoreo de infraestructura: PostgreSQL, Redis, estado de sockets Baileys, DeepSeek, memoria y uptime.
 
-**Criterio de aceptación:** El administrador consulta el reporte mensual, descarga exportable en Excel, recibe alertas de SKUs con stock crítico y visualiza métricas de ventas por canal.
+**Criterio de aceptación:** El administrador consulta el reporte mensual, descarga exportable en Excel, recibe alertas de SKUs con stock crítico y visualiza métricas de ventas por canal. [VERIFICADO]
 
 ---
 

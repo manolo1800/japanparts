@@ -550,4 +550,125 @@ export interface CambiarEstadoConversacionDto {
   estado: ConversationStatus;
 }
 
+// ============================================================================
+// FASE 5: Optimización, Alertas y Reportes Ejecutivos
+// ============================================================================
+
+export interface ReporteVentasPorCanal {
+  canal: Channel;
+  total_ventas: number;
+  cantidad_ordenes: number;
+  ticket_promedio: number;
+  porcentaje_total: number;
+}
+
+export interface ReporteVentasPorVendedor {
+  vendedor_id: string;
+  vendedor_nombre: string;
+  total_ventas: number;
+  cantidad_ordenes: number;
+  ticket_promedio: number;
+  comision_estimada: number;
+}
+
+export interface RankingSkuVendido {
+  sku_id: string;
+  sku_interno: string;
+  nombre: string;
+  marca: string;
+  cantidad_vendida: number;
+  ingresos_totales: number;
+  costo_total: number;
+  margen_ganancia: number;
+  porcentaje_margen: number;
+}
+
+export interface VentasDiariasItem {
+  fecha: string; // YYYY-MM-DD
+  total: number;
+  ordenes: number;
+}
+
+export interface DashboardKpis {
+  ventas_mes_actual: {
+    total: number;
+    ordenes: number;
+    comparacion_mes_anterior_pct: number;
+  };
+  ventas_mes_anterior: {
+    total: number;
+    ordenes: number;
+  };
+  ticket_promedio: number;
+  tasa_conversion_bot: {
+    total_conversaciones: number;
+    ordenes_whatsapp: number;
+    conversion_pct: number;
+  };
+  stock_critico_count: number;
+  conversaciones_pendientes_humano: number;
+  ventas_diarias: VentasDiariasItem[];
+  canales: ReporteVentasPorCanal[];
+  top_skus: RankingSkuVendido[];
+  vendedores: ReporteVentasPorVendedor[];
+}
+
+export type TipoAlerta =
+  | 'stock_bajo'
+  | 'whatsapp_sin_atender'
+  | 'compra_vencida'
+  | 'sistema';
+
+export type NivelAlerta = 'critico' | 'advertencia' | 'info';
+
+export interface AlertaItem {
+  id: string;
+  tipo: TipoAlerta;
+  nivel: NivelAlerta;
+  titulo: string;
+  mensaje: string;
+  metadata?: Record<string, any>;
+  timestamp: string;
+  accion_url?: string;
+  accion_label?: string;
+}
+
+export interface SugerirPrecioPayload {
+  margen_objetivo_pct?: number;
+  notas_adicionales?: string;
+}
+
+export interface SugerirPrecioResponse {
+  sku_id: string;
+  sku_interno: string;
+  nombre: string;
+  costo_promedio: number;
+  precio_actual: number;
+  precio_sugerido: number;
+  margen_estimado_pct: number;
+  margen_ganancia_unidad: number;
+  razonamiento: string;
+  factores: string[];
+  confianza: 'alta' | 'media' | 'estimada';
+}
+
+export interface SistemaHealthSummary {
+  status: 'healthy' | 'degraded' | 'error';
+  timestamp: string;
+  uptime_segundos: number;
+  memoria: {
+    rss_mb: number;
+    heap_used_mb: number;
+    heap_total_mb: number;
+  };
+  servicios: {
+    database: { status: 'up' | 'down'; latency_ms?: number; error?: string };
+    redis: { status: 'up' | 'down'; latency_ms?: number; error?: string };
+    baileys: { status: WhatsAppConnectionState; telefono?: string | null };
+    deepseek: { status: 'configured' | 'heuristic_fallback' };
+    mail: { status: 'configured' | 'simulated' };
+  };
+}
+
+
 

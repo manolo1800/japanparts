@@ -7,13 +7,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Sku } from '../entities/sku.entity';
 import { CreateSkuDto, UpdateSkuDto, SkuFilterDto } from './dto/sku.dto';
-import { PaginatedResult } from '@japonparts/shared';
+import { PaginatedResult, SugerirPrecioPayload, SugerirPrecioResponse } from '@japonparts/shared';
+import { DeepSeekService } from '../integrations/deepseek/deepseek.service';
 
 @Injectable()
 export class SkuService {
   constructor(
     @InjectRepository(Sku)
     private skuRepository: Repository<Sku>,
+    private readonly deepSeekService: DeepSeekService,
   ) {}
 
   async create(createSkuDto: CreateSkuDto): Promise<Sku> {
@@ -154,5 +156,27 @@ export class SkuService {
   async remove(id: string): Promise<void> {
     const sku = await this.findOne(id);
     await this.skuRepository.remove(sku);
+  }
+
+  async sugerirPrecio(
+    id: string,
+    payload?: SugerirPrecioPayload,
+  ): Promise<SugerirPrecioResponse> {
+    const sku = await this.findOne(id);
+
+    return await this.deepSeekService.sugerirPrecio(
+      {
+        id: sku.id,
+        sku_interno: sku.sku_interno,
+        nombre: sku.nombre,
+        marca: sku.marca,
+        costo_promedio: Number(sku.costo_promedio) || 0,
+        precio_base: Number(sku.precio_base) || 0,
+        stock_actual: Number(sku.stock_actual) || 0,
+        descripcion: sku.descripcion,
+      },
+      payload?.margen_objetivo_pct,
+      payload?.notas_adicionales,
+    );
   }
 }

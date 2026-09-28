@@ -83,4 +83,19 @@ export class SkuController {
       timestamp: new Date().toISOString(),
     };
   }
+
+  @Post(':id/sugerir-precio')
+  @Roles(UserRole.ADMIN, UserRole.VENDEDOR)
+  async sugerirPrecio(
+    @Param('id') id: string,
+    @Body() payload: { margen_objetivo_pct?: number; notas_adicionales?: string },
+  ) {
+    const data = await this.skuService.sugerirPrecio(id, payload);
+    return {
+      success: true,
+      data,
+      message: 'Análisis de precio generado exitosamente',
+      timestamp: new Date().toISOString(),
+    };
+  }
 }

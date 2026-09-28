@@ -10,6 +10,7 @@ import { AjusteStockModal } from '../../../components/ajuste-stock-modal';
 import { CompatibilidadModal } from '../../../components/compatibilidad-modal';
 import { PublicacionModal } from '../../../components/publicacion-modal';
 import { EditarSkuModal } from '../../../components/editar-sku-modal';
+import { SugerirPrecioModal } from '../../../components/sugerir-precio-modal';
 import {
   Search,
   Car,
@@ -19,6 +20,7 @@ import {
   XCircle,
   ChevronRight,
   Pencil,
+  Sparkles,
 } from 'lucide-react';
 
 export default function InventarioPage() {
@@ -32,6 +34,7 @@ export default function InventarioPage() {
   const [stockModalSku, setStockModalSku] = useState<SkuSummary | null>(null);
   const [compatModalSku, setCompatModalSku] = useState<SkuSummary | null>(null);
   const [pubModalSku, setPubModalSku] = useState<SkuSummary | null>(null);
+  const [sugerirModalSku, setSugerirModalSku] = useState<SkuSummary | null>(null);
 
   const { data, isLoading, refetch } = useQuery<PaginatedResult<SkuSummary>>({
     queryKey: ['skus', search, marcaFilter, bajoStockFilter, page],
@@ -278,6 +281,14 @@ export default function InventarioPage() {
                         <td className="py-4 px-4 text-right whitespace-nowrap">
                           <div className="flex items-center justify-end gap-1.5">
                             <button
+                              onClick={() => setSugerirModalSku(sku)}
+                              className="p-1.5 rounded-lg bg-[#F8F9FA] hover:bg-emerald-50 text-[#7F8C8D] hover:text-emerald-700 border border-[#E2E8F0] hover:border-emerald-200 transition"
+                              title="Optimizar Precio con IA (DeepSeek)"
+                            >
+                              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+                            </button>
+
+                            <button
                               onClick={() => setEditModalSku(sku)}
                               className="p-1.5 rounded-lg bg-[#F8F9FA] hover:bg-blue-50 text-[#7F8C8D] hover:text-[#1A5276] border border-[#E2E8F0] hover:border-[#BFDBFE] transition"
                               title="Editar Datos del SKU"
@@ -364,6 +375,13 @@ export default function InventarioPage() {
         sku={editModalSku}
         isOpen={!!editModalSku}
         onClose={() => setEditModalSku(null)}
+        onSuccess={() => refetch()}
+      />
+
+      <SugerirPrecioModal
+        sku={sugerirModalSku}
+        isOpen={!!sugerirModalSku}
+        onClose={() => setSugerirModalSku(null)}
         onSuccess={() => refetch()}
       />
     </div>

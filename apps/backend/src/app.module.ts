@@ -15,6 +15,8 @@ import { ClienteModule } from './cliente/cliente.module';
 import { OrdenModule } from './orden/orden.module';
 import { IntegrationsModule } from './integrations/integrations.module';
 import { ConversacionModule } from './conversacion/conversacion.module';
+import { ReporteModule } from './reporte/reporte.module';
+import { AlertaModule } from './alerta/alerta.module';
 import {
   Usuario,
   Sku,
@@ -96,6 +98,8 @@ import {
     OrdenModule,
     IntegrationsModule,
     ConversacionModule,
+    ReporteModule,
+    AlertaModule,
   ],
 })
 export class AppModule {}
