@@ -367,6 +367,87 @@ export interface EstadoCuentaProveedor {
   historial_pagos: PagoCompraSummary[];
 }
 
+export enum PurchaseOrderStatus {
+  BORRADOR = 'borrador',
+  ENVIADA = 'enviada',
+  CONFIRMADA = 'confirmada',
+  RECIBIDA = 'recibida',
+  CANCELADA = 'cancelada',
+}
+
+export interface OrdenCompraDetalleSummary {
+  id: string;
+  orden_compra_id: string;
+  sku_id?: string | null;
+  codigo_articulo: string;
+  descripcion: string;
+  marca?: string | null;
+  marca_compatibilidad?: string | null;
+  cantidad: number;
+  costo_unitario: number;
+  subtotal: number;
+  created_at?: string;
+  updated_at?: string;
+  sku?: SkuSummary | null;
+}
+
+export interface OrdenCompraSummary {
+  id: string;
+  proveedor_id: string;
+  numero_orden: string;
+  fecha_emision: string;
+  fecha_entrega_esperada?: string | null;
+  estado: PurchaseOrderStatus;
+  subtotal: number;
+  total: number;
+  observaciones?: string | null;
+  archivo_pdf_url?: string | null;
+  usuario_id?: string | null;
+  enviado_email: boolean;
+  enviado_email_a?: string | null;
+  enviado_email_at?: string | null;
+  enviado_whatsapp: boolean;
+  enviado_whatsapp_a?: string | null;
+  enviado_whatsapp_at?: string | null;
+  compra_id?: string | null;
+  created_at: string;
+  updated_at: string;
+  proveedor?: ProveedorSummary;
+  usuario?: UserSummary | null;
+  detalles?: OrdenCompraDetalleSummary[];
+  compra?: CompraSummary | null;
+}
+
+export interface CreateOrdenCompraDetalleDto {
+  sku_id?: string | null;
+  codigo_articulo?: string;
+  descripcion: string;
+  marca?: string;
+  marca_compatibilidad?: string;
+  cantidad: number;
+  costo_unitario?: number;
+  subtotal?: number;
+}
+
+export interface CreateOrdenCompraDto {
+  proveedor_id: string;
+  numero_orden?: string;
+  fecha_emision?: string;
+  fecha_entrega_esperada?: string | null;
+  observaciones?: string;
+  items: CreateOrdenCompraDetalleDto[];
+}
+
+export interface EnviarOrdenCompraEmailDto {
+  email: string;
+  mensaje?: string;
+}
+
+export interface EnviarOrdenCompraWhatsappDto {
+  telefono: string;
+  mensaje?: string;
+}
+
 export interface OcrFacturaItem {
   sku_interno?: string;
   descripcion: string;

@@ -14,5 +14,5 @@ export * from './orden-detalle.entity';
 export * from './documento-venta.entity';
 export * from './conversacion.entity';
 export * from './mensaje.entity';
-
-
+export * from './orden-compra.entity';
+export * from './orden-compra-detalle.entity';

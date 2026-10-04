@@ -46,7 +46,8 @@ export class SkuService {
       .createQueryBuilder('sku')
       .leftJoinAndSelect('sku.compatibilidades', 'compatibilidad')
       .leftJoinAndSelect('sku.publicaciones', 'publicacion')
-      .orderBy('sku.created_at', 'DESC');
+      .orderBy('sku.created_at', 'DESC')
+      .addOrderBy('compatibilidad.created_at', 'ASC');
 
     if (filter.q && filter.q.trim()) {
       const term = `%${filter.q.trim()}%`;
@@ -84,6 +85,11 @@ export class SkuService {
     const sku = await this.skuRepository.findOne({
       where: { id },
       relations: ['compatibilidades', 'publicaciones', 'publicaciones.cuenta'],
+      order: {
+        compatibilidades: {
+          created_at: 'ASC',
+        },
+      },
     });
 
     if (!sku) {
@@ -97,6 +103,11 @@ export class SkuService {
     return await this.skuRepository.findOne({
       where: { sku_interno: sku_interno.toUpperCase().trim() },
       relations: ['compatibilidades', 'publicaciones'],
+      order: {
+        compatibilidades: {
+          created_at: 'ASC',
+        },
+      },
     });
   }
 

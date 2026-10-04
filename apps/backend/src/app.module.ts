@@ -34,6 +34,8 @@ import {
   DocumentoVenta,
   Conversacion,
   Mensaje,
+  OrdenCompra,
+  OrdenCompraDetalle,
 } from './entities';
 
 @Module({
@@ -79,6 +81,8 @@ import {
             DocumentoVenta,
             Conversacion,
             Mensaje,
+            OrdenCompra,
+            OrdenCompraDetalle,
           ],
           synchronize: false,
           logging: false,

@@ -138,6 +138,13 @@ class ApiClient {
     });
   }
 
+  public patch<T>(endpoint: string, body?: any) {
+    return this.request<T>(endpoint, {
+      method: 'PATCH',
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  }
+
   public upload<T>(endpoint: string, formData: FormData): Promise<ApiResponse<T>> {
     const url = endpoint.startsWith('http')
       ? endpoint
