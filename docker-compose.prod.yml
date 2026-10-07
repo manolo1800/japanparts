@@ -53,7 +53,7 @@ services:
       - app-net
 
   minio:
-    image: quay.io/minio/minio:latest
+    image: image: docker.io/cortexproject/minio:RELEASE.2024-07-04T14-25-45Z
     container_name: japonparts-minio-prod
     restart: always
     command: server /data
