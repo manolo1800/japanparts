@@ -5,20 +5,17 @@ networks:
     driver: bridge
   dokploy-network:
     external: true
-
 volumes:
   pgdata_prod:
   redisdata_prod:
   miniodata_prod:
   whatsappdata_prod:
-
+  
 services:
   postgres:
     image: postgres:16-alpine
     container_name: japonparts-postgres-prod
-    restart: always
-    env_file:
-      - .env.prod
+    restart: always  
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -37,8 +34,6 @@ services:
     image: redis:7-alpine
     container_name: japonparts-redis-prod
     restart: always
-    env_file:
-      - .env.prod
     command: >
       sh -c '
         if [ -n "${REDIS_PASSWORD}" ]; then
@@ -61,8 +56,6 @@ services:
     image: quay.io/minio/minio:latest
     container_name: japonparts-minio-prod
     restart: always
-    env_file:
-      - .env.prod
     command: server /data
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
@@ -78,8 +71,6 @@ services:
       dockerfile: apps/backend/Dockerfile
     container_name: japonparts-backend-prod
     restart: always
-    env_file:
-      - .env.prod
     volumes:
       - whatsappdata_prod:/data/whatsapp-sessions
     depends_on:
@@ -97,8 +88,7 @@ services:
       dockerfile: apps/frontend/Dockerfile
     container_name: japonparts-frontend-prod
     restart: always
-    env_file:
-      - .env.prod
+    
     depends_on:
       - backend
     networks:
@@ -110,9 +100,7 @@ services:
       context: .
       dockerfile: apps/worker/Dockerfile
     container_name: japonparts-worker-prod
-    restart: always
-    env_file:
-      - .env.prod
+    restart: always    
     volumes:
       - whatsappdata_prod:/data/whatsapp-sessions
     depends_on:
