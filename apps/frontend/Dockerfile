@@ -18,6 +18,9 @@ RUN pnpm install --frozen-lockfile
 COPY packages/shared ./packages/shared
 COPY apps/frontend ./apps/frontend
 
+ARG NEXT_PUBLIC_API_URL=/api
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 RUN pnpm --filter @japonparts/shared build
 RUN pnpm --filter @japonparts/frontend build
 
@@ -29,6 +32,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
+ENV BACKEND_INTERNAL_URL="http://backend:4000"
 
 RUN addgroup -S -g 1001 nodejs && adduser -S -u 1001 nextjs
 

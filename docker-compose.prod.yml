@@ -86,9 +86,13 @@ services:
     build:
       context: .
       dockerfile: apps/frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
     container_name: japonparts-frontend-prod
     restart: always
-    
+    environment:
+      BACKEND_INTERNAL_URL: ${BACKEND_INTERNAL_URL:-http://backend:4000}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api}
     depends_on:
       - backend
     networks:

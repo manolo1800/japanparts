@@ -1,7 +1,20 @@
 import { ApiResponse, AuthTokens } from '@japonparts/shared';
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+function resolveApiBaseUrl(): string {
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  // Si está definido y es una URL personalizada que no sea el placeholder sin DNS
+  if (envUrl && !envUrl.includes('api.japonparts.com') && envUrl !== 'http://localhost:4000') {
+    return envUrl;
+  }
+  // En el navegador, usar la ruta relativa /api proxyeada internamente por Next.js
+  if (typeof window !== 'undefined') {
+    return '/api';
+  }
+  // En SSR dentro del contenedor Docker
+  return process.env.BACKEND_INTERNAL_URL || 'http://backend:4000';
+}
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 class ApiClient {
   private getAccessToken(): string | null {
