@@ -2,8 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as fs from 'fs';
+import * as path from 'path';
 import { HealthModule } from './health/health.module';
 import { AuthModule } from './auth/auth.module';
+import { DatabaseSeedModule } from './database/seeds/seed.module';
 import { SkuModule } from './sku/sku.module';
 import { CompatibilidadModule } from './compatibilidad/compatibilidad.module';
 import { PublicacionModule } from './publicacion/publicacion.module';
@@ -85,12 +87,15 @@ import {
             OrdenCompraDetalle,
           ],
           synchronize: false,
+          migrations: [path.join(__dirname, 'database/migrations/*{.ts,.js}')],
+          migrationsRun: config.get<string>('RUN_MIGRATIONS') !== 'false',
           logging: false,
         };
       },
     }),
     HealthModule,
     AuthModule,
+    DatabaseSeedModule,
     SkuModule,
     CompatibilidadModule,
     PublicacionModule,

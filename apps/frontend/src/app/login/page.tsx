@@ -1,36 +1,48 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../context/auth-context';
-import { Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
+import { Lock, Mail, ArrowRight, AlertCircle, Eye, EyeOff, Loader2, ShieldCheck } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { user, login, loading: authLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Si el usuario ya cuenta con sesión activa, redirigir directo al dashboard
+  useEffect(() => {
+    if (!authLoading && user) {
+      router.replace('/inventario');
+    }
+  }, [user, authLoading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanEmail = email.trim().toLowerCase();
+
+    if (!cleanEmail || !password) {
+      setError('Por favor ingresa tu correo y contraseña.');
+      return;
+    }
+
     setError(null);
-    setLoading(true);
+    setSubmitting(true);
 
     try {
-      await login(email, password);
+      await login(cleanEmail, password);
       router.push('/inventario');
     } catch (err: any) {
-      setError(err.message || 'Error al iniciar sesión. Verifica tus credenciales.');
+      setError(
+        err.message || 'Credenciales inválidas. Verifica tu correo y contraseña.',
+      );
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
-  };
-
-  const handleQuickLogin = (demoEmail: string) => {
-    setEmail(demoEmail);
-    setPassword('admin');
   };
 
   return (
@@ -42,26 +54,26 @@ export default function LoginPage() {
       <div className="w-full max-w-md relative z-10">
         {/* Logo and Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#C4F82A] shadow-xl shadow-[#C4F82A]/20 mb-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#C4F82A] shadow-xl shadow-[#C4F82A]/20 mb-4 transition-transform hover:scale-105">
             <span className="font-black text-[#0A0D14] text-2xl tracking-tight">TSP</span>
           </div>
           <h1 className="text-2xl font-black text-white tracking-tight">
             TOKUGAWA <span className="text-[#C4F82A]">SPARE PARTS</span>
           </h1>
           <p className="text-xs text-[#8B949E] mt-1 uppercase tracking-widest font-medium">
-            ERP Repuestos Cloud — Dashboard Financiero
+            ERP Repuestos Cloud — Sistema de Gestión Integral
           </p>
         </div>
 
         {/* Card */}
         <div className="erp-card bg-[#151A23] p-8 rounded-3xl shadow-2xl border border-[#2D3748]">
-          <h2 className="text-base font-bold text-white mb-2">Iniciar Sesión</h2>
+          <h2 className="text-base font-bold text-white mb-1">Iniciar Sesión</h2>
           <p className="text-xs text-[#8B949E] mb-6">
-            Acceso unificado para administración, ventas y bodega
+            Ingresa con tus credenciales autorizadas del sistema
           </p>
 
           {error && (
-            <div className="mb-4 p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs flex items-center gap-2">
+            <div className="mb-5 p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs flex items-center gap-2.5 animate-in fade-in duration-200">
               <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
               <span>{error}</span>
             </div>
@@ -77,10 +89,14 @@ export default function LoginPage() {
                 <input
                   type="email"
                   required
-                  placeholder="usuario@tokugawaspareparts.com"
+                  autoComplete="email"
+                  placeholder="admin@tokugawuasp.com"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#1F2633] border border-[#2D3748] text-white text-sm placeholder-[#8B949E] focus:outline-none focus:border-[#C4F82A] transition"
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (error) setError(null);
+                  }}
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#1F2633] border border-[#2D3748] text-white text-sm placeholder-[#8B949E]/70 focus:outline-none focus:border-[#C4F82A] transition"
                 />
               </div>
             </div>
@@ -92,54 +108,56 @@ export default function LoginPage() {
               <div className="relative">
                 <Lock className="w-4 h-4 text-[#8B949E] absolute left-3.5 top-3" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
-                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  placeholder="••••••••••••"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-[#1F2633] border border-[#2D3748] text-white text-sm placeholder-[#8B949E] focus:outline-none focus:border-[#C4F82A] transition"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (error) setError(null);
+                  }}
+                  className="w-full pl-10 pr-10 py-2.5 rounded-xl bg-[#1F2633] border border-[#2D3748] text-white text-sm placeholder-[#8B949E]/70 focus:outline-none focus:border-[#C4F82A] transition"
                 />
+                <button
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-3 text-[#8B949E] hover:text-white transition focus:outline-none"
+                  aria-label={showPassword ? 'Ocultar contraseña' : 'Ver contraseña'}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
               </div>
             </div>
 
             <button
               type="submit"
-              disabled={loading}
-              className="erp-btn-primary w-full py-3 text-sm mt-2 disabled:opacity-50"
+              disabled={submitting}
+              className="erp-btn-primary w-full py-3 text-sm mt-3 flex items-center justify-center gap-2 font-semibold disabled:opacity-50 transition cursor-pointer"
             >
-              <span>{loading ? 'Accediendo...' : 'Entrar al ERP'}</span>
-              <ArrowRight className="w-4 h-4" />
+              {submitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-[#0A0D14]" />
+                  <span>Validando credenciales...</span>
+                </>
+              ) : (
+                <>
+                  <span>Entrar al ERP</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
             </button>
           </form>
 
-          {/* Quick Login for Testing */}
-          <div className="mt-8 pt-6 border-t border-[#2D3748]">
-            <span className="text-[11px] font-semibold text-[#8B949E] uppercase tracking-wider block mb-3 text-center">
-              Acceso Rápido de Prueba (Demo)
-            </span>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('admin@japonparts.com')}
-                className="px-2 py-2 rounded-xl bg-[#1F2633] border border-[#2D3748] text-[#C4F82A] hover:bg-[#273142] hover:border-[#C4F82A] text-xs font-semibold transition"
-              >
-                Admin
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('vendedor@japonparts.com')}
-                className="px-2 py-2 rounded-xl bg-[#1F2633] border border-[#2D3748] text-white hover:bg-[#273142] text-xs font-semibold transition"
-              >
-                Vendedor
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('bodega@japonparts.com')}
-                className="px-2 py-2 rounded-xl bg-[#1F2633] border border-[#2D3748] text-[#8B949E] hover:bg-[#273142] hover:text-white text-xs font-semibold transition"
-              >
-                Bodega
-              </button>
-            </div>
+          {/* Security footer */}
+          <div className="mt-6 pt-5 border-t border-[#2D3748]/60 flex items-center justify-center gap-2 text-[11px] text-[#8B949E]">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#C4F82A]" />
+            <span>Acceso seguro cifrado con JWT &amp; SSL</span>
           </div>
         </div>
       </div>

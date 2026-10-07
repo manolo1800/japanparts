@@ -13,7 +13,7 @@ export class MailController {
   @Post('test')
   @Roles(UserRole.ADMIN)
   async testMail(@Body('email') email: string) {
-    const targetEmail = email || 'admin@japonparts.com';
+    const targetEmail = email || 'admin@tokugawuasp.com';
     const sent = await this.mailService.sendMail(
       targetEmail,
       'Prueba de Correo — Tokugawa Spare Parts ERP',

@@ -11,7 +11,9 @@
     "start:prod": "node dist/main",
     "lint": "echo 'Linting backend...'",
     "db:migrate": "ts-node src/database/run-migrations.ts",
-    "db:seed": "ts-node src/database/seeds/seed.ts"
+    "db:migrate:prod": "node dist/database/run-migrations.js",
+    "db:seed": "ts-node src/database/seeds/seed.ts",
+    "db:seed:prod": "node dist/database/seeds/seed.js"
   },
   "dependencies": {
     "@japonparts/shared": "workspace:*",
