@@ -81,7 +81,7 @@ import {
           ],
           synchronize: false,
           migrations: [path.join(__dirname, 'database/migrations/*{.ts,.js}')],
-          migrationsRun: config.get<string>('RUN_MIGRATIONS') !== 'false',
+          migrationsRun: false,
           logging: false,
         };
       },

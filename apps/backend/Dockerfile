@@ -36,6 +36,8 @@ COPY --from=builder --chown=nestjs:nodejs /app/apps/backend/dist ./dist
 COPY --from=builder --chown=nestjs:nodejs /app/pruned/node_modules ./node_modules
 COPY --from=builder --chown=nestjs:nodejs /app/apps/backend/package.json ./package.json
 
+RUN mkdir -p /data/whatsapp-sessions && chown -R nestjs:nodejs /data
+
 USER nestjs
 
 EXPOSE 4000

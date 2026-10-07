@@ -36,6 +36,8 @@ COPY --from=builder --chown=workerjs:nodejs /app/apps/worker/dist ./dist
 COPY --from=builder --chown=workerjs:nodejs /app/pruned/node_modules ./node_modules
 COPY --from=builder --chown=workerjs:nodejs /app/apps/worker/package.json ./package.json
 
+RUN mkdir -p /data/whatsapp-sessions && chown -R workerjs:nodejs /data
+
 USER workerjs
 
 CMD ["node", "dist/main.js"]
