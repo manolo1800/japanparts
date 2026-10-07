@@ -9,9 +9,7 @@ dotenv.config({ path: path.resolve(__dirname, '../../../../.env.dev') });
 dotenv.config({ path: path.resolve(__dirname, '../../../../.env') });
 dotenv.config();
 
-const isInsideDocker = fs.existsSync('/.dockerenv') || process.env.IS_DOCKER === 'true';
-const rawHost = process.env.DB_HOST || process.env.POSTGRES_HOST || 'localhost';
-const effectiveHost = isInsideDocker ? rawHost : (rawHost === 'postgres' ? 'localhost' : rawHost);
+const effectiveHost = process.env.DB_HOST || process.env.POSTGRES_HOST || 'localhost';
 
 export const dataSourceOptions: DataSourceOptions = {
   type: 'postgres',

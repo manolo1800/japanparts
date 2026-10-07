@@ -50,14 +50,7 @@ import {
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
-        const rawHost = config.get<string>('POSTGRES_HOST') || 'localhost';
-        const isDocker =
-          fs.existsSync('/.dockerenv') || process.env.IS_DOCKER === 'true';
-        const host = isDocker
-          ? rawHost
-          : rawHost === 'postgres'
-            ? 'localhost'
-            : rawHost;
+        const host = config.get<string>('POSTGRES_HOST') || 'localhost';
 
         return {
           type: 'postgres',

@@ -111,10 +111,18 @@ class ApiClient {
       }
     }
 
-    const data: ApiResponse<T> = await response.json();
+    const text = await response.text();
+    let data: ApiResponse<T>;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(
+        `Error del servidor (${response.status}): ${text.slice(0, 120) || 'Respuesta no válida'}`
+      );
+    }
 
     if (!response.ok) {
-      throw new Error(data.message || 'Error en la petición al servidor');
+      throw new Error(data.message || `Error en la petición al servidor (${response.status})`);
     }
 
     return data;
@@ -174,9 +182,17 @@ class ApiClient {
       headers,
       body: formData,
     }).then(async (response) => {
-      const data: ApiResponse<T> = await response.json();
+      const text = await response.text();
+      let data: ApiResponse<T>;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(
+          `Error del servidor (${response.status}): ${text.slice(0, 120) || 'Respuesta no válida'}`
+        );
+      }
       if (!response.ok) {
-        throw new Error(data.message || 'Error en la petición al servidor');
+        throw new Error(data.message || `Error en la petición al servidor (${response.status})`);
       }
       return data;
     });

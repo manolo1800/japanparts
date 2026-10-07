@@ -71,6 +71,31 @@ services:
       dockerfile: apps/backend/Dockerfile
     container_name: japonparts-backend-prod
     restart: always
+    environment:
+      NODE_ENV: production
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-minio}
+      MINIO_PORT: ${MINIO_PORT:-9000}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-}
+      MINIO_BUCKET: ${MINIO_BUCKET:-japonparts}
+      JWT_SECRET: ${JWT_SECRET:-default_jwt_secret}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-default_refresh_secret}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-1h}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+      BACKEND_PORT: 4000
+      PORT: 4000
+      IS_DOCKER: "true"
+      RUN_MIGRATIONS: "true"
+      AUTO_SEED: "true"
     volumes:
       - whatsappdata_prod:/data/whatsapp-sessions
     depends_on:
@@ -105,6 +130,24 @@ services:
       dockerfile: apps/worker/Dockerfile
     container_name: japonparts-worker-prod
     restart: always    
+    environment:
+      NODE_ENV: production
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT:-minio}
+      MINIO_PORT: ${MINIO_PORT:-9000}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-}
+      MINIO_BUCKET: ${MINIO_BUCKET:-japonparts}
+      JWT_SECRET: ${JWT_SECRET:-default_jwt_secret}
+      IS_DOCKER: "true"
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-10}
     volumes:
       - whatsappdata_prod:/data/whatsapp-sessions
     depends_on:
