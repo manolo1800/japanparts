@@ -36,37 +36,52 @@ export function Topbar({ title = 'Dashboard', subtitle = 'Resumen general del si
       <div className="topbar-left">
         <button
           onClick={toggleSidebar}
-          className="topbar-btn md:hidden"
+          className="topbar-btn md:hidden shrink-0"
           title="Alternar menú"
+          aria-label="Alternar menú"
         >
           <Menu className="w-4 h-4" />
         </button>
 
-        <div>
-          <h1 className="page-title">{title}</h1>
-          {subtitle && <p className="page-subtitle">{subtitle}</p>}
+        <div className="min-w-0 flex-1">
+          <h1 className="page-title truncate" title={title}>
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="page-subtitle hidden sm:block truncate" title={subtitle}>
+              {subtitle}
+            </p>
+          )}
         </div>
       </div>
 
       <div className="topbar-right">
-        {actionSlot}
+        {actionSlot && (
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {actionSlot}
+          </div>
+        )}
 
-        {/* Branch / Sede */}
-        <div className="branch-badge hidden sm:flex">
-          <Building2 className="w-3.5 h-3.5 text-[#1A5276]" />
-          <span>Tokugawa Spare Parts — Sucursal Principal</span>
+        {/* Branch / Sede: full text on 2xl+, compact on lg-xl, hidden on mobile/tablet */}
+        <div className="branch-badge hidden 2xl:flex items-center gap-1.5 shrink-0" title="Tokugawa Spare Parts — Sucursal Principal">
+          <Building2 className="w-3.5 h-3.5 text-[#1A5276] shrink-0" />
+          <span className="truncate max-w-[220px]">Tokugawa Spare Parts — Sucursal Principal</span>
+        </div>
+        <div className="branch-badge hidden lg:flex 2xl:hidden items-center gap-1.5 shrink-0" title="Sucursal Principal">
+          <Building2 className="w-3.5 h-3.5 text-[#1A5276] shrink-0" />
+          <span>Sucursal Principal</span>
         </div>
 
-        {/* Current Time Clock */}
+        {/* Current Time Clock: only on xl+ */}
         {timeString && (
-          <div className="current-time hidden md:flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-slate-400" />
+          <div className="current-time hidden xl:flex items-center gap-1.5 shrink-0">
+            <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span>{timeString}</span>
           </div>
         )}
 
         {/* Notification Bell */}
-        <button className="topbar-btn" title="Notificaciones del sistema">
+        <button className="topbar-btn shrink-0" title="Notificaciones del sistema" aria-label="Notificaciones">
           <Bell className="w-4 h-4 text-slate-600" />
           <span className="notif-dot" />
         </button>

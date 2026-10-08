@@ -133,40 +133,43 @@ export default function ComprasPage() {
           else refetchOrdenes();
         }}
         actionSlot={
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <Link
               href="/compras/ordenes/nueva"
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm shadow-emerald-600/20"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-sm shadow-emerald-600/20 whitespace-nowrap shrink-0"
             >
-              <Plus className="w-4 h-4" />
-              <span>+ Nueva Orden de Compra</span>
+              <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span className="hidden sm:inline">Nueva Orden de Compra</span>
+              <span className="sm:hidden">Nueva Orden</span>
             </Link>
 
             <Link
               href="/compras/nueva"
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1A5276] hover:bg-[#154360] text-white text-xs font-bold transition shadow-sm shadow-[#1A5276]/20"
+              className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl bg-[#1A5276] hover:bg-[#154360] text-white text-xs font-bold transition shadow-sm shadow-[#1A5276]/20 whitespace-nowrap shrink-0"
             >
-              <Plus className="w-4 h-4" />
-              <span>+ Cargar Factura (OCR)</span>
+              <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
+              <span className="hidden sm:inline">Cargar Factura (OCR)</span>
+              <span className="sm:hidden">Factura OCR</span>
             </Link>
           </div>
         }
       />
 
-      <div className="p-8 max-w-7xl mx-auto space-y-6">
+      <div className="p-4 sm:p-6 md:p-8 max-w-7xl mx-auto space-y-6">
         {/* Main Tab Switcher */}
-        <div className="flex items-center p-1.5 bg-slate-200/80 rounded-2xl w-fit gap-1 shadow-inner">
+        <div className="flex items-center p-1.5 bg-slate-200/80 rounded-2xl w-full sm:w-fit gap-1 shadow-inner overflow-x-auto">
           <button
             type="button"
             onClick={() => setActiveMainTab('facturas')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition ${
+            className={`flex items-center justify-center gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap shrink-0 ${
               activeMainTab === 'facturas'
                 ? 'bg-white text-[#1A5276] shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <FileText className="w-4 h-4 text-[#1A5276]" />
-            <span>Facturas Registradas & CxP</span>
+            <FileText className="w-4 h-4 text-[#1A5276] shrink-0" />
+            <span className="hidden sm:inline">Facturas Registradas & CxP</span>
+            <span className="sm:hidden">Facturas & CxP</span>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
               {totalFacturas}
             </span>
@@ -175,14 +178,15 @@ export default function ComprasPage() {
           <button
             type="button"
             onClick={() => setActiveMainTab('ordenes')}
-            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition ${
+            className={`flex items-center justify-center gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap shrink-0 ${
               activeMainTab === 'ordenes'
                 ? 'bg-white text-emerald-700 shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Package className="w-4 h-4 text-emerald-600" />
-            <span>Órdenes de Compra a Proveedores</span>
+            <Package className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span className="hidden sm:inline">Órdenes de Compra a Proveedores</span>
+            <span className="sm:hidden">Órdenes de Compra</span>
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">
               {totalOrdenes}
             </span>

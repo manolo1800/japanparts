@@ -17,12 +17,14 @@ import {
   MessageSquareText,
   Menu,
   TrendingUp,
+  X,
 } from 'lucide-react';
 
 export function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
-  const { collapsed, toggleSidebar } = useSidebar();
+  const { collapsed, toggleSidebar, mobileOpen, closeMobile } = useSidebar();
+
 
   const navSections = [
     {
@@ -99,86 +101,108 @@ export function Sidebar() {
   const userInitial = user?.nombre?.charAt(0).toUpperCase() || 'U';
 
   return (
-    <aside className={`sidebar ${collapsed ? 'collapsed' : ''}`}>
-      {/* Brand Header */}
-      <div className="sidebar-brand">
-        <Link href="/whatsapp" className="brand-logo">
-          <div className="brand-icon">
-            <span>TSP</span>
-          </div>
-          <div className="brand-text">
-            <span className="brand-name">Tokugawa Spare Parts</span>
-            <span className="brand-sub">ERP Cloud Dashboard</span>
-          </div>
-        </Link>
-      </div>
+    <>
+      {/* Mobile overlay backdrop */}
+      {mobileOpen && (
+        <div
+          className="sidebar-backdrop md:hidden"
+          onClick={closeMobile}
+          aria-label="Cerrar navegación"
+        />
+      )}
 
-      {/* User info card */}
-      <div className="sidebar-user" title={collapsed ? `${user?.nombre || 'Usuario'} (${user?.rol || 'Conectado'})` : undefined}>
-        <div className="user-avatar">{userInitial}</div>
-        <div className="user-info">
-          <div className="user-name">{user?.nombre || 'Administrador'}</div>
-          <div className="user-role">{user?.rol || 'Conectado'}</div>
+      <aside className={`sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
+        {/* Brand Header */}
+        <div className="sidebar-brand">
+          <Link href="/reportes" className="brand-logo" onClick={closeMobile}>
+            <div className="brand-icon">
+              <span>TSP</span>
+            </div>
+            <div className="brand-text">
+              <span className="brand-name">Tokugawa Spare Parts</span>
+              <span className="brand-sub">ERP Cloud Dashboard</span>
+            </div>
+          </Link>
+
+          {/* Close button on mobile */}
+          <button
+            onClick={closeMobile}
+            className="sidebar-close-btn md:hidden"
+            title="Cerrar menú"
+            aria-label="Cerrar menú"
+          >
+            <X className="w-5 h-5 text-white/80 hover:text-white" />
+          </button>
         </div>
-      </div>
 
-      {/* Navigation list */}
-      <nav className="sidebar-nav">
-        {navSections.map((section, sIdx) => (
-          <div key={sIdx} className="nav-section">
-            <div className="nav-section-label">{section.title}</div>
-            <ul>
-              {section.items.map((item) => {
-                const Icon = item.icon;
-                const isActive =
-                  pathname === item.href ||
-                  (item.href !== '/' && pathname.startsWith(item.href));
-
-                return (
-                  <li key={item.href} className="nav-item">
-                    <Link
-                      href={item.href}
-                      className={`nav-link ${isActive ? 'active' : ''}`}
-                      title={collapsed ? item.label : undefined}
-                    >
-                      <span className="nav-icon">
-                        <Icon className="w-4 h-4" />
-                      </span>
-                      <span>{item.label}</span>
-                      {item.badge && <span className="nav-badge">{item.badge}</span>}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
+        {/* User info card */}
+        <div className="sidebar-user" title={collapsed ? `${user?.nombre || 'Usuario'} (${user?.rol || 'Conectado'})` : undefined}>
+          <div className="user-avatar">{userInitial}</div>
+          <div className="user-info">
+            <div className="user-name">{user?.nombre || 'Administrador'}</div>
+            <div className="user-role">{user?.rol || 'Conectado'}</div>
           </div>
-        ))}
-      </nav>
+        </div>
 
-      {/* Footer with toggle and logout */}
-      <div className="sidebar-footer">
-        <button
-          onClick={toggleSidebar}
-          className="sidebar-toggle"
-          title={collapsed ? 'Expandir menú' : 'Contraer menú'}
-        >
-          <span className="nav-icon">
-            <Menu className="w-4 h-4" />
-          </span>
-          <span>Menú</span>
-        </button>
+        {/* Navigation list */}
+        <nav className="sidebar-nav">
+          {navSections.map((section, sIdx) => (
+            <div key={sIdx} className="nav-section">
+              <div className="nav-section-label">{section.title}</div>
+              <ul>
+                {section.items.map((item) => {
+                  const Icon = item.icon;
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href !== '/' && pathname.startsWith(item.href));
 
-        <button
-          onClick={logout}
-          className="logout-btn"
-          title={collapsed ? 'Cerrar Sesión' : undefined}
-        >
-          <span className="nav-icon">
-            <LogOut className="w-4 h-4" />
-          </span>
-          <span>Cerrar Sesión</span>
-        </button>
-      </div>
-    </aside>
+                  return (
+                    <li key={item.href} className="nav-item">
+                      <Link
+                        href={item.href}
+                        onClick={closeMobile}
+                        className={`nav-link ${isActive ? 'active' : ''}`}
+                        title={collapsed ? item.label : undefined}
+                      >
+                        <span className="nav-icon">
+                          <Icon className="w-4 h-4" />
+                        </span>
+                        <span>{item.label}</span>
+                        {item.badge && <span className="nav-badge">{item.badge}</span>}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </nav>
+
+        {/* Footer with toggle and logout */}
+        <div className="sidebar-footer">
+          <button
+            onClick={toggleSidebar}
+            className="sidebar-toggle hidden md:flex"
+            title={collapsed ? 'Expandir menú' : 'Contraer menú'}
+          >
+            <span className="nav-icon">
+              <Menu className="w-4 h-4" />
+            </span>
+            <span>Menú</span>
+          </button>
+
+          <button
+            onClick={logout}
+            className="logout-btn"
+            title={collapsed ? 'Cerrar Sesión' : undefined}
+          >
+            <span className="nav-icon">
+              <LogOut className="w-4 h-4" />
+            </span>
+            <span>Cerrar Sesión</span>
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }

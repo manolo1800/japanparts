@@ -47,26 +47,38 @@ export function Header({
       <div className="topbar-left">
         <button
           onClick={toggleSidebar}
-          className="topbar-btn md:hidden"
+          className="topbar-btn md:hidden shrink-0"
           title="Alternar menú"
+          aria-label="Alternar menú"
         >
           <Menu className="w-4 h-4" />
         </button>
 
-        <div>
-          <h1 className="page-title">{title}</h1>
-          {subtitle && <p className="page-subtitle">{subtitle}</p>}
+        <div className="min-w-0 flex-1">
+          <h1 className="page-title truncate" title={title}>
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="page-subtitle hidden sm:block truncate" title={subtitle}>
+              {subtitle}
+            </p>
+          )}
         </div>
       </div>
 
       <div className="topbar-right">
-        {actionSlot}
+        {actionSlot && (
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {actionSlot}
+          </div>
+        )}
 
         {onRefresh && (
           <button
             onClick={onRefresh}
-            className="topbar-btn"
+            className="topbar-btn shrink-0"
             title="Recargar datos"
+            aria-label="Recargar datos"
           >
             <RefreshCw className="w-4 h-4 text-slate-600" />
           </button>
@@ -75,29 +87,34 @@ export function Header({
         {showNewSkuBtn && isBodega && (
           <Link
             href="/inventario/nuevo"
-            className="btn btn-primary !text-xs !py-2 !px-3.5"
+            className="btn btn-primary !text-xs !py-2 !px-3 shrink-0 whitespace-nowrap"
           >
-            <Plus className="w-4 h-4" />
-            <span>Nuevo SKU</span>
+            <Plus className="w-4 h-4 shrink-0" />
+            <span className="hidden sm:inline">Nuevo SKU</span>
+            <span className="sm:hidden">SKU</span>
           </Link>
         )}
 
-        {/* Branch / Sede */}
-        <div className="branch-badge hidden sm:flex">
-          <Building2 className="w-3.5 h-3.5 text-[#1A5276]" />
-          <span>Tokugawa Spare Parts — Sucursal Principal</span>
+        {/* Branch / Sede: full text on 2xl+, compact on lg-xl, hidden on mobile/tablet */}
+        <div className="branch-badge hidden 2xl:flex items-center gap-1.5 shrink-0" title="Tokugawa Spare Parts — Sucursal Principal">
+          <Building2 className="w-3.5 h-3.5 text-[#1A5276] shrink-0" />
+          <span className="truncate max-w-[220px]">Tokugawa Spare Parts — Sucursal Principal</span>
+        </div>
+        <div className="branch-badge hidden lg:flex 2xl:hidden items-center gap-1.5 shrink-0" title="Sucursal Principal">
+          <Building2 className="w-3.5 h-3.5 text-[#1A5276] shrink-0" />
+          <span>Sucursal Principal</span>
         </div>
 
-        {/* Live Clock */}
+        {/* Live Clock: only on xl+ */}
         {timeString && (
-          <div className="current-time hidden md:flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5 text-slate-400" />
+          <div className="current-time hidden xl:flex items-center gap-1.5 shrink-0">
+            <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span>{timeString}</span>
           </div>
         )}
 
         {/* Notification Bell */}
-        <button className="topbar-btn" title="Notificaciones del sistema">
+        <button className="topbar-btn shrink-0" title="Notificaciones del sistema" aria-label="Notificaciones">
           <Bell className="w-4 h-4 text-slate-600" />
           <span className="notif-dot" />
         </button>
